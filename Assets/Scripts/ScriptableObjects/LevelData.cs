@@ -7,4 +7,7 @@ public class LevelData : ScriptableObject
     public string displayName;
     public string sceneName;
     public bool unlockedByDefault;
+    
+    [TextArea]
+    public string description;
 }

@@ -1,8 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.EventSystems;
 
-public class LevelButton : MonoBehaviour
+public class LevelButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private LevelData levelData;
     [SerializeField] private Button button;
@@ -18,6 +19,16 @@ public class LevelButton : MonoBehaviour
 
         button.interactable = _isUnlocked;
         lockIcon.SetActive(!_isUnlocked);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        StageInfoPanel.Instance?.SetInfo(levelData);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        StageInfoPanel.Instance?.Clear();
     }
 
     public void OnButtonClick()
