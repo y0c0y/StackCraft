@@ -8,6 +8,16 @@ public class Stack
     public int Length => cards.Count;
     public Card TopCard => cards.Count > 0 ? cards[0] : null;
     public Card LastCard => cards.Count > 0 ? cards[^1] : null;
+
+    public void Start()
+    {
+        GameTableManager.Instance.AddStackToTable(this);    
+    }
+    
+    public void OnDestroy()
+    {
+        GameTableManager.Instance.RemoveStackFromTable(this);
+    }
     
     public void AddCard(Card card)
     {

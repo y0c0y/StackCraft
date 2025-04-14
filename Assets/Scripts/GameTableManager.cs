@@ -9,6 +9,7 @@ public class GameTableManager : MonoBehaviour
     public event Action<Card> CardRemovedFromTable;
 
     [SerializeField] public List<Card> CardsOnTable;
+    [SerializeField] public List<Stack> StacksOnTable;
     
     private void Awake()
     {
@@ -58,6 +59,22 @@ public class GameTableManager : MonoBehaviour
             }
             
             CardRemovedFromTable?.Invoke(card);
+        }
+    }
+    
+    public void AddStackToTable(Stack stack)
+    {
+        if (!StacksOnTable.Contains(stack))
+        {
+            StacksOnTable.Add(stack);
+        }
+    }
+    
+    public void RemoveStackFromTable(Stack stack)
+    {
+        if (StacksOnTable.Contains(stack))
+        {
+            StacksOnTable.Remove(stack);
         }
     }
     
