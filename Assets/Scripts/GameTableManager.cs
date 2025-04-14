@@ -79,6 +79,7 @@ public class GameTableManager : MonoBehaviour
         {
             if (c == card) continue;
             if (!c.IsLastCard) continue;
+            if (c.owningStack == card.owningStack) continue;
             
             var draggingCardData = card.cardData;
             var releasedCardData = c.cardData;
