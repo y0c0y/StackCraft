@@ -1,23 +1,35 @@
+using System;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Animations;
 
 public class StackManager : MonoBehaviour
 {
-    void Start()
-    {
-        // TODO: how to find all cards?
-        var cards = GameObject.FindGameObjectsWithTag("Card");
+    public event Action CardAddedToStackByDrag;
         
-        foreach (var card in cards)
+    public static StackManager Instance;
+    
+    void Awake()
+    {
+        if (Instance != null)
         {
-            var cardComponent = card.GetComponent<Card>();
-            if (cardComponent != null)
-            {
-                cardComponent.CardReleasedOn += OnCardReleasedOn;
-                cardComponent.RequestSplitFromStack += OnCardSplit;
-            }
+            Destroy(Instance.gameObject);
         }
+        Instance = this;
+        
+        GameTableManager.Instance.CardAddedOnTable += OnCardAddedToTable;
+        GameTableManager.Instance.CardRemovedFromTable += OnCardRemovedFromTable;
+    }
+
+    private void OnCardAddedToTable(Card card)
+    {
+        card.CardReleasedOn += OnCardReleasedOn;
+        card.RequestSplitFromStack += OnCardSplit;
+    }
+    
+    private void OnCardRemovedFromTable(Card card)
+    {
+        card.CardReleasedOn -= OnCardReleasedOn;
+        card.RequestSplitFromStack -= OnCardSplit;
     }
 
     private void OnCardSplit(Card card)
@@ -34,7 +46,7 @@ public class StackManager : MonoBehaviour
         Card[] copyBuffer = new Card[prevStack.Length - indexInStack];
         prevStack.cards.CopyTo(indexInStack, copyBuffer, 0, prevStack.Length - indexInStack);
 
-        Debug.Log(copyBuffer.Aggregate("", (s, c) => s += c.ToString()));
+        //Debug.Log(copyBuffer.Aggregate("", (s, c) => s += c.ToString()));
         
         for (int i = 0; i < copyBuffer.Length; i++)
         {
@@ -48,6 +60,21 @@ public class StackManager : MonoBehaviour
     private void OnCardReleasedOn(Card draggingCard, Card releasedCard)
     {
         if (draggingCard == releasedCard) return;
+
+        var draggingCardData = draggingCard.cardData;
+        var releasedCardData = releasedCard.cardData;
+        if (draggingCardData == null || releasedCardData == null)
+        {
+            Debug.LogError($"Card data is null. draggingCard: {draggingCard}, releasedCard: {releasedCard}");
+            return;
+        }
+
+        if (!StackingRules.CanStackByType(draggingCardData.cardType, releasedCardData.cardType))
+        {
+            Debug.Log($"Can't stack type {draggingCardData.cardType} on {releasedCardData.cardType}");
+            return;
+        }
+        
         var lastCard = releasedCard.owningStack.LastCard;
 
         var copyStack = draggingCard.owningStack;
@@ -59,5 +86,7 @@ public class StackManager : MonoBehaviour
         var slowParentCon = draggingCard.gameObject.GetComponent<SlowParentConstraint>();
         slowParentCon.enabled = true;
         slowParentCon.Target = lastCard.gameObject;
+        
+        CardAddedToStackByDrag?.Invoke();
     }
 }

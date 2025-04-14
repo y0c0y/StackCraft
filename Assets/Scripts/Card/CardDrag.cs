@@ -5,10 +5,14 @@ using UnityEngine.InputSystem;
 
 public class CardDrag : MonoBehaviour
 {
+    public event Action<Card> CardDragStarted;
+    public event Action<Card> CardDragEnded;
+    
     private Card _card;
     private InputAction _pointAction;
     private Vector2 _dragOrigin;
     private bool _isDragging = false;
+    private bool _wasDragging = false;
 
     private void Awake()
     {
@@ -22,12 +26,26 @@ public class CardDrag : MonoBehaviour
 
         if (_isDragging)
         {
+            if (!_wasDragging)
+            {
+                CardDragStarted?.Invoke(_card);
+            }
+            _wasDragging = true;
+            
             Vector2 movement = _pointAction.ReadValue<Vector2>();
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(movement);
             mousePos.z = 0;
 
             transform.position = mousePos - new Vector3(_dragOrigin.x * transform.localScale.x,
                 _dragOrigin.y * transform.localScale.y, 0);
+        }
+        else
+        {
+            if (_wasDragging)
+            {
+                _wasDragging = false;
+                CardDragEnded?.Invoke(_card);
+            }
         }
     }
 
