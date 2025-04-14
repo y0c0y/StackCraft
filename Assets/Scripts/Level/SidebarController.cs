@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ToggleButton : MonoBehaviour
+public class SidebarController : MonoBehaviour
 {
     
     public RectTransform sidebarGroup;
