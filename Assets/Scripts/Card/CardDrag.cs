@@ -22,7 +22,16 @@ public class CardDrag : MonoBehaviour
 
     private void Update()
     {
-        if (_card.IsChild) return;
+        if (_card.IsChild)
+        {
+            if (_isDragging || _wasDragging)
+            {
+                _isDragging = false;
+                _wasDragging = false;
+                CardDragEnded?.Invoke(_card);
+            }
+            return;
+        }
 
         if (_isDragging)
         {
@@ -55,6 +64,8 @@ public class CardDrag : MonoBehaviour
         var inverseTransformPoint = transform.InverseTransformPoint(eventData.pointerPressRaycast.worldPosition);
         _dragOrigin = new Vector2(inverseTransformPoint.x, inverseTransformPoint.y);
         _isDragging = true;
+        
+        Debug.Log("Card Drag OnpointerDown");
     }
 
     public void OnPointerUp(PointerEventData eventData)
