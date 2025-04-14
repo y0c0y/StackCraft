@@ -4,7 +4,7 @@ public class StageManager : MonoBehaviour
 {
     [SerializeField] private LevelButton[] levelButtons;
 
-    void Start()
+    private void Start()
     {
         foreach (var btn in levelButtons)
         {

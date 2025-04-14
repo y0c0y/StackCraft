@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class LevelScene : MonoBehaviour
 {
-    void Start()
+    private void Start()
     {
-        Debug.Log($"Loaded: {StageInfo.selectedLevel.displayName}");
+        Debug.Log($"Loaded: {StageInfo.SelectedLevel.displayName}");
     }
 
     

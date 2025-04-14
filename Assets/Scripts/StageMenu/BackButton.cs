@@ -5,6 +5,6 @@ public class BackButton : MonoBehaviour
 {
     public void OnButtonClick()
     {
-        Debug.Log("Bakc button clicked");
+        Debug.Log("Back button clicked");
     }
 }

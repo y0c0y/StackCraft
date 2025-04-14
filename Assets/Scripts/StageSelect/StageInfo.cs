@@ -1,5 +1,5 @@
 public static class StageInfo
 {
-    public static LevelData selectedLevel;
+    public static LevelData SelectedLevel;
     
 }

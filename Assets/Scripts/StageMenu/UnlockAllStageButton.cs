@@ -5,9 +5,9 @@ public class UnlockAllStageButton : MonoBehaviour
 {
     public void OnButtonClick()
     {
-        int totalStages = 4; // 현재 스테이지 수에 맞게 수정
+        const int totalStages = 4; // 현재 스테이지 수에 맞게 수정
 
-        for (int i = 0; i < totalStages; i++)
+        for (var i = 0; i < totalStages; i++)
         {
             PlayerPrefs.SetInt($"Stage_{i}", 1);
         }

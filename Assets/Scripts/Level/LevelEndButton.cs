@@ -5,7 +5,7 @@ public class LevelEndButton : MonoBehaviour
 {
     public void OnButtonClick()
     {
-        int next = StageInfo.selectedLevel.levelIndex + 1;
+        var next = StageInfo.SelectedLevel.levelIndex + 1;
 
 
         if (next < 4)
@@ -15,7 +15,7 @@ public class LevelEndButton : MonoBehaviour
         }
         else
         {
-            for (int i = 1; i <= 4; i++)
+            for (var i = 1; i <= 4; i++)
             {
 
                 PlayerPrefs.DeleteKey("Stage_" + next);
