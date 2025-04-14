@@ -5,11 +5,11 @@ using UnityEngine.UI;
 public class SidebarController : MonoBehaviour
 {
     
-    public RectTransform sidebarGroup;
-    public float slideAmount;
-    public float slideSpeed;
+    [SerializeField] private RectTransform sidebarGroup;
+    [SerializeField] private float slideAmount;
+    [SerializeField] private float slideSpeed;
     
-    public TMP_Text toggleButtonText;
+    [SerializeField] private TMP_Text toggleButtonText;
     
     private bool _isOpen = true;
     private Vector2 _targetPos;
@@ -31,9 +31,6 @@ public class SidebarController : MonoBehaviour
         _isOpen = !_isOpen;
         toggleButtonText.text = _isOpen ? "<" : ">";
         _targetPos += new Vector2(offset, 0);
-        
-        Debug.Log(_targetPos);
-        
     }
     
 }
