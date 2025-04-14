@@ -20,7 +20,7 @@ public class Stack
     {
         for (int i = 0; i < cards.Count; i++)
         {
-            cards[i].SetSortingLayer(i);
+            cards[i].SetSortingLayer(i * 3);
         }
     }
 }
