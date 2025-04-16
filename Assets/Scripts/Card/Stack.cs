@@ -189,7 +189,7 @@ public class Stack: MonoBehaviour
             return;
         }
         
-        Timer.CancelAllRegisteredTimers();
+        Timer.Cancel(_produceTimer);
         Debug.Log($"Starting recipe {matchedRecipe.recipeName} timer for {matchedRecipe.produceTime} seconds");
         ProducingRecipe = matchedRecipe;
         _produceTimer = this.AttachTimer(matchedRecipe.produceTime, () => ApplyRecipe(matchedRecipe, consumedCards), useRealTime: false, isLooped: true);
@@ -208,7 +208,7 @@ public class Stack: MonoBehaviour
     public void RemoveTimer()
     {
         Debug.Log($"Removing timer");
-        Timer.CancelAllRegisteredTimers();
+        Timer.Cancel(_produceTimer);
         ProducingRecipe = null;
     }
 }
