@@ -115,6 +115,8 @@ public class Stack: MonoBehaviour
     
     public void ConsumeCard(Card card)
     {
+        if (!card.cardData.isConsumable) return;
+        
         cards.Remove(card);
         
         if (CardCounts.TryGetValue(card.cardData, out var count))

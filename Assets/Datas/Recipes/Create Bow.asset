@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   recipeName: Gather Wood
   inputCards:
-  - {fileID: 11400000, guid: 794af32de4c41364e94e792b8353e07b, type: 2}
-  - {fileID: 11400000, guid: 9b64babf688ac614589c3768fa2db8a7, type: 2}
-  outputCards:
+  - {fileID: 11400000, guid: a73c0216b5b65d9458d7861854aec6ed, type: 2}
   - {fileID: 11400000, guid: e0ed2bd08572f4f4faa1a63c2131fb35, type: 2}
-  ConsumeInputs: 0
-  produceTime: 3
+  - {fileID: 11400000, guid: e0ed2bd08572f4f4faa1a63c2131fb35, type: 2}
+  - {fileID: 11400000, guid: a8b83a26e796c7d4ea3ed9b632813f56, type: 2}
+  outputCards:
+  - {fileID: 11400000, guid: 3e393341d7bcaef4dbd9e55e63daeb4e, type: 2}
+  ConsumeInputs: 1
+  produceTime: 0
