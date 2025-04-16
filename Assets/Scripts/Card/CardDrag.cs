@@ -64,8 +64,6 @@ public class CardDrag : MonoBehaviour
         var inverseTransformPoint = transform.InverseTransformPoint(eventData.pointerPressRaycast.worldPosition);
         _dragOrigin = new Vector2(inverseTransformPoint.x, inverseTransformPoint.y);
         _isDragging = true;
-        
-        Debug.Log("Card Drag OnpointerDown");
     }
 
     public void OnPointerUp(PointerEventData eventData)

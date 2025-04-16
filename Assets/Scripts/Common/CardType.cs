@@ -3,5 +3,8 @@ public enum CardType
     None,
     Person,
     Resource,
-    Producer
+    Producer,
+    Building,
+    Weapon,
+    Construction
 }

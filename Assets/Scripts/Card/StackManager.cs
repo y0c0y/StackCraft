@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using UnityEngine;
 
 public class StackManager : MonoBehaviour
@@ -7,6 +6,7 @@ public class StackManager : MonoBehaviour
     public event Action CardAddedToStackByDrag;
         
     public static StackManager Instance;
+   [SerializeField] public GameObject stacksHolderGameObject;
     
     void Awake()
     {
@@ -18,6 +18,11 @@ public class StackManager : MonoBehaviour
         
         GameTableManager.Instance.CardAddedOnTable += OnCardAddedToTable;
         GameTableManager.Instance.CardRemovedFromTable += OnCardRemovedFromTable;
+    }
+
+    public Stack AddNewStack()
+    {
+        return stacksHolderGameObject.AddComponent<Stack>();
     }
 
     private void OnCardAddedToTable(Card card)
@@ -39,7 +44,7 @@ public class StackManager : MonoBehaviour
         slowParentCon.Target = null;
         
         var prevStack = card.owningStack;
-        var newStack = new Stack();
+        var newStack = AddNewStack();
         var indexInStack = card.IndexInStack;
         
         // Add the cards from splitting card to the new stack
@@ -48,13 +53,17 @@ public class StackManager : MonoBehaviour
 
         //Debug.Log(copyBuffer.Aggregate("", (s, c) => s += c.ToString()));
         
+        /*
         for (int i = 0; i < copyBuffer.Length; i++)
         {
             newStack.AddCard(copyBuffer[i]);
         }
+        */
+        
+        newStack.AddMultipleCards(copyBuffer);
         
         // Remove the cards from the previous stack
-        prevStack.cards.RemoveRange(indexInStack, prevStack.Length - indexInStack);
+        prevStack.RemoveRange(indexInStack, prevStack.Length - indexInStack);
     }
 
     private void OnCardReleasedOn(Card draggingCard, Card releasedCard)
@@ -78,14 +87,20 @@ public class StackManager : MonoBehaviour
         var lastCard = releasedCard.owningStack.LastCard;
 
         var copyStack = draggingCard.owningStack;
+        
+        /*
         for (int i = 0; i < copyStack.cards.Count; i++)
         {
             lastCard.owningStack.AddCard(copyStack.cards[i]);
         }
+        */
+        lastCard.owningStack.AddMultipleCards(copyStack.cards.ToArray());
+        
+        copyStack.RemoveRange(0, copyStack.cards.Count);
         
         var slowParentCon = draggingCard.gameObject.GetComponent<SlowParentConstraint>();
         slowParentCon.enabled = true;
-        slowParentCon.Target = lastCard.gameObject;
+        slowParentCon.Target = lastCard.transform;
         
         CardAddedToStackByDrag?.Invoke();
     }

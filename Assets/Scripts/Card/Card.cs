@@ -32,15 +32,15 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         _sprites = GetComponentsInChildren<SpriteRenderer>();
         _drag = GetComponent<CardDrag>();
         _collider2D = GetComponent<Collider2D>();
-        
-        owningStack ??= new Stack();
-        owningStack.AddCard(this);
     }
 
     private void Start()
     {
         Debug.Assert(cardData != null, $"{name}에 카드 데이터가 설정되지 않음");
         GameTableManager.Instance.AddCardToTable(this);
+
+        owningStack ??= StackManager.Instance.AddNewStack();
+        owningStack.AddCard(this);
     }
 
     private void OnDestroy()

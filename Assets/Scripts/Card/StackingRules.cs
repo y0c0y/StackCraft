@@ -6,11 +6,14 @@ public static class StackingRules
     {
         switch (type)
         {
-            case CardType.Person:   return StackingRuleFlags.Person;
-            case CardType.Resource: return StackingRuleFlags.Resource;
-            case CardType.Producer: return StackingRuleFlags.Producer;
+            case CardType.Person:        return StackingRuleFlags.Person;
+            case CardType.Resource:      return StackingRuleFlags.Resource;
+            case CardType.Producer:      return StackingRuleFlags.Producer;
+            case CardType.Building:      return StackingRuleFlags.Building;
+            case CardType.Weapon:        return StackingRuleFlags.Weapon;
+            case CardType.Construction:  return StackingRuleFlags.Construction;
             case CardType.None:
-            default:                return StackingRuleFlags.None;
+            default:                     return StackingRuleFlags.None;
         }
     }
     
@@ -19,11 +22,16 @@ public static class StackingRules
         switch (cardBelowType)
         {
             case CardType.Person:
-                return StackingRuleFlags.Person | StackingRuleFlags.Resource;
+                return StackingRuleFlags.Person | StackingRuleFlags.Resource | StackingRuleFlags.Weapon;
             case CardType.Resource:
                 return StackingRuleFlags.Resource;
             case CardType.Producer:
                 return StackingRuleFlags.Person;
+            case CardType.Building:
+                return StackingRuleFlags.Resource;
+            case CardType.Construction:
+                return StackingRuleFlags.Resource;
+            case CardType.Weapon:
             case CardType.None:
             default:
                 return StackingRuleFlags.None;
@@ -37,8 +45,12 @@ public static class StackingRules
             case CardType.Person:
                 return StackingRuleFlags.Person | StackingRuleFlags.Producer;
             case CardType.Resource:
-                return StackingRuleFlags.Resource;
+                return StackingRuleFlags.Resource | StackingRuleFlags.Building | StackingRuleFlags.Construction;
+            case CardType.Weapon:
+                return StackingRuleFlags.Person;
             case CardType.Producer:
+            case CardType.Building:
+            case CardType.Construction:
             case CardType.None:
             default:
                 return StackingRuleFlags.None;
