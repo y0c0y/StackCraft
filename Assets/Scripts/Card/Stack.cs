@@ -194,7 +194,12 @@ public class Stack: MonoBehaviour
         Timer.Cancel(_produceTimer);
         Debug.Log($"Starting recipe {matchedRecipe.recipeName} timer for {matchedRecipe.produceTime} seconds");
         ProducingRecipe = matchedRecipe;
-        _produceTimer = this.AttachTimer(matchedRecipe.produceTime, () => ApplyRecipe(matchedRecipe, consumedCards), useRealTime: false, isLooped: true);
+        TopCard.cardTimerUI.gameObject.SetActive(true);
+        _produceTimer = this.AttachTimer(matchedRecipe.produceTime,
+            () => ApplyRecipe(matchedRecipe, consumedCards),
+            onUpdate: (t) => this.TopCard.cardTimerUI.SetValue(t / matchedRecipe.produceTime),
+            useRealTime: false,
+            isLooped: true);
     }
 
     private void ApplyRecipe(Recipe matchedRecipe, List<Card> consumedCards)
@@ -210,6 +215,7 @@ public class Stack: MonoBehaviour
     public void RemoveTimer()
     {
         Debug.Log($"Removing timer");
+        TopCard.cardTimerUI.gameObject.SetActive(false);
         Timer.Cancel(_produceTimer);
         ProducingRecipe = null;
     }

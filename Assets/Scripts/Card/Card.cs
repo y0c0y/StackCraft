@@ -23,6 +23,7 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public bool IsChild => !IsTopCard;
     
     // Components
+    [SerializeField] public CardTimerUI cardTimerUI;
     private SpriteRenderer[] _sprites;
     private CardDrag _drag;
     private Collider2D _collider2D;
