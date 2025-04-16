@@ -1,15 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class GameTableManager : MonoBehaviour
 {
     public static GameTableManager Instance;
     public event Action<Card> CardAddedOnTable;
     public event Action<Card> CardRemovedFromTable;
-
+    
     [SerializeField] public List<Card> CardsOnTable;
     [SerializeField] public List<Stack> StacksOnTable;
+
+    [SerializeField] private GameObject cardPrefab;
     
     private void Awake()
     {
@@ -23,6 +27,12 @@ public class GameTableManager : MonoBehaviour
     private void Start()
     {
         StackManager.Instance.CardAddedToStackByDrag += HideCardCanStackIndicator;
+    }
+
+    public void AddNewCardToTable(CardData newCardData, Vector3 position)
+    {
+        var newCard = Instantiate(cardPrefab, position, Quaternion.identity);
+        newCard.GetComponent<Card>().cardData = newCardData;
     }
 
     public void AddCardToTable(Card card)
@@ -44,7 +54,6 @@ public class GameTableManager : MonoBehaviour
             CardAddedOnTable?.Invoke(card);
         }
     }
-
     
     public void RemoveCardFromTable(Card card)
     {
@@ -67,6 +76,7 @@ public class GameTableManager : MonoBehaviour
         if (!StacksOnTable.Contains(stack))
         {
             StacksOnTable.Add(stack);
+            stack.OnStackModified += OnStackModified;
         }
     }
     
@@ -75,18 +85,46 @@ public class GameTableManager : MonoBehaviour
         if (StacksOnTable.Contains(stack))
         {
             StacksOnTable.Remove(stack);
+            stack.OnStackModified -= OnStackModified;
+        }
+    }
+    
+    private void OnStackModified(Stack stack)
+    {
+        // Don't bother checking for recipes if the stack is empty or has only one card
+        if (stack.Length <= 1) return;
+        
+        Debug.Log($"Stack modified: {stack.name}. Checking for recipes...");
+        if (RecipeManager.Instance.TryFindMatchingRecipe(stack, out var matchedRecipe, out var consumedCards))
+        {
+            Debug.Log($"Recipe matched: {matchedRecipe.name} with {stack.name}, consumed cards: {string.Join(", ", consumedCards.Select(c => c.name))}");
+            var originStackPos = stack.cards[0].transform.position;
+
+            if (matchedRecipe.ConsumeInputs)
+            {
+                stack.ConsumeCards(consumedCards);
+            }
+
+            var outputCards = matchedRecipe.outputCards;
+            
+            foreach (var spawningCard in outputCards)
+            {
+                var randomUnitCircle = Random.insideUnitCircle;
+                var spawningPos = originStackPos + new Vector3(randomUnitCircle.x, 0, randomUnitCircle.y);
+                AddNewCardToTable(spawningCard, spawningPos);
+            }   
         }
     }
     
     private void OnCardDragStarted(Card card)
     {
-        Debug.Log($"Card {card.name} started dragging");
+        //Debug.Log($"Card {card.name} started dragging");
         ShowCardCanStackIndicator(card);
     }
 
-    private void OnCardDragEnded(Card obj)
+    private void OnCardDragEnded(Card card)
     {
-        Debug.Log($"Card {obj.name} ended dragging");
+        //Debug.Log($"Card {obj.name} ended dragging");
         HideCardCanStackIndicator();
     }
     

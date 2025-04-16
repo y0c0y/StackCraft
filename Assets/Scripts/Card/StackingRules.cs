@@ -37,7 +37,7 @@ public static class StackingRules
             case CardType.Person:
                 return StackingRuleFlags.Person | StackingRuleFlags.Producer;
             case CardType.Resource:
-                return StackingRuleFlags.Resource;
+                return StackingRuleFlags.Resource | StackingRuleFlags.Person;
             case CardType.Producer:
             case CardType.None:
             default:

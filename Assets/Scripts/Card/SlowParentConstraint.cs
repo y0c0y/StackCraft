@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SlowParentConstraint : MonoBehaviour
 {
-    public GameObject Target;
+    public Transform Target;
     public Vector2 Offset;
     public float speed = 15f;
 
