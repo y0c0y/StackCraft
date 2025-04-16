@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityTimer;
 
 [Serializable]
 public class Stack: MonoBehaviour
@@ -13,6 +14,10 @@ public class Stack: MonoBehaviour
     public Card LastCard => cards.Count > 0 ? cards[^1] : null;
 
     public Dictionary<CardData, int> CardCounts = new();
+    
+    private Timer _produceTimer;
+    public Recipe ProducingRecipe;
+    public bool HasTimer => _produceTimer is { isDone: false };
     
     public void Start()
     {
@@ -175,5 +180,35 @@ public class Stack: MonoBehaviour
         {
             cards[i].SetSortingLayer(i * 3);
         }
+    }
+
+    public void AddTimer(Recipe matchedRecipe, List<Card> consumedCards)
+    {
+        if (ProducingRecipe != null && ProducingRecipe == matchedRecipe)
+        {
+            return;
+        }
+        
+        Timer.CancelAllRegisteredTimers();
+        Debug.Log($"Starting recipe {matchedRecipe.recipeName} timer for {matchedRecipe.produceTime} seconds");
+        ProducingRecipe = matchedRecipe;
+        _produceTimer = this.AttachTimer(matchedRecipe.produceTime, () => ApplyRecipe(matchedRecipe, consumedCards), useRealTime: false, isLooped: true);
+    }
+
+    private void ApplyRecipe(Recipe matchedRecipe, List<Card> consumedCards)
+    {
+        GameTableManager.Instance.ApplyRecipe(this, matchedRecipe, consumedCards);
+
+        if (!RecipeManager.Instance.CheckRecipe(this, matchedRecipe))
+        {
+            RemoveTimer();
+        }
+    }
+
+    public void RemoveTimer()
+    {
+        Debug.Log($"Removing timer");
+        Timer.CancelAllRegisteredTimers();
+        ProducingRecipe = null;
     }
 }

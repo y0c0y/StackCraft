@@ -20,6 +20,35 @@ public class RecipeManager : MonoBehaviour
         }
     }
 
+    public bool CheckRecipe(Stack stack, Recipe recipe)
+    {
+        if (stack.Length < recipe.TotalInputCount)
+        {
+            return false;
+        }
+
+        var stackCardCounts = stack.CardCounts;
+            
+        var inputCards = recipe.GetInputCards();
+        bool canMatch = true;
+            
+        foreach (var requirement in inputCards)
+        {
+            if (!stackCardCounts.TryGetValue(requirement.Key, out var count))
+            {
+                canMatch = false;
+                break;
+            }
+            if (count < requirement.Value)
+            {
+                canMatch = false;
+                break;
+            }
+        }
+
+        return canMatch;
+    }
+
     public bool TryFindMatchingRecipe(Stack stack, out Recipe matchedRecipe, out List<Card> consumedCards)
     {
         matchedRecipe = null;

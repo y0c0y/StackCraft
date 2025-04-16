@@ -91,6 +91,14 @@ public class GameTableManager : MonoBehaviour
     
     private void OnStackModified(Stack stack)
     {
+        if (stack.HasTimer)
+        {
+            if (!RecipeManager.Instance.CheckRecipe(stack, stack.ProducingRecipe))
+            {
+                stack.RemoveTimer();
+            }
+        }
+        
         // Don't bother checking for recipes if the stack is empty or has only one card
         if (stack.Length <= 1) return;
         
@@ -98,21 +106,36 @@ public class GameTableManager : MonoBehaviour
         if (RecipeManager.Instance.TryFindMatchingRecipe(stack, out var matchedRecipe, out var consumedCards))
         {
             Debug.Log($"Recipe matched: {matchedRecipe.name} with {stack.name}, consumed cards: {string.Join(", ", consumedCards.Select(c => c.name))}");
-            var originStackPos = stack.cards[0].transform.position;
-
-            if (matchedRecipe.ConsumeInputs)
-            {
-                stack.ConsumeCards(consumedCards);
-            }
-
-            var outputCards = matchedRecipe.outputCards;
             
-            foreach (var spawningCard in outputCards)
+            if (matchedRecipe.produceTime > 0)
             {
-                var randomUnitCircle = Random.insideUnitCircle;
-                var spawningPos = originStackPos + new Vector3(randomUnitCircle.x, 0, randomUnitCircle.y);
-                AddNewCardToTable(spawningCard, spawningPos);
-            }   
+                stack.AddTimer(matchedRecipe, consumedCards);
+            }
+            else
+            {
+                ApplyRecipe(stack, matchedRecipe, consumedCards);
+            }
+        }
+    }
+
+    public void ApplyRecipe(Stack stack, Recipe recipe, List<Card> consumedCards)
+    {
+        var originStackPos = stack.cards[0].transform.position;
+        
+        if (recipe.ConsumeInputs)
+        {
+            stack.ConsumeCards(consumedCards);
+        }
+
+        var outputCards = recipe.outputCards;
+            
+        foreach (var spawningCard in outputCards)
+        {
+            var randomDirection = Random.insideUnitCircle.normalized;
+            var randomUnitCircle = randomDirection * 3f;
+            
+            var spawningPos = originStackPos + new Vector3(randomUnitCircle.x, 0, randomUnitCircle.y);
+            AddNewCardToTable(spawningCard, spawningPos);
         }
     }
     
