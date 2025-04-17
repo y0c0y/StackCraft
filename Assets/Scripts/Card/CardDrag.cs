@@ -1,15 +1,19 @@
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 
 public class CardDrag : MonoBehaviour
 {
     public event Action<Card> CardDragStarted;
     public event Action<Card> CardDragEnded;
+
+    private const float SELECTED_Z_OFFSET = -0.5f;
+    
+    [SerializeField] private float speed = 30f;
+    
+    private Vector3 _targetPosition;
     
     private Card _card;
-    private InputAction _pointAction;
     private Vector2 _dragOrigin;
     private bool _isDragging = false;
     private bool _wasDragging = false;
@@ -17,11 +21,12 @@ public class CardDrag : MonoBehaviour
     private void Awake()
     {
         _card = GetComponent<Card>();
-        _pointAction = InputSystem.actions.FindAction("Point");
+        _targetPosition = transform.position;
     }
 
     private void Update()
     {
+        // 가장 위쪽 카드가 아닐시 위치는 SlowParentConstraint에서 관리함
         if (_card.IsChild)
         {
             if (_isDragging || _wasDragging)
@@ -41,11 +46,12 @@ public class CardDrag : MonoBehaviour
             }
             _wasDragging = true;
             
-            Vector2 movement = _pointAction.ReadValue<Vector2>();
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(movement);
-            mousePos.z = 0;
-
-            transform.position = mousePos - new Vector3(_dragOrigin.x * transform.localScale.x,
+            var mousePos = Input.mousePosition;
+            mousePos.z = 10f;
+            Vector3 screenPos = Camera.main.ScreenToWorldPoint(mousePos);
+            screenPos.z = SELECTED_Z_OFFSET;
+            
+            _targetPosition = screenPos - new Vector3(_dragOrigin.x * transform.localScale.x,
                 _dragOrigin.y * transform.localScale.y, 0);
         }
         else
@@ -56,20 +62,35 @@ public class CardDrag : MonoBehaviour
                 CardDragEnded?.Invoke(_card);
             }
         }
+
+        if (Vector3.SqrMagnitude(transform.position - _targetPosition) > 0.05f)
+        {
+            transform.position = Vector3.Lerp(transform.position, _targetPosition, speed * Time.deltaTime);
+        }
+        else
+        {
+            var pos = transform.position;
+            pos.z = _targetPosition.z;
+            transform.position = pos;
+        }
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        // TODO: Maybe use a better way to get the transform?
         var inverseTransformPoint = transform.InverseTransformPoint(eventData.pointerPressRaycast.worldPosition);
         _dragOrigin = new Vector2(inverseTransformPoint.x, inverseTransformPoint.y);
-        _isDragging = true;
+        _card.owningStack?.ReorderZOrder(1);
         
-        Debug.Log("Card Drag OnpointerDown");
+        _isDragging = true;
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
+        var nowPos = transform.position;
+        nowPos.z = 0f;
+        _targetPosition = nowPos;
+        _card.owningStack?.ReorderZOrder(0);
+        
         _isDragging = false;
     }
 }

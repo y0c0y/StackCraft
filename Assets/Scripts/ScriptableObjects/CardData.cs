@@ -7,4 +7,5 @@ public class CardData : ScriptableObject
     public string description;
     public Sprite sprite;
     public CardType cardType;
+    public bool isConsumable = true;
 }
