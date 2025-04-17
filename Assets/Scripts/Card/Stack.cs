@@ -8,7 +8,7 @@ public class Stack: MonoBehaviour
 {
     public event Action<Stack> OnStackModified;
     
-    public List<Card> cards = new List<Card>();
+    public List<Card> cards = new();
     public int Length => cards.Count;
     public Card TopCard => cards.Count > 0 ? cards[0] : null;
     public Card LastCard => cards.Count > 0 ? cards[^1] : null;
@@ -17,7 +17,7 @@ public class Stack: MonoBehaviour
     public bool IsOneKindOnly => CardCounts.Count == 1;
     
     private Timer _produceTimer;
-    public Recipe ProducingRecipe;
+    public Recipe producingRecipe;
     public bool HasTimer => _produceTimer is { isDone: false };
     
     public void Start()
@@ -187,14 +187,14 @@ public class Stack: MonoBehaviour
 
     public void AddTimer(Recipe matchedRecipe, List<Card> consumedCards)
     {
-        if (ProducingRecipe != null && ProducingRecipe == matchedRecipe)
+        if (producingRecipe != null && producingRecipe == matchedRecipe)
         {
             return;
         }
         
         Timer.Cancel(_produceTimer);
         Debug.Log($"Starting recipe {matchedRecipe.recipeName} timer for {matchedRecipe.produceTime} seconds");
-        ProducingRecipe = matchedRecipe;
+        producingRecipe = matchedRecipe;
         TopCard.cardTimerUI.gameObject.SetActive(true);
         _produceTimer = this.AttachTimer(matchedRecipe.produceTime,
             () => ApplyRecipe(matchedRecipe, consumedCards),
@@ -218,6 +218,6 @@ public class Stack: MonoBehaviour
         Debug.Log($"Removing timer");
         TopCard.cardTimerUI.gameObject.SetActive(false);
         Timer.Cancel(_produceTimer);
-        ProducingRecipe = null;
+        producingRecipe = null;
     }
 }

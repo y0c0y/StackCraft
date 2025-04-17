@@ -56,7 +56,7 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         GameTableManager.Instance.RemoveCardFromTable(this);
     }
-
+    
     public void OnPointerDown(PointerEventData eventData)
     {
         _drag.OnPointerDown(eventData);
@@ -71,6 +71,7 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         _drag.OnPointerUp(eventData);
 
+        // OverlapBox가 자동으로 지워주지 않아서 null값으로 초기화해야함
         for (int i = 0; i < _cardOverlaps.Length; i++)
         {
             _cardOverlaps[i] = null;
@@ -86,7 +87,7 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         if (size <= 0) return;
         
         
-        // 자기 자신이 아니거나 맨 위 카드가 아닌 카드 (첫번째 맨 위 카드)
+        // 자기 자신이 아니고 맨위 카드인 첫번째 카드 (첫번째 맨 위 카드)
         var firstTopCard = _cardOverlaps?.FirstOrDefault(o => o && o != _collider2D  && (o.GetComponent<Card>()?.IsTopCard ?? false));
         if (firstTopCard != null)
         {

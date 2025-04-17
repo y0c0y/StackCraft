@@ -93,7 +93,7 @@ public class GameTableManager : MonoBehaviour
     {
         if (stack.HasTimer)
         {
-            if (!RecipeManager.Instance.CheckRecipe(stack, stack.ProducingRecipe))
+            if (!RecipeManager.Instance.CheckRecipe(stack, stack.producingRecipe))
             {
                 stack.RemoveTimer();
             }
@@ -134,7 +134,7 @@ public class GameTableManager : MonoBehaviour
             var randomDirection = Random.insideUnitCircle.normalized;
             var randomUnitCircle = randomDirection * 3f;
             
-            var spawningPos = originStackPos + new Vector3(randomUnitCircle.x, 0, randomUnitCircle.y);
+            var spawningPos = originStackPos + new Vector3(randomUnitCircle.x, randomUnitCircle.y, 0);
             AddNewCardToTable(spawningCard, spawningPos);
         }
     }

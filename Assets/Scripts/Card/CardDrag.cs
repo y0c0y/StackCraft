@@ -41,11 +41,12 @@ public class CardDrag : MonoBehaviour
             }
             _wasDragging = true;
             
-            Vector2 movement = _pointAction.ReadValue<Vector2>();
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(movement);
-            mousePos.z = 0;
-
-            transform.position = mousePos - new Vector3(_dragOrigin.x * transform.localScale.x,
+            var mousePos = Input.mousePosition;
+            mousePos.z = 10f;
+            Vector3 screenPos = Camera.main.ScreenToWorldPoint(mousePos);
+            screenPos.z = 0f;
+            
+            transform.position = screenPos - new Vector3(_dragOrigin.x * transform.localScale.x,
                 _dragOrigin.y * transform.localScale.y, 0);
         }
         else
@@ -60,7 +61,6 @@ public class CardDrag : MonoBehaviour
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        // TODO: Maybe use a better way to get the transform?
         var inverseTransformPoint = transform.InverseTransformPoint(eventData.pointerPressRaycast.worldPosition);
         _dragOrigin = new Vector2(inverseTransformPoint.x, inverseTransformPoint.y);
         _isDragging = true;
