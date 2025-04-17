@@ -5,10 +5,12 @@ using UnityEngine.EventSystems;
 
 public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
+    private static readonly Vector2 CARD_SIZE = new Vector2(3f, 4f);
+
     // Events
     public event Action<Card, Card> CardReleasedOn;
     public event Action<Card> RequestSplitFromStack;
-    public event Action<int> OnSortingLayerChanged;
+    public event Action<int, int> OnSortingLayerChanged;
     public event Action OnShowCanStackOnIndicator;
     public event Action OnHideCanStackOnIndicator;
 
@@ -23,31 +25,36 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public bool IsChild => !IsTopCard;
     
     // Components
-    private SpriteRenderer[] _sprites;
+    [SerializeField] public CardTimerUI cardTimerUI;
     private CardDrag _drag;
-    private Collider2D _collider2D;
+
+    private ContactFilter2D _cardOverlapFilter2D;
+    private Collider2D[] _cardOverlaps;
 
     private void Awake()
     {
-        _sprites = GetComponentsInChildren<SpriteRenderer>();
         _drag = GetComponent<CardDrag>();
-        _collider2D = GetComponent<Collider2D>();
-        
-        owningStack ??= new Stack();
-        owningStack.AddCard(this);
+        _cardOverlapFilter2D = new ContactFilter2D();
+        _cardOverlapFilter2D.SetLayerMask(LayerMask.GetMask("Card"));
+        _cardOverlapFilter2D.useLayerMask = true;
+        _cardOverlapFilter2D.useTriggers = true;
+        _cardOverlaps = new Collider2D[10];
     }
 
     private void Start()
     {
         Debug.Assert(cardData != null, $"{name}에 카드 데이터가 설정되지 않음");
         GameTableManager.Instance.AddCardToTable(this);
+
+        owningStack ??= StackManager.Instance.AddNewStack();
+        owningStack.AddCard(this);
     }
 
     private void OnDestroy()
     {
         GameTableManager.Instance.RemoveCardFromTable(this);
     }
-
+    
     public void OnPointerDown(PointerEventData eventData)
     {
         _drag.OnPointerDown(eventData);
@@ -62,23 +69,34 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         _drag.OnPointerUp(eventData);
 
-        // TODO: non alloc / find better way?
-        var overlapBox = Physics2D.OverlapBoxAll(transform.position,
-            new Vector2(transform.localScale.x, transform.localScale.y) + new Vector2(0.1f, 0.1f),
-            0f,
-            LayerMask.GetMask("Card")
-            );
-        // 자기 자신이 아니거나 맨 위 카드가 아닌 카드 (첫번째 맨 위 카드)
-        var FirstTopCard = overlapBox?.FirstOrDefault(o => o != _collider2D  && (o.GetComponent<Card>()?.IsTopCard ?? false));
-        if (FirstTopCard != null)
+        // OverlapBox가 자동으로 지워주지 않아서 null값으로 초기화해야함
+        for (int i = 0; i < _cardOverlaps.Length; i++)
         {
-            CardReleasedOn?.Invoke(this, FirstTopCard.GetComponent<Card>());
+            _cardOverlaps[i] = null;
+        }
+        
+        var size = Physics2D.OverlapBox(
+            transform.position,
+            CARD_SIZE + new Vector2(0.1f, 0.1f),
+            0f,
+            _cardOverlapFilter2D,
+            _cardOverlaps
+            );
+        if (size <= 0) return;
+        
+        
+        // 자기 자신의 스택이 아닌 첫번째 카드
+        var firstCard = _cardOverlaps?.FirstOrDefault(o => o &&
+                                                               o.GetComponent<Card>()?.owningStack != this.owningStack);
+        if (firstCard != null)
+        {
+            CardReleasedOn?.Invoke(this, firstCard.GetComponent<Card>());
         }
     }
     
-    public void SetSortingLayer(int sortingLayer)
+    public void SetSortingLayer(int sortingOrder, int sortingLayerId = 0)
     {
-        OnSortingLayerChanged?.Invoke(sortingLayer);
+        OnSortingLayerChanged?.Invoke(sortingOrder, sortingLayerId);
     }
 
     public void ShowCanStackOnIndicator()
