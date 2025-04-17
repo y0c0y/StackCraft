@@ -35,7 +35,7 @@ public class LevelButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     {
         if(!_isUnlocked) return;
         StageInfo.SelectedLevel = levelData;
-        UnityEngine.SceneManagement.SceneManager.LoadScene(levelData.sceneName);
+       UnityEngine.SceneManagement.SceneManager.LoadScene(levelData.sceneName);
     }
     
 }
