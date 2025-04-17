@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 2f15789d0a3c96c46bfd72726bae9fed
+guid: 14758915fc13ad149b58dc3531b64763
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6861894420282137670
-    second: person_0
+      213: 7903364201190432095
+    second: spearhouse_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: person_0
+      name: spearhouse_0
       rect:
         serializedVersion: 2
         x: 1
-        y: 1
+        y: 2
         width: 298
-        height: 398
+        height: 397
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 64cd62f8e985a3f50800000000000000
-      internalID: 6861894420282137670
+      spriteID: f5d9e7efdd36ead60800000000000000
+      internalID: 7903364201190432095
       vertices: []
       indices: 
       edges: []
@@ -160,8 +160,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      person_0: 6861894420282137670
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
