@@ -89,11 +89,12 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         if (size <= 0) return;
         
         
-        // 자기 자신이 아니고 맨위 카드인 첫번째 카드 (첫번째 맨 위 카드)
-        var firstTopCard = _cardOverlaps?.FirstOrDefault(o => o && o != _collider2D  && (o.GetComponent<Card>()?.IsTopCard ?? false));
-        if (firstTopCard != null)
+        // 자기 자신의 스택이 아닌 첫번째 카드
+        var firstCard = _cardOverlaps?.FirstOrDefault(o => o &&
+                                                               o.GetComponent<Card>()?.owningStack != this.owningStack);
+        if (firstCard != null)
         {
-            CardReleasedOn?.Invoke(this, firstTopCard.GetComponent<Card>());
+            CardReleasedOn?.Invoke(this, firstCard.GetComponent<Card>());
         }
     }
     

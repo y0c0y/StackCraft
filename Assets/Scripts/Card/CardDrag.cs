@@ -29,6 +29,7 @@ public class CardDrag : MonoBehaviour
 
     private void Update()
     {
+        // 가장 위쪽 카드가 아닐시 위치는 SlowParentConstraint에서 관리함
         if (_card.IsChild)
         {
             if (_isDragging || _wasDragging)

@@ -787,7 +787,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4de086173a488a42be918e5c74e416d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 15
+  speed: 20
 --- !u!114 &6956080204527786390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -801,5 +801,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  offset: {x: 0, y: -0.7}
-  speed: 15
+  offset: {x: 0, y: -0.7, z: 0}
+  speed: 20

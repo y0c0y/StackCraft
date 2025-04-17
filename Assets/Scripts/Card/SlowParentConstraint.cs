@@ -3,7 +3,7 @@ using UnityEngine;
 public class SlowParentConstraint : MonoBehaviour
 {
     public Transform target;
-    public Vector2 offset;
+    public Vector3 offset;
     public float speed = 15f;
 
     // Update is called once per frame
@@ -12,13 +12,17 @@ public class SlowParentConstraint : MonoBehaviour
         if (!target) return;
         if (!target.transform) return;
 
-        var pos = transform.position;
+        var pos = target.transform.position;
+        Vector3 desiredPosition = pos + offset;
+        if (Vector3.SqrMagnitude(transform.position - desiredPosition) > Vector3.kEpsilon)
+        {
+            transform.position = Vector3.Lerp(transform.position, desiredPosition, speed * Time.deltaTime);
+        }
+        else
+        {
+            transform.position = desiredPosition;
+        }
         
-        Vector2 targetPosition = target.transform.position;
-        Vector2 desiredPosition = targetPosition + offset;
-        transform.position = Vector2.Lerp(transform.position, desiredPosition, speed * Time.deltaTime);
-        
-        // Keep original Z
-        transform.position = new Vector3(transform.position.x, transform.position.y, pos.z);
+        //transform.position = new Vector3(transform.position.x, transform.position.y, pos.z);
     }
 }
