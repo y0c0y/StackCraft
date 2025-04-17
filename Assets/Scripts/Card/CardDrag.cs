@@ -7,6 +7,12 @@ public class CardDrag : MonoBehaviour
 {
     public event Action<Card> CardDragStarted;
     public event Action<Card> CardDragEnded;
+
+    private const float SELECTED_Z_OFFSET = -0.5f;
+    
+    [SerializeField] private float speed = 30f;
+    
+    private Vector3 _targetPosition;
     
     private Card _card;
     private InputAction _pointAction;
@@ -18,6 +24,7 @@ public class CardDrag : MonoBehaviour
     {
         _card = GetComponent<Card>();
         _pointAction = InputSystem.actions.FindAction("Point");
+        _targetPosition = transform.position;
     }
 
     private void Update()
@@ -44,9 +51,9 @@ public class CardDrag : MonoBehaviour
             var mousePos = Input.mousePosition;
             mousePos.z = 10f;
             Vector3 screenPos = Camera.main.ScreenToWorldPoint(mousePos);
-            screenPos.z = 0f;
+            screenPos.z = SELECTED_Z_OFFSET;
             
-            transform.position = screenPos - new Vector3(_dragOrigin.x * transform.localScale.x,
+            _targetPosition = screenPos - new Vector3(_dragOrigin.x * transform.localScale.x,
                 _dragOrigin.y * transform.localScale.y, 0);
         }
         else
@@ -57,6 +64,8 @@ public class CardDrag : MonoBehaviour
                 CardDragEnded?.Invoke(_card);
             }
         }
+
+        transform.position = Vector3.Lerp(transform.position, _targetPosition, speed * Time.deltaTime);
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -69,5 +78,8 @@ public class CardDrag : MonoBehaviour
     public void OnPointerUp(PointerEventData eventData)
     {
         _isDragging = false;
+        var nowPos = transform.position;
+        nowPos.z = 0f;
+        _targetPosition = nowPos;
     }
 }

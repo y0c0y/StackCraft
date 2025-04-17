@@ -2,19 +2,19 @@ using UnityEngine;
 
 public class SlowParentConstraint : MonoBehaviour
 {
-    public Transform Target;
-    public Vector2 Offset;
+    public Transform target;
+    public Vector2 offset;
     public float speed = 15f;
 
     // Update is called once per frame
     void Update()
     {
-        if (!Target.transform) return;
+        if (!target.transform) return;
 
         var pos = transform.position;
         
-        Vector2 targetPosition = Target.transform.position;
-        Vector2 desiredPosition = targetPosition + Offset;
+        Vector2 targetPosition = target.transform.position;
+        Vector2 desiredPosition = targetPosition + offset;
         transform.position = Vector2.Lerp(transform.position, desiredPosition, speed * Time.deltaTime);
         
         // Keep original Z

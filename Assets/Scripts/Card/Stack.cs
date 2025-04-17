@@ -167,11 +167,11 @@ public class Stack: MonoBehaviour
                 if (i == 0)
                 {
                     follow.enabled = false;
-                    follow.Target = null;
+                    follow.target = null;
                 }
                 else
                 {
-                    follow.Target = cards[i - 1].transform;
+                    follow.target = cards[i - 1].transform;
                 }
             }
         }
@@ -179,9 +179,20 @@ public class Stack: MonoBehaviour
 
     private void ReorderZOrder()
     {
+        float topz = 0f;
         for (int i = 0; i < cards.Count; i++)
         {
             cards[i].SetSortingLayer(i * 3);
+            if (i == 0)
+            {
+                topz = cards[0].transform.position.z;
+            }
+            else
+            {
+                var pos = cards[i].transform.position;
+                pos.z = topz;
+                cards[i].transform.position = pos;
+            }
         }
     }
 
