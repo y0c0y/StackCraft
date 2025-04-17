@@ -10,7 +10,7 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     // Events
     public event Action<Card, Card> CardReleasedOn;
     public event Action<Card> RequestSplitFromStack;
-    public event Action<int> OnSortingLayerChanged;
+    public event Action<int, int> OnSortingLayerChanged;
     public event Action OnShowCanStackOnIndicator;
     public event Action OnHideCanStackOnIndicator;
 
@@ -26,18 +26,14 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     
     // Components
     [SerializeField] public CardTimerUI cardTimerUI;
-    private SpriteRenderer[] _sprites;
     private CardDrag _drag;
-    private Collider2D _collider2D;
 
     private ContactFilter2D _cardOverlapFilter2D;
     private Collider2D[] _cardOverlaps;
 
     private void Awake()
     {
-        _sprites = GetComponentsInChildren<SpriteRenderer>();
         _drag = GetComponent<CardDrag>();
-        _collider2D = GetComponent<Collider2D>();
         _cardOverlapFilter2D = new ContactFilter2D();
         _cardOverlapFilter2D.SetLayerMask(LayerMask.GetMask("Card"));
         _cardOverlapFilter2D.useLayerMask = true;
@@ -98,9 +94,9 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         }
     }
     
-    public void SetSortingLayer(int sortingLayer)
+    public void SetSortingLayer(int sortingOrder, int sortingLayerId = 0)
     {
-        OnSortingLayerChanged?.Invoke(sortingLayer);
+        OnSortingLayerChanged?.Invoke(sortingOrder, sortingLayerId);
     }
 
     public void ShowCanStackOnIndicator()

@@ -177,12 +177,12 @@ public class Stack: MonoBehaviour
         }
     }
 
-    private void ReorderZOrder()
+    public void ReorderZOrder(int sortingLayerId = 0)
     {
         float topz = 0f;
         for (int i = 0; i < cards.Count; i++)
         {
-            cards[i].SetSortingLayer(i * 3);
+            cards[i].SetSortingLayer(i, sortingLayerId);
             if (i == 0)
             {
                 topz = cards[0].transform.position.z;

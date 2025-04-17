@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 
 public class CardDrag : MonoBehaviour
 {
@@ -15,7 +14,6 @@ public class CardDrag : MonoBehaviour
     private Vector3 _targetPosition;
     
     private Card _card;
-    private InputAction _pointAction;
     private Vector2 _dragOrigin;
     private bool _isDragging = false;
     private bool _wasDragging = false;
@@ -23,7 +21,6 @@ public class CardDrag : MonoBehaviour
     private void Awake()
     {
         _card = GetComponent<Card>();
-        _pointAction = InputSystem.actions.FindAction("Point");
         _targetPosition = transform.position;
     }
 
@@ -82,14 +79,18 @@ public class CardDrag : MonoBehaviour
     {
         var inverseTransformPoint = transform.InverseTransformPoint(eventData.pointerPressRaycast.worldPosition);
         _dragOrigin = new Vector2(inverseTransformPoint.x, inverseTransformPoint.y);
+        _card.owningStack?.ReorderZOrder(1);
+        
         _isDragging = true;
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        _isDragging = false;
         var nowPos = transform.position;
         nowPos.z = 0f;
         _targetPosition = nowPos;
+        _card.owningStack?.ReorderZOrder(0);
+        
+        _isDragging = false;
     }
 }

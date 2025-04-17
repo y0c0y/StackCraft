@@ -42,10 +42,11 @@ public class CardDataSprite : MonoBehaviour
         //cardNameText.text = _owner.cardData.cardName;
     }
     
-    public void SetSortingLayer(int sortingOrder)
+    private void SetSortingLayer(int sortingOrder, int sortingLayerId = 0)
     {
         foreach (var sprite in _spriteInitialSortingOrder.Keys)
         {
+            sprite.sortingLayerID = SortingLayer.layers[sortingLayerId].id;
             sprite.sortingOrder = _spriteInitialSortingOrder[sprite] + sortingOrder;
         }
 
