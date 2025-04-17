@@ -28,11 +28,19 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private CardDrag _drag;
     private Collider2D _collider2D;
 
+    private ContactFilter2D _cardOverlapFilter2D;
+    private Collider2D[] _cardOverlaps;
+
     private void Awake()
     {
         _sprites = GetComponentsInChildren<SpriteRenderer>();
         _drag = GetComponent<CardDrag>();
         _collider2D = GetComponent<Collider2D>();
+        _cardOverlapFilter2D = new ContactFilter2D();
+        _cardOverlapFilter2D.SetLayerMask(LayerMask.GetMask("Card"));
+        _cardOverlapFilter2D.useLayerMask = true;
+        _cardOverlapFilter2D.useTriggers = true;
+        _cardOverlaps = new Collider2D[10];
     }
 
     private void Start()
@@ -63,17 +71,26 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         _drag.OnPointerUp(eventData);
 
-        // TODO: non alloc / find better way?
-        var overlapBox = Physics2D.OverlapBoxAll(transform.position,
+        for (int i = 0; i < _cardOverlaps.Length; i++)
+        {
+            _cardOverlaps[i] = null;
+        }
+        
+        var size = Physics2D.OverlapBox(
+            transform.position,
             new Vector2(transform.localScale.x, transform.localScale.y) + new Vector2(0.1f, 0.1f),
             0f,
-            LayerMask.GetMask("Card")
+            _cardOverlapFilter2D,
+            _cardOverlaps
             );
+        if (size <= 0) return;
+        
+        
         // 자기 자신이 아니거나 맨 위 카드가 아닌 카드 (첫번째 맨 위 카드)
-        var FirstTopCard = overlapBox?.FirstOrDefault(o => o != _collider2D  && (o.GetComponent<Card>()?.IsTopCard ?? false));
-        if (FirstTopCard != null)
+        var firstTopCard = _cardOverlaps?.FirstOrDefault(o => o && o != _collider2D  && (o.GetComponent<Card>()?.IsTopCard ?? false));
+        if (firstTopCard != null)
         {
-            CardReleasedOn?.Invoke(this, FirstTopCard.GetComponent<Card>());
+            CardReleasedOn?.Invoke(this, firstTopCard.GetComponent<Card>());
         }
     }
     

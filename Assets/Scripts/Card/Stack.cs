@@ -14,6 +14,7 @@ public class Stack: MonoBehaviour
     public Card LastCard => cards.Count > 0 ? cards[^1] : null;
 
     public Dictionary<CardData, int> CardCounts = new();
+    public bool IsOneKindOnly => CardCounts.Count == 1;
     
     private Timer _produceTimer;
     public Recipe ProducingRecipe;

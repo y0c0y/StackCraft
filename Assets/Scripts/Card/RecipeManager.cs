@@ -64,7 +64,7 @@ public class RecipeManager : MonoBehaviour
             }
             
             var inputCards = recipe.GetInputCards();
-            Debug.Log($"Checking recipe {recipe.recipeName} with input cards: {string.Join(", ", inputCards)}");
+            //Debug.Log($"Checking recipe {recipe.recipeName} with input cards: {string.Join(", ", inputCards)}");
             bool canMatch = true;
             
             foreach (var requirement in inputCards)

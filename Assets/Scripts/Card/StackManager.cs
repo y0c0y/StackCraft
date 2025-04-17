@@ -80,7 +80,7 @@ public class StackManager : MonoBehaviour
 
         if (!StackingRules.CanStackByType(draggingCardData.cardType, releasedCardData.cardType))
         {
-            Debug.Log($"Can't stack type {draggingCardData.cardType} on {releasedCardData.cardType}");
+            //Debug.Log($"Can't stack type {draggingCardData.cardType} on {releasedCardData.cardType}");
             return;
         }
         
