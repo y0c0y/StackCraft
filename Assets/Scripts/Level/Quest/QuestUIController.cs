@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 
 public class QuestUIController : MonoBehaviour
@@ -9,7 +10,10 @@ public class QuestUIController : MonoBehaviour
     
     [SerializeField] private GameObject togglePrefab;
     [SerializeField] private Transform questListParent;
-
+    
+    [SerializeField] private TMP_Text progressText;
+    
+    
     private Transform _hideQuest;
     private QuestData _hideQuestData;
     
@@ -25,19 +29,23 @@ public class QuestUIController : MonoBehaviour
 
     public void OpenTheGoal()
     {
-        Debug.Log("Opening the goal");
         var item = questListParent.GetChild(questListParent.childCount - 1);
         var tmp = item.gameObject.GetComponent<QuestItem>();
         tmp.ShowGoal(_hideQuestData);
     }
+
+    public void ChangeQuestProgress(int total, int completed)
+    {
+        progressText.text = $"({completed}/{total})";
+    }
+    
     
     public async UniTask LoadQuestsUI()
     {
         await QuestManager.Instance.Init();
         
         var quests = QuestManager.Instance.Quests;
-        
-        bool flag = false;
+        var flag = false;
 
         foreach (var quest in quests)
         {
