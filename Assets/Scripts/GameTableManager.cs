@@ -10,8 +10,8 @@ public class GameTableManager : MonoBehaviour
     public event Action<Card> CardAddedOnTable;
     public event Action<Card> CardRemovedFromTable;
     
-    [SerializeField] public List<Card> CardsOnTable;
-    [SerializeField] public List<Stack> StacksOnTable;
+    [SerializeField] public List<Card> cardsOnTable;
+    [SerializeField] public List<Stack> stacksOnTable;
 
     [SerializeField] private GameObject cardPrefab;
     
@@ -37,9 +37,9 @@ public class GameTableManager : MonoBehaviour
 
     public void AddCardToTable(Card card)
     {
-        if (!CardsOnTable.Contains(card))
+        if (!cardsOnTable.Contains(card))
         {
-            CardsOnTable.Add(card);
+            cardsOnTable.Add(card);
             var cardDrag = card.GetComponent<CardDrag>();
             if (cardDrag != null)
             {
@@ -57,9 +57,9 @@ public class GameTableManager : MonoBehaviour
     
     public void RemoveCardFromTable(Card card)
     {
-        if (CardsOnTable.Contains(card))
+        if (cardsOnTable.Contains(card))
         {
-            CardsOnTable.Remove(card);
+            cardsOnTable.Remove(card);
             var cardDrag = card.GetComponent<CardDrag>();
             if (cardDrag != null)
             {
@@ -73,18 +73,18 @@ public class GameTableManager : MonoBehaviour
     
     public void AddStackToTable(Stack stack)
     {
-        if (!StacksOnTable.Contains(stack))
+        if (!stacksOnTable.Contains(stack))
         {
-            StacksOnTable.Add(stack);
+            stacksOnTable.Add(stack);
             stack.OnStackModified += OnStackModified;
         }
     }
     
     public void RemoveStackFromTable(Stack stack)
     {
-        if (StacksOnTable.Contains(stack))
+        if (stacksOnTable.Contains(stack))
         {
-            StacksOnTable.Remove(stack);
+            stacksOnTable.Remove(stack);
             stack.OnStackModified -= OnStackModified;
         }
     }
@@ -122,7 +122,7 @@ public class GameTableManager : MonoBehaviour
     {
         var originStackPos = stack.cards[0].transform.position;
         
-        if (recipe.ConsumeInputs)
+        if (recipe.consumeInputs)
         {
             stack.ConsumeCards(consumedCards);
         }
@@ -153,7 +153,7 @@ public class GameTableManager : MonoBehaviour
     
     private void ShowCardCanStackIndicator(Card card)
     {
-        foreach (var c in CardsOnTable)
+        foreach (var c in cardsOnTable)
         {
             if (c == card) continue;
             if (!c.IsLastCard) continue;
@@ -171,7 +171,7 @@ public class GameTableManager : MonoBehaviour
     
     private void HideCardCanStackIndicator()
     {
-        foreach (var c in CardsOnTable)
+        foreach (var c in cardsOnTable)
         { 
             c.HideCanStackOnIndicator();
         }

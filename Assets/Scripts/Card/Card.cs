@@ -5,6 +5,8 @@ using UnityEngine.EventSystems;
 
 public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
+    private static readonly Vector2 CARD_SIZE = new Vector2(3f, 4f);
+
     // Events
     public event Action<Card, Card> CardReleasedOn;
     public event Action<Card> RequestSplitFromStack;
@@ -79,7 +81,7 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         
         var size = Physics2D.OverlapBox(
             transform.position,
-            new Vector2(transform.localScale.x, transform.localScale.y) + new Vector2(0.1f, 0.1f),
+            CARD_SIZE + new Vector2(0.1f, 0.1f),
             0f,
             _cardOverlapFilter2D,
             _cardOverlaps

@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,13 +6,12 @@ using Random = UnityEngine.Random;
 
 public class CardDataSprite : MonoBehaviour
 {
-    [SerializeField] private SpriteRenderer backgroundSprite;
     [SerializeField] private SpriteRenderer artworkSprite;
     [SerializeField] private TextMeshPro cardNameText;
     [SerializeField] private GameObject canStackOnIndicator;
     
     private Card _owner;
-    private Dictionary<SpriteRenderer, int> _spriteInitialSortingOrder = new();
+    private readonly Dictionary<SpriteRenderer, int> _spriteInitialSortingOrder = new();
     
     private void Awake()
     {
@@ -33,16 +31,15 @@ public class CardDataSprite : MonoBehaviour
 
     private void Start()
     {
-        Debug.Assert(backgroundSprite && artworkSprite && cardNameText);
+        Debug.Assert(artworkSprite && cardNameText);
         StartCoroutine(SetupCardData());
     }
     
     private IEnumerator SetupCardData()
     {
         yield return new WaitUntil(() => _owner.cardData != null);
-        backgroundSprite.color = Random.ColorHSV();
         artworkSprite.sprite = _owner.cardData.sprite;
-        cardNameText.text = _owner.cardData.cardName;
+        //cardNameText.text = _owner.cardData.cardName;
     }
     
     public void SetSortingLayer(int sortingOrder)
@@ -52,9 +49,11 @@ public class CardDataSprite : MonoBehaviour
             sprite.sortingOrder = _spriteInitialSortingOrder[sprite] + sortingOrder;
         }
 
+        /*
         if (cardNameText != null)
         {
             cardNameText.sortingOrder = sortingOrder + 2;
         }
+        */
     }
 }

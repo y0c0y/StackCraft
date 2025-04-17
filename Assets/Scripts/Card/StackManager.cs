@@ -41,7 +41,7 @@ public class StackManager : MonoBehaviour
     {
         var slowParentCon = card.GetComponent<SlowParentConstraint>();
         slowParentCon.enabled = false;
-        slowParentCon.Target = null;
+        slowParentCon.target = null;
         
         var prevStack = card.owningStack;
         var newStack = AddNewStack();
@@ -100,7 +100,7 @@ public class StackManager : MonoBehaviour
         
         var slowParentCon = draggingCard.gameObject.GetComponent<SlowParentConstraint>();
         slowParentCon.enabled = true;
-        slowParentCon.Target = lastCard.transform;
+        slowParentCon.target = lastCard.transform;
         
         CardAddedToStackByDrag?.Invoke();
     }

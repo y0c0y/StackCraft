@@ -9,6 +9,7 @@ public class SlowParentConstraint : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!target) return;
         if (!target.transform) return;
 
         var pos = transform.position;
