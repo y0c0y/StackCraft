@@ -65,7 +65,16 @@ public class CardDrag : MonoBehaviour
             }
         }
 
-        transform.position = Vector3.Lerp(transform.position, _targetPosition, speed * Time.deltaTime);
+        if (Vector3.SqrMagnitude(transform.position - _targetPosition) > 0.05f)
+        {
+            transform.position = Vector3.Lerp(transform.position, _targetPosition, speed * Time.deltaTime);
+        }
+        else
+        {
+            var pos = transform.position;
+            pos.z = _targetPosition.z;
+            transform.position = pos;
+        }
     }
 
     public void OnPointerDown(PointerEventData eventData)
