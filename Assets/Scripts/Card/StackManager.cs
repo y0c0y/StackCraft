@@ -69,9 +69,11 @@ public class StackManager : MonoBehaviour
     private void OnCardReleasedOn(Card draggingCard, Card releasedCard)
     {
         if (draggingCard == releasedCard) return;
-
+        
+        var lastCard = releasedCard.owningStack.LastCard;
+        
         var draggingCardData = draggingCard.cardData;
-        var releasedCardData = releasedCard.cardData;
+        var releasedCardData = lastCard.cardData;
         if (draggingCardData == null || releasedCardData == null)
         {
             Debug.LogError($"Card data is null. draggingCard: {draggingCard}, releasedCard: {releasedCard}");
@@ -83,8 +85,6 @@ public class StackManager : MonoBehaviour
             //Debug.Log($"Can't stack type {draggingCardData.cardType} on {releasedCardData.cardType}");
             return;
         }
-        
-        var lastCard = releasedCard.owningStack.LastCard;
 
         var copyStack = draggingCard.owningStack;
         
