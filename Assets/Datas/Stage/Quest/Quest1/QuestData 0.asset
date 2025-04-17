@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 898d86f94e71dec479b7876ff7e44a7a, type: 3}
   m_Name: QuestData 0
   m_EditorClassIdentifier: 
-  questID: 0
+  questID: Quest_0
   description: "\uBC8C\uBAA9\uC7A5 \uC704\uC5D0 \uC8FC\uBBFC\uC744 \uB04C\uC5B4\uB2E4
     \uB193\uAE30"
-  isCompleted: 0
