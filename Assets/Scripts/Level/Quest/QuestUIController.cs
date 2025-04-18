@@ -12,10 +12,10 @@ public class QuestUIController : MonoBehaviour
     [SerializeField] private Transform questListParent;
     
     [SerializeField] private TMP_Text progressText;
-    
-    
-    private Transform _hideQuest;
-    private QuestData _hideQuestData;
+
+
+    private int _hideQuestIdx; 
+    private string _hideQuestDescription;
     
     
     private void Awake()
@@ -27,11 +27,24 @@ public class QuestUIController : MonoBehaviour
         }
     }
 
-    public void OpenTheGoal()
+    public QuestItem FindQuestItem(int index)
     {
-        var item = questListParent.GetChild(questListParent.childCount - 1);
-        var tmp = item.gameObject.GetComponent<QuestItem>();
-        tmp.ShowGoal(_hideQuestData);
+        var item = questListParent.GetChild(index);
+        return item.gameObject.GetComponent<QuestItem>();
+    }
+    
+
+    public void ChangeQuestItemUI(QuestData questData)
+    {
+        var item = FindQuestItem(questData.idxInQuestList);
+        
+        if (questData.questID == QuestInfo.GoalOpenQuestID)
+        {
+            var tmp = FindQuestItem(_hideQuestIdx);
+            tmp.ShowGoal(_hideQuestDescription);
+        }
+        
+        item.OnChange();
     }
 
     public void ChangeQuestProgress(int total, int completed)
@@ -58,8 +71,9 @@ public class QuestUIController : MonoBehaviour
             {
                 if (quest.Key == QuestInfo.GameClearQuestID)
                 {
-                    _hideQuestData = quest.Value;
-                    questUI.HideGoal(quest.Value);
+                    _hideQuestIdx = quest.Value.idxInQuestList;
+                    _hideQuestDescription = quest.Value.description;
+                    questUI.HideGoal();
                 }
             }
             
