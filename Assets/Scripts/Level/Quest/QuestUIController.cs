@@ -27,12 +27,11 @@ public class QuestUIController : MonoBehaviour
         }
     }
 
-    public QuestItem FindQuestItem(int index)
+    public void Start()
     {
-        var item = questListParent.GetChild(index);
-        return item.gameObject.GetComponent<QuestItem>();
+        QuestManager.Instance.OnChangeQuestProgress += ChangeQuestProgress;
+        QuestManager.Instance.OnChangeQuestItemUI += ChangeQuestItemUI;
     }
-    
 
     public void ChangeQuestItemUI(QuestData questData)
     {
@@ -81,5 +80,10 @@ public class QuestUIController : MonoBehaviour
         }
         
         Canvas.ForceUpdateCanvases(); 
+    }
+    private QuestItem FindQuestItem(int index)
+    {
+        var item = questListParent.GetChild(index);
+        return item.gameObject.GetComponent<QuestItem>();
     }
 }
