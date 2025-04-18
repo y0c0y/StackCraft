@@ -182,7 +182,7 @@ public class Stack: MonoBehaviour
         float topz = 0f;
         for (int i = 0; i < cards.Count; i++)
         {
-            cards[i].SetSortingLayer(i, sortingLayerId);
+            cards[i].SetSortingLayer(i * 2, sortingLayerId);
             if (i == 0)
             {
                 topz = cards[0].transform.position.z;
