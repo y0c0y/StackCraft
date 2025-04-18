@@ -44,8 +44,9 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private void Start()
     {
         Debug.Assert(cardData != null, $"{name}에 카드 데이터가 설정되지 않음");
-        GameTableManager.Instance.AddCardToTable(this);
 
+        if (owningStack) return;
+        GameTableManager.Instance.AddCardToTable(this);
         owningStack ??= StackManager.Instance.AddNewStack();
         owningStack.AddCard(this);
     }
