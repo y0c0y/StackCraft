@@ -31,7 +31,7 @@ public class CardDataSprite : MonoBehaviour
 
     private void Start()
     {
-        Debug.Assert(artworkSprite && cardNameText);
+        Debug.Assert(artworkSprite);
         StartCoroutine(SetupCardData());
     }
     

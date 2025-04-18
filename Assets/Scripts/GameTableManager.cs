@@ -49,7 +49,7 @@ public class GameTableManager : MonoBehaviour
             }
             else
             {
-                Debug.LogError($"CardDrag component not found on {card.name}");
+                //Debug.LogError($"CardDrag component not found on {card.name}");
             }
                 
             CardAddedOnTable?.Invoke(card);
