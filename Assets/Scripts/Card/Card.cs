@@ -57,7 +57,7 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     
     public void OnPointerDown(PointerEventData eventData)
     {
-        _drag.OnPointerDown(eventData);
+        _drag?.OnPointerDown(eventData);
 
         if (!IsTopCard)
         {
@@ -67,7 +67,7 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        _drag.OnPointerUp(eventData);
+        _drag?.OnPointerUp(eventData);
 
         // OverlapBox가 자동으로 지워주지 않아서 null값으로 초기화해야함
         for (int i = 0; i < _cardOverlaps.Length; i++)
