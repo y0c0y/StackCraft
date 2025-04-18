@@ -17,6 +17,8 @@ public class RecipeManager : MonoBehaviour
     [SerializeField] private int woodRecipeNeedForBerry = 4;
     private int _woodRecipeDone = 0;
     
+    private Dictionary<CardData, List<Recipe>> _recipesByInput;
+    
     private void Awake()
     {
         if (Instance != null)
@@ -28,6 +30,28 @@ public class RecipeManager : MonoBehaviour
         foreach (var recipe in recipes)
         {
             recipe.EnsureCacheGenerated();
+        }
+
+        BuildRecipeIndex();
+    }
+
+    private void BuildRecipeIndex()
+    {
+        _recipesByInput = new Dictionary<CardData, List<Recipe>>();
+        foreach (var recipe in recipes)
+        {
+            foreach (var cardData in recipe.GetInputCards().Keys)
+            {
+                if (!_recipesByInput.ContainsKey(cardData))
+                {
+                    _recipesByInput[cardData] = new List<Recipe>();
+                }
+
+                if (!_recipesByInput[cardData].Contains(recipe))
+                {
+                    _recipesByInput[cardData].Add(recipe);
+                }
+            }
         }
     }
 
@@ -150,8 +174,19 @@ public class RecipeManager : MonoBehaviour
         consumedCards = new List<Card>();
 
         var stackCardCounts = stack.CardCounts;
+
+        var potentialRecipes = new HashSet<Recipe>();
+        foreach (var cardData in stackCardCounts.Keys)
+        {
+            if (_recipesByInput.TryGetValue(cardData, out var inputRecipes))
+            {
+                potentialRecipes.UnionWith(inputRecipes);
+            }
+
+            if (potentialRecipes.Count == 0) return false;
+        }
         
-        foreach (var recipe in recipes)
+        foreach (var recipe in potentialRecipes)
         {
             if (stack.Length < recipe.TotalInputCount)
             {
