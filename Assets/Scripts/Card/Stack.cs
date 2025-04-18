@@ -216,7 +216,7 @@ public class Stack: MonoBehaviour
 
     private void ApplyRecipe(Recipe matchedRecipe, List<Card> consumedCards)
     {
-        GameTableManager.Instance.ApplyRecipe(this, matchedRecipe, consumedCards);
+        RecipeManager.Instance.ApplyRecipe(this, matchedRecipe, consumedCards);
 
         if (!RecipeManager.Instance.CheckRecipe(this, matchedRecipe))
         {
