@@ -10,13 +10,10 @@ public class QuestUIController : MonoBehaviour
     
     [SerializeField] private GameObject togglePrefab;
     [SerializeField] private Transform questListParent;
-    
     [SerializeField] private TMP_Text progressText;
-
-
+    
     private int _hideQuestIdx; 
     private string _hideQuestDescription;
-    
     
     private void Awake()
     {
@@ -50,7 +47,6 @@ public class QuestUIController : MonoBehaviour
     {
         progressText.text = $"({completed}/{total})";
     }
-    
     
     public async UniTask LoadQuestsUI()
     {
