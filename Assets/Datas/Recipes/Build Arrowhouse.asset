@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   recipeName: "\uAD81\uBC29 \uAC74\uCD95"
   inputCards:
-  - {fileID: 11400000, guid: 872f9a50e64bccd4486903c1c7f8a178, type: 2}
+  - {fileID: 11400000, guid: 2b5f2f44121ff5d43ba8a3def95c8d3e, type: 2}
   - {fileID: 11400000, guid: e0ed2bd08572f4f4faa1a63c2131fb35, type: 2}
   - {fileID: 11400000, guid: e0ed2bd08572f4f4faa1a63c2131fb35, type: 2}
   - {fileID: 11400000, guid: e0ed2bd08572f4f4faa1a63c2131fb35, type: 2}

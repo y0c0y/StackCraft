@@ -77,7 +77,7 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         
         var size = Physics2D.OverlapBox(
             transform.position,
-            CARD_SIZE + new Vector2(0.1f, 0.1f),
+            CARD_SIZE + new Vector2(0.05f, 0.05f),
             0f,
             _cardOverlapFilter2D,
             _cardOverlaps

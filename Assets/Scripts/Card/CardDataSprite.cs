@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class CardDataSprite : MonoBehaviour
 {
@@ -49,12 +48,5 @@ public class CardDataSprite : MonoBehaviour
             sprite.sortingLayerID = SortingLayer.layers[sortingLayerId].id;
             sprite.sortingOrder = _spriteInitialSortingOrder[sprite] + sortingOrder;
         }
-
-        /*
-        if (cardNameText != null)
-        {
-            cardNameText.sortingOrder = sortingOrder + 2;
-        }
-        */
     }
 }

@@ -50,20 +50,13 @@ public class StackManager : MonoBehaviour
         // Add the cards from splitting card to the new stack
         Card[] copyBuffer = new Card[prevStack.Length - indexInStack];
         prevStack.cards.CopyTo(indexInStack, copyBuffer, 0, prevStack.Length - indexInStack);
-
-        //Debug.Log(copyBuffer.Aggregate("", (s, c) => s += c.ToString()));
-        
-        /*
-        for (int i = 0; i < copyBuffer.Length; i++)
-        {
-            newStack.AddCard(copyBuffer[i]);
-        }
-        */
         
         newStack.AddMultipleCards(copyBuffer);
         
         // Remove the cards from the previous stack
         prevStack.RemoveRange(indexInStack, prevStack.Length - indexInStack);
+        
+        newStack.ReorderZOrder(1);
     }
 
     private void OnCardReleasedOn(Card draggingCard, Card releasedCard)

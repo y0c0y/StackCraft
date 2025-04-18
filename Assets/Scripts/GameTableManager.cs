@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameTableManager : MonoBehaviour
@@ -41,6 +42,11 @@ public class GameTableManager : MonoBehaviour
         if (!cardsOnTable.Contains(card))
         {
             cardsOnTable.Add(card);
+            
+#if UNITY_EDITOR
+            card.name = card.cardData.cardName + " " + cardsOnTable.Count((c) => c.cardData == card.cardData);
+#endif
+            
             var cardDrag = card.GetComponent<CardDrag>();
             if (cardDrag != null)
             {
@@ -94,12 +100,29 @@ public class GameTableManager : MonoBehaviour
     {
         //Debug.Log($"Card {card.name} started dragging");
         ShowCardCanStackIndicator(card);
+        var owningStack = card.owningStack;
+        if (owningStack)
+        {
+            foreach (var stackCard in owningStack.cards)
+            {
+                stackCard.gameObject.layer = LayerMask.NameToLayer("DraggingCard");
+            }
+        }
     }
 
     private void OnCardDragEnded(Card card)
     {
         //Debug.Log($"Card {obj.name} ended dragging");
         HideCardCanStackIndicator();
+        
+        var owningStack = card.owningStack;
+        if (owningStack)
+        {
+            foreach (var stackCard in owningStack.cards)
+            {
+                stackCard.gameObject.layer = LayerMask.NameToLayer("Card");
+            }
+        }
     }
     
     private void ShowCardCanStackIndicator(Card card)
