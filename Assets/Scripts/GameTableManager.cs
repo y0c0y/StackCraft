@@ -43,9 +43,9 @@ public class GameTableManager : MonoBehaviour
         {
             cardsOnTable.Add(card);
             
-            #if UNITY_EDITOR
-                card.name = card.cardData.cardName + " " + cardsOnTable.Count((c) => c.cardData == card.cardData);
-            #endif
+#if UNITY_EDITOR
+            card.name = card.cardData.cardName + " " + cardsOnTable.Count((c) => c.cardData == card.cardData);
+#endif
             
             var cardDrag = card.GetComponent<CardDrag>();
             if (cardDrag != null)
