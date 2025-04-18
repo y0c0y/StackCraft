@@ -3,8 +3,8 @@ guid: 82cc199305cd78b40a7aca552eaf7570
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1898833970713811422
-    second: KakaoTalk_20250416_211418266_0
+      213: 3820083299726011480
+    second: stonepit_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -126,7 +126,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: KakaoTalk_20250416_211418266_0
+      name: stonepit_0
       rect:
         serializedVersion: 2
         x: 1
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ed957d79f630a5a10800000000000000
-      internalID: 1898833970713811422
+      spriteID: 85c229c7589a30530800000000000000
+      internalID: 3820083299726011480
       vertices: []
       indices: 
       edges: []
@@ -151,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      KakaoTalk_20250416_211418266_0: 1898833970713811422
+      stonepit_0: 3820083299726011480
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

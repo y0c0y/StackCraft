@@ -8,15 +8,16 @@ public class Stack: MonoBehaviour
 {
     public event Action<Stack> OnStackModified;
     
-    public List<Card> cards = new List<Card>();
+    public List<Card> cards = new();
     public int Length => cards.Count;
     public Card TopCard => cards.Count > 0 ? cards[0] : null;
     public Card LastCard => cards.Count > 0 ? cards[^1] : null;
 
     public Dictionary<CardData, int> CardCounts = new();
+    public bool IsOneKindOnly => CardCounts.Count == 1;
     
     private Timer _produceTimer;
-    public Recipe ProducingRecipe;
+    public Recipe producingRecipe;
     public bool HasTimer => _produceTimer is { isDone: false };
     
     public void Start()
@@ -166,35 +167,51 @@ public class Stack: MonoBehaviour
                 if (i == 0)
                 {
                     follow.enabled = false;
-                    follow.Target = null;
+                    follow.target = null;
                 }
                 else
                 {
-                    follow.Target = cards[i - 1].transform;
+                    follow.target = cards[i - 1].transform;
                 }
             }
         }
     }
 
-    private void ReorderZOrder()
+    public void ReorderZOrder(int sortingLayerId = 0)
     {
+        float topz = 0f;
         for (int i = 0; i < cards.Count; i++)
         {
-            cards[i].SetSortingLayer(i * 3);
+            cards[i].SetSortingLayer(i, sortingLayerId);
+            if (i == 0)
+            {
+                topz = cards[0].transform.position.z;
+            }
+            else
+            {
+                var pos = cards[i].transform.position;
+                pos.z = topz;
+                cards[i].transform.position = pos;
+            }
         }
     }
 
     public void AddTimer(Recipe matchedRecipe, List<Card> consumedCards)
     {
-        if (ProducingRecipe != null && ProducingRecipe == matchedRecipe)
+        if (producingRecipe != null && producingRecipe == matchedRecipe)
         {
             return;
         }
         
         Timer.Cancel(_produceTimer);
         Debug.Log($"Starting recipe {matchedRecipe.recipeName} timer for {matchedRecipe.produceTime} seconds");
-        ProducingRecipe = matchedRecipe;
-        _produceTimer = this.AttachTimer(matchedRecipe.produceTime, () => ApplyRecipe(matchedRecipe, consumedCards), useRealTime: false, isLooped: true);
+        producingRecipe = matchedRecipe;
+        TopCard.cardTimerUI.gameObject.SetActive(true);
+        _produceTimer = this.AttachTimer(matchedRecipe.produceTime,
+            () => ApplyRecipe(matchedRecipe, consumedCards),
+            onUpdate: (t) => this.TopCard.cardTimerUI.SetValue(t / matchedRecipe.produceTime),
+            useRealTime: false,
+            isLooped: true);
     }
 
     private void ApplyRecipe(Recipe matchedRecipe, List<Card> consumedCards)
@@ -210,7 +227,8 @@ public class Stack: MonoBehaviour
     public void RemoveTimer()
     {
         Debug.Log($"Removing timer");
+        TopCard.cardTimerUI.gameObject.SetActive(false);
         Timer.Cancel(_produceTimer);
-        ProducingRecipe = null;
+        producingRecipe = null;
     }
 }

@@ -51,7 +51,7 @@ public class CameraMove : MonoBehaviour
             Vector2 origin = new Vector2(mouseWorldPos.x, mouseWorldPos.y);
 
             // 2D 레이캐스트 수행
-            RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.zero, Mathf.Infinity, camLayerMask);
+            RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.zero, 11f, camLayerMask);
             isDraggingCard = (hit.collider != null);
         }
         else if (!isPressed && isDragging)

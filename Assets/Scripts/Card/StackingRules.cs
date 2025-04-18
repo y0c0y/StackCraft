@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public static class StackingRules
 {
     public static StackingRuleFlags ToFlag(this CardType type)

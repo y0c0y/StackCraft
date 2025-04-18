@@ -41,7 +41,7 @@ public class StackManager : MonoBehaviour
     {
         var slowParentCon = card.GetComponent<SlowParentConstraint>();
         slowParentCon.enabled = false;
-        slowParentCon.Target = null;
+        slowParentCon.target = null;
         
         var prevStack = card.owningStack;
         var newStack = AddNewStack();
@@ -69,9 +69,11 @@ public class StackManager : MonoBehaviour
     private void OnCardReleasedOn(Card draggingCard, Card releasedCard)
     {
         if (draggingCard == releasedCard) return;
-
+        
+        var lastCard = releasedCard.owningStack.LastCard;
+        
         var draggingCardData = draggingCard.cardData;
-        var releasedCardData = releasedCard.cardData;
+        var releasedCardData = lastCard.cardData;
         if (draggingCardData == null || releasedCardData == null)
         {
             Debug.LogError($"Card data is null. draggingCard: {draggingCard}, releasedCard: {releasedCard}");
@@ -80,11 +82,9 @@ public class StackManager : MonoBehaviour
 
         if (!StackingRules.CanStackByType(draggingCardData.cardType, releasedCardData.cardType))
         {
-            Debug.Log($"Can't stack type {draggingCardData.cardType} on {releasedCardData.cardType}");
+            //Debug.Log($"Can't stack type {draggingCardData.cardType} on {releasedCardData.cardType}");
             return;
         }
-        
-        var lastCard = releasedCard.owningStack.LastCard;
 
         var copyStack = draggingCard.owningStack;
         
@@ -100,7 +100,7 @@ public class StackManager : MonoBehaviour
         
         var slowParentCon = draggingCard.gameObject.GetComponent<SlowParentConstraint>();
         slowParentCon.enabled = true;
-        slowParentCon.Target = lastCard.transform;
+        slowParentCon.target = lastCard.transform;
         
         CardAddedToStackByDrag?.Invoke();
     }

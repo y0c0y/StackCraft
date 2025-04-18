@@ -3,8 +3,8 @@ guid: 382f19c12a930b5478cc352bdd88a999
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3360730201369277424
-    second: KakaoTalk_20250416_212437442_0
+      213: 4189540031001477720
+    second: woodyard_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -126,7 +126,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: KakaoTalk_20250416_212437442_0
+      name: woodyard_0
       rect:
         serializedVersion: 2
         x: 1
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0f3fa8eef46b3ae20800000000000000
-      internalID: 3360730201369277424
+      spriteID: 8524f18067c342a30800000000000000
+      internalID: 4189540031001477720
       vertices: []
       indices: 
       edges: []
@@ -151,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      KakaoTalk_20250416_212437442_0: 3360730201369277424
+      woodyard_0: 4189540031001477720
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

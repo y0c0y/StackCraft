@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "Recipe", menuName = "Scriptable Objects/Recipe")]
 public class Recipe : ScriptableObject
@@ -7,7 +8,7 @@ public class Recipe : ScriptableObject
     public string recipeName;
     public CardData[] inputCards;
     public CardData[] outputCards;
-    public bool ConsumeInputs = true;
+    [FormerlySerializedAs("ConsumeInputs")] public bool consumeInputs = true;
     
     // 0f = instant
     public float produceTime = 0f;
