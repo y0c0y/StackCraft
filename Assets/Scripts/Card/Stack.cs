@@ -111,6 +111,7 @@ public class Stack: MonoBehaviour
             Destroy(this);
         }
         
+        ReorderZOrder();
         OnStackModified?.Invoke(this);
     }
     
