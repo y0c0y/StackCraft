@@ -20,7 +20,7 @@ public class LevelScene : MonoBehaviour
         }
         catch (Exception e)
         {
-            throw; // TODO 예외 처리
+            throw ; // TODO 예외 처리
         }
     }
 }

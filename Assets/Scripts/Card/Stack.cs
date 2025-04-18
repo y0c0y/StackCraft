@@ -111,6 +111,7 @@ public class Stack: MonoBehaviour
             Destroy(this);
         }
         
+        ReorderZOrder();
         OnStackModified?.Invoke(this);
     }
     
@@ -155,6 +156,8 @@ public class Stack: MonoBehaviour
         
         ReorderZOrder();
         ResetFollowTargets();
+        
+        OnStackModified?.Invoke(this);
     }
 
     private void ResetFollowTargets()
@@ -182,7 +185,7 @@ public class Stack: MonoBehaviour
         float topz = 0f;
         for (int i = 0; i < cards.Count; i++)
         {
-            cards[i].SetSortingLayer(i, sortingLayerId);
+            cards[i].SetSortingLayer(i * 2, sortingLayerId);
             if (i == 0)
             {
                 topz = cards[0].transform.position.z;
@@ -216,7 +219,7 @@ public class Stack: MonoBehaviour
 
     private void ApplyRecipe(Recipe matchedRecipe, List<Card> consumedCards)
     {
-        GameTableManager.Instance.ApplyRecipe(this, matchedRecipe, consumedCards);
+        RecipeManager.Instance.ApplyRecipe(this, matchedRecipe, consumedCards);
 
         if (!RecipeManager.Instance.CheckRecipe(this, matchedRecipe))
         {

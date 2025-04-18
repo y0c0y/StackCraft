@@ -15,3 +15,5 @@ MonoBehaviour:
   questID: Quest_1
   description: "\uAD81\uBC29 \uAC74\uCD95\uC5D0 \uBAA9\uC7AC\uC640 \uC11D\uC7AC\uB97C
     \uB123\uC5B4 \uAD81\uBC29 \uC9D3\uAE30"
+  questRecipe: {fileID: 11400000, guid: 29a65310d349167418d60d6eadb05e70, type: 2}
+  idxInQuestList: 0

@@ -14,4 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questID: Quest_0
   description: "\uBC8C\uBAA9\uC7A5 \uC704\uC5D0 \uC8FC\uBBFC\uC744 \uB04C\uC5B4\uB2E4
-    \uB193\uAE30"
+    \uB193\uC544 \uBAA9\uC7AC \uD68D\uB4DD\uD558\uAE30"
+  questRecipe: {fileID: 11400000, guid: aed028a6e1ec50f48b27df58c33e1124, type: 2}
+  idxInQuestList: 0

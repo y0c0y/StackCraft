@@ -8,7 +8,7 @@ public class StackManager : MonoBehaviour
     public static StackManager Instance;
    [SerializeField] public GameObject stacksHolderGameObject;
     
-    void Awake()
+    private void Awake()
     {
         if (Instance != null)
         {
@@ -18,6 +18,34 @@ public class StackManager : MonoBehaviour
         
         GameTableManager.Instance.CardAddedOnTable += OnCardAddedToTable;
         GameTableManager.Instance.CardRemovedFromTable += OnCardRemovedFromTable;
+    }
+
+    private void Start()
+    {
+        var startingStacks = stacksHolderGameObject.GetComponents<Stack>();
+        foreach (var stack in startingStacks)
+        {
+            for (int i = 0; i < stack.cards.Count; i++)
+            {
+                stack.cards[i].owningStack = stack;
+                if (i > 0)
+                {
+                    var parentConstraint = stack.cards[i].GetComponent<SlowParentConstraint>();
+                    if (parentConstraint)
+                    {
+                        parentConstraint.target = stack.cards[i - 1].gameObject.transform;
+                        parentConstraint.enabled = true;
+                    }
+                }
+                GameTableManager.Instance.AddCardToTable(stack.cards[i]);
+                if (!stack.CardCounts.TryAdd(stack.cards[i].cardData, 1))
+                {
+                    stack.CardCounts[stack.cards[i].cardData]++;
+                }
+            }
+            stack.ReorderZOrder();
+            GameTableManager.Instance.AddStackToTable(stack);
+        }
     }
 
     public Stack AddNewStack()
@@ -50,20 +78,13 @@ public class StackManager : MonoBehaviour
         // Add the cards from splitting card to the new stack
         Card[] copyBuffer = new Card[prevStack.Length - indexInStack];
         prevStack.cards.CopyTo(indexInStack, copyBuffer, 0, prevStack.Length - indexInStack);
-
-        //Debug.Log(copyBuffer.Aggregate("", (s, c) => s += c.ToString()));
-        
-        /*
-        for (int i = 0; i < copyBuffer.Length; i++)
-        {
-            newStack.AddCard(copyBuffer[i]);
-        }
-        */
         
         newStack.AddMultipleCards(copyBuffer);
         
         // Remove the cards from the previous stack
         prevStack.RemoveRange(indexInStack, prevStack.Length - indexInStack);
+        
+        newStack.ReorderZOrder(1);
     }
 
     private void OnCardReleasedOn(Card draggingCard, Card releasedCard)

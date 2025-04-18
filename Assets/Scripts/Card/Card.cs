@@ -44,8 +44,9 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private void Start()
     {
         Debug.Assert(cardData != null, $"{name}에 카드 데이터가 설정되지 않음");
-        GameTableManager.Instance.AddCardToTable(this);
 
+        if (owningStack) return;
+        GameTableManager.Instance.AddCardToTable(this);
         owningStack ??= StackManager.Instance.AddNewStack();
         owningStack.AddCard(this);
     }
@@ -57,7 +58,7 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     
     public void OnPointerDown(PointerEventData eventData)
     {
-        _drag.OnPointerDown(eventData);
+        _drag?.OnPointerDown(eventData);
 
         if (!IsTopCard)
         {
@@ -67,7 +68,7 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        _drag.OnPointerUp(eventData);
+        _drag?.OnPointerUp(eventData);
 
         // OverlapBox가 자동으로 지워주지 않아서 null값으로 초기화해야함
         for (int i = 0; i < _cardOverlaps.Length; i++)
@@ -77,7 +78,7 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         
         var size = Physics2D.OverlapBox(
             transform.position,
-            CARD_SIZE + new Vector2(0.1f, 0.1f),
+            CARD_SIZE + new Vector2(0.05f, 0.05f),
             0f,
             _cardOverlapFilter2D,
             _cardOverlaps
