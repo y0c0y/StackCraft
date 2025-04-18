@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 
 public class QuestUIController : MonoBehaviour
@@ -9,9 +10,12 @@ public class QuestUIController : MonoBehaviour
     
     [SerializeField] private GameObject togglePrefab;
     [SerializeField] private Transform questListParent;
+    
+    [SerializeField] private TMP_Text progressText;
 
-    private Transform _hideQuest;
-    private QuestData _hideQuestData;
+
+    private int _hideQuestIdx; 
+    private string _hideQuestDescription;
     
     
     private void Awake()
@@ -23,21 +27,38 @@ public class QuestUIController : MonoBehaviour
         }
     }
 
-    public void OpenTheGoal()
+    public QuestItem FindQuestItem(int index)
     {
-        Debug.Log("Opening the goal");
-        var item = questListParent.GetChild(questListParent.childCount - 1);
-        var tmp = item.gameObject.GetComponent<QuestItem>();
-        tmp.ShowGoal(_hideQuestData);
+        var item = questListParent.GetChild(index);
+        return item.gameObject.GetComponent<QuestItem>();
     }
+    
+
+    public void ChangeQuestItemUI(QuestData questData)
+    {
+        var item = FindQuestItem(questData.idxInQuestList);
+        
+        if (questData.questID == QuestInfo.GoalOpenQuestID)
+        {
+            var tmp = FindQuestItem(_hideQuestIdx);
+            tmp.ShowGoal(_hideQuestDescription);
+        }
+        
+        item.OnChange();
+    }
+
+    public void ChangeQuestProgress(int total, int completed)
+    {
+        progressText.text = $"({completed}/{total})";
+    }
+    
     
     public async UniTask LoadQuestsUI()
     {
         await QuestManager.Instance.Init();
         
         var quests = QuestManager.Instance.Quests;
-        
-        bool flag = false;
+        var flag = false;
 
         foreach (var quest in quests)
         {
@@ -50,8 +71,9 @@ public class QuestUIController : MonoBehaviour
             {
                 if (quest.Key == QuestInfo.GameClearQuestID)
                 {
-                    _hideQuestData = quest.Value;
-                    questUI.HideGoal(quest.Value);
+                    _hideQuestIdx = quest.Value.idxInQuestList;
+                    _hideQuestDescription = quest.Value.description;
+                    questUI.HideGoal();
                 }
             }
             

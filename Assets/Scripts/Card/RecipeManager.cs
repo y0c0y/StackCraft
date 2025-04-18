@@ -8,7 +8,6 @@ public class RecipeManager : MonoBehaviour
 {
     public static RecipeManager Instance;
     
-    public event Action<Recipe> OnRecipeStarted;
     public event Action<Recipe> OnRecipeFinished;
     
     [SerializeField] private Recipe[] recipes;
@@ -64,6 +63,9 @@ public class RecipeManager : MonoBehaviour
         
         GameTableManager.Instance.StackAddedOnTable += OnStackAddedOnTable;
         GameTableManager.Instance.StackRemovedFromTable += OnStackRemovedFromTable;
+
+        if (!QuestManager.Instance) return;
+        OnRecipeFinished += QuestManager.Instance.CheckQuestComplete;
     }
     
     private void OnStackAddedOnTable(Stack stack)
@@ -94,7 +96,7 @@ public class RecipeManager : MonoBehaviour
         {
             Debug.Log($"Recipe matched: {matchedRecipe.name} with {stack.name}, consumed cards: {string.Join(", ", consumedCards.Select(c => c.name))}");
             
-            OnRecipeStarted?.Invoke(matchedRecipe);
+            // OnRecipeStarted?.Invoke(matchedRecipe);
             if (matchedRecipe.produceTime > 0)
             {
                 stack.AddTimer(matchedRecipe, consumedCards);
@@ -126,7 +128,6 @@ public class RecipeManager : MonoBehaviour
             GameTableManager.Instance.AddNewCardToTable(spawningCard, spawningPos);
         }
         
-        OnRecipeFinished?.Invoke(recipe);
 
         if (recipe == woodRecipe)
         {
@@ -137,6 +138,7 @@ public class RecipeManager : MonoBehaviour
                 ApplyRecipe(stack, berryRecipe, new List<Card>());
             }
         }
+        OnRecipeFinished?.Invoke(recipe);
     }
 
     public bool CheckRecipe(Stack stack, Recipe recipe)

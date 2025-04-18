@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.SceneManagement;
-using static QuestUIController;
 
 public class QuestManager : MonoBehaviour
 {
@@ -16,7 +16,9 @@ public class QuestManager : MonoBehaviour
    public int TotalQuestCnt {get; private set;}
    public int CompletedQuestCnt {get; private set;}
 
-   public event Action OnGoalQuestOpen;
+   public event Action<int, int> OnChangeQuestProgress;
+   
+   public event Action<QuestData> OnChangeQuestItemUI;
 
    public readonly Dictionary<string, QuestData> Quests = new();
    public readonly Dictionary<string, QuestProgress> Progresses = new();
@@ -32,19 +34,25 @@ public class QuestManager : MonoBehaviour
 
    private void Start()
    {
-      OnGoalQuestOpen += QuestUIController.Instance.OpenTheGoal;
+      OnChangeQuestProgress += QuestUIController.Instance.ChangeQuestProgress;
+      OnChangeQuestItemUI += QuestUIController.Instance.ChangeQuestItemUI;
    }
 
    public async UniTask Init()
    {
-      var label = StageInfo.SelectedLevel.displayName + " Quests";
-      Debug.Log(label);
-      var check = LoadQuests(label);
-      
-      await LoadQuests(label);
-      
-      // await LoadQuests("Stage 1 Quests");
 
+      if (StageInfo.SelectedLevel != null)
+      {
+         var label = StageInfo.SelectedLevel.displayName + " Quests";
+         Debug.Log(label);
+         var check = LoadQuests(label);
+      
+         await LoadQuests(label);
+      }
+      else
+      {
+         await LoadQuests("Stage 1 Quests");
+      }
    }
 
    private async UniTask LoadQuests(string stageLabel)
@@ -58,31 +66,46 @@ public class QuestManager : MonoBehaviour
       
       var data = await handle.ToUniTask();
 
-      foreach (var d in data)
+      for (var i = 0; i < data.Count; i++)
       {
-         Quests[d.questID] = d;
-         Progresses[d.questID] = new QuestProgress(d.questID);
-      }
+         var quest = data[i];
+         quest.idxInQuestList = i;
+         Quests[quest.questID] = quest;
+         Progresses[quest.questID] = new QuestProgress(quest.questID);
+      } 
       
       TotalQuestCnt = Quests.Count;
       CompletedQuestCnt = 0;
+      
+      OnChangeQuestProgress?.Invoke(TotalQuestCnt, CompletedQuestCnt);
 
       Debug.Log($"총 퀘스트 {TotalQuestCnt}개 로드 완료");
    }
 
-   public void CompleteQuest(string questID)
+   public void CheckQuestComplete(Recipe recipe)
    {
+      foreach (var quest in Quests.Where(quest => quest.Value.questRecipe == recipe))
+      {
+         ChangeComplete(quest.Value);
+      }
+   }
+
+   public void ChangeComplete(QuestData quest)
+   {
+      string questID = quest.questID;
+      int idxInQuestList = quest.idxInQuestList;
+      
       if (!Progresses.TryGetValue(questID, out var progress)) return;
       if (progress.IsCompleted) return;
       
       progress.IsCompleted = true;
       CompletedQuestCnt++;
-
+      
+      OnChangeQuestProgress?.Invoke(TotalQuestCnt, CompletedQuestCnt);
+      OnChangeQuestItemUI?.Invoke(quest);
+      
       switch (questID)
       {
-         case QuestInfo.GoalOpenQuestID:
-            OnGoalQuestOpen?.Invoke();
-            break;
          case QuestInfo.GameClearQuestID:
             GameClear();
             break;

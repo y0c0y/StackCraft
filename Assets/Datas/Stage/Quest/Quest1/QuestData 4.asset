@@ -13,5 +13,7 @@ MonoBehaviour:
   m_Name: QuestData 4
   m_EditorClassIdentifier: 
   questID: Quest_4
-  description: "\uCC3D\uD130\uC5D0 \uBAA9\uC7AC 1\uAC1C\uB97C \uB123\uC5B4 \uB098\uBB34\uCC3D
+  description: "\uCC3D\uD130\uC5D0 \uBAA9\uC7AC 2\uAC1C\uB97C \uB123\uC5B4 \uB098\uBB34\uCC3D
     \uB9CC\uB4E4\uAE30"
+  questRecipe: {fileID: 11400000, guid: 3781648aedd244f489fef107aab13e10, type: 2}
+  idxInQuestList: 4

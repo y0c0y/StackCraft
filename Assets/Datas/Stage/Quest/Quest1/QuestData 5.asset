@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questID: Quest_Open
   description: "\uC8FC\uBBFC\uC5D0\uAC8C \uB098\uBB34\uCC3D \uC8FC\uAE30"
+  questRecipe: {fileID: 11400000, guid: 2aa810a976db54a4185cb3f65ff6366c, type: 2}
+  idxInQuestList: 5
