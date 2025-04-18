@@ -12,7 +12,10 @@ public class RecipeManager : MonoBehaviour
     public event Action<Recipe> OnRecipeFinished;
     
     [SerializeField] private Recipe[] recipes;
-    
+    [SerializeField] private Recipe woodRecipe;
+    [SerializeField] private Recipe berryRecipe;
+    [SerializeField] private int woodRecipeNeedForBerry = 4;
+    private int _woodRecipeDone = 0;
     
     private void Awake()
     {
@@ -100,6 +103,16 @@ public class RecipeManager : MonoBehaviour
         }
         
         OnRecipeFinished?.Invoke(recipe);
+
+        if (recipe == woodRecipe)
+        {
+            _woodRecipeDone++;
+            if (_woodRecipeDone >= woodRecipeNeedForBerry)
+            {
+                _woodRecipeDone = 0;
+                ApplyRecipe(stack, berryRecipe, new List<Card>());
+            }
+        }
     }
 
     public bool CheckRecipe(Stack stack, Recipe recipe)
