@@ -8,7 +8,6 @@ public class RecipeManager : MonoBehaviour
 {
     public static RecipeManager Instance;
     
-    public event Action<Recipe> OnRecipeStarted;
     public event Action<Recipe> OnRecipeFinished;
     
     [SerializeField] private Recipe[] recipes;

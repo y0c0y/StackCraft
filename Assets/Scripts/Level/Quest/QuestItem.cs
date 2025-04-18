@@ -9,16 +9,11 @@ public class QuestItem : MonoBehaviour
     [SerializeField] private Toggle toggle;
     [SerializeField] private TMP_Text label;
     
-    private QuestData _questData;
-    
     public void Init(QuestData data)
     {
-        _questData = data;
-        
         label.text = data.description;
         toggle.isOn = QuestManager.Instance.IsCompleted(data.questID);
-
-        // toggle.interactable = false;
+        toggle.interactable = false;
     }
 
     public void OnChange()
