@@ -1,10 +1,18 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class RecipeManager : MonoBehaviour
 {
     public static RecipeManager Instance;
+    
+    public event Action<Recipe> OnRecipeStarted;
+    public event Action<Recipe> OnRecipeFinished;
+    
     [SerializeField] private Recipe[] recipes;
+    
     
     private void Awake()
     {
@@ -18,6 +26,80 @@ public class RecipeManager : MonoBehaviour
         {
             recipe.EnsureCacheGenerated();
         }
+    }
+
+    private void Start()
+    {
+        foreach (var stack in GameTableManager.Instance.stacksOnTable)
+        {
+            stack.OnStackModified += OnStackModified;
+        }
+        
+        GameTableManager.Instance.StackAddedOnTable += OnStackAddedOnTable;
+        GameTableManager.Instance.StackRemovedFromTable += OnStackRemovedFromTable;
+    }
+    
+    private void OnStackAddedOnTable(Stack stack)
+    {
+        stack.OnStackModified += OnStackModified;
+    }
+    
+    private void OnStackRemovedFromTable(Stack stack)
+    {
+        stack.OnStackModified -= OnStackModified;
+    }
+    
+    private void OnStackModified(Stack stack)
+    {
+        if (stack.HasTimer)
+        {
+            if (!CheckRecipe(stack, stack.producingRecipe))
+            {
+                stack.RemoveTimer();
+            }
+        }
+        
+        // Don't bother checking for recipes if the stack is empty or has only one card
+        if (stack.Length <= 1) return;
+        
+        Debug.Log($"Stack modified: {stack.name}. Checking for recipes...");
+        if (TryFindMatchingRecipe(stack, out var matchedRecipe, out var consumedCards))
+        {
+            Debug.Log($"Recipe matched: {matchedRecipe.name} with {stack.name}, consumed cards: {string.Join(", ", consumedCards.Select(c => c.name))}");
+            
+            OnRecipeStarted?.Invoke(matchedRecipe);
+            if (matchedRecipe.produceTime > 0)
+            {
+                stack.AddTimer(matchedRecipe, consumedCards);
+            }
+            else
+            {
+                ApplyRecipe(stack, matchedRecipe, consumedCards);
+            }
+        }
+    }
+
+    public void ApplyRecipe(Stack stack, Recipe recipe, List<Card> consumedCards)
+    {
+        var originStackPos = stack.cards[0].transform.position;
+        
+        if (recipe.consumeInputs)
+        {
+            stack.ConsumeCards(consumedCards);
+        }
+
+        var outputCards = recipe.outputCards;
+            
+        foreach (var spawningCard in outputCards)
+        {
+            var randomDirection = Random.insideUnitCircle.normalized;
+            var randomUnitCircle = randomDirection * 3f;
+            
+            var spawningPos = originStackPos + new Vector3(randomUnitCircle.x, randomUnitCircle.y, 0);
+            GameTableManager.Instance.AddNewCardToTable(spawningCard, spawningPos);
+        }
+        
+        OnRecipeFinished?.Invoke(recipe);
     }
 
     public bool CheckRecipe(Stack stack, Recipe recipe)
