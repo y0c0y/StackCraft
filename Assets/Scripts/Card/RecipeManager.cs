@@ -63,9 +63,6 @@ public class RecipeManager : MonoBehaviour
         
         GameTableManager.Instance.StackAddedOnTable += OnStackAddedOnTable;
         GameTableManager.Instance.StackRemovedFromTable += OnStackRemovedFromTable;
-
-        if (!QuestManager.Instance) return;
-        OnRecipeFinished += QuestManager.Instance.CheckQuestComplete;
     }
     
     private void OnStackAddedOnTable(Stack stack)

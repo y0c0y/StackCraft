@@ -36,6 +36,8 @@ public class QuestManager : MonoBehaviour
    {
       OnChangeQuestProgress += QuestUIController.Instance.ChangeQuestProgress;
       OnChangeQuestItemUI += QuestUIController.Instance.ChangeQuestItemUI;
+
+      RecipeManager.Instance.OnRecipeFinished += CheckQuestComplete;
    }
 
    public async UniTask Init()
