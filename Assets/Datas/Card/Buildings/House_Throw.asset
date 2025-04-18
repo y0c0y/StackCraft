@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f8f8a2badb2439f4488891cc7743ddfa, type: 3}
-  m_Name: Quarry
+  m_Name: House_Throw
   m_EditorClassIdentifier: 
-  cardName: "\uCC44\uC11D\uC7A5"
-  description: "\uD14C\uC2A4\uD2B8\uC6A9 \uCC44\uC11D\uC7A5"
-  sprite: {fileID: 21300000, guid: 82cc199305cd78b40a7aca552eaf7570, type: 3}
-  cardType: 3
+  cardName: "\uC5F0\uBB34\uAD00"
+  description: "\uC5F0\uBB34\uAD00"
+  sprite: {fileID: 21300000, guid: d3474ae4bbdf98d4598badbdb3f02c01, type: 3}
+  cardType: 4
   isConsumable: 0

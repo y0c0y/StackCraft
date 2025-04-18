@@ -155,6 +155,8 @@ public class Stack: MonoBehaviour
         
         ReorderZOrder();
         ResetFollowTargets();
+        
+        OnStackModified?.Invoke(this);
     }
 
     private void ResetFollowTargets()
