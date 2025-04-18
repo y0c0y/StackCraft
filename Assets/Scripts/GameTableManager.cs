@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class GameTableManager : MonoBehaviour
 {
     public static GameTableManager Instance;
     public event Action<Card> CardAddedOnTable;
     public event Action<Card> CardRemovedFromTable;
+
+    public event Action<Stack> StackAddedOnTable;
+    public event Action<Stack> StackRemovedFromTable;
     
     [SerializeField] public List<Card> cardsOnTable;
     [SerializeField] public List<Stack> stacksOnTable;
@@ -76,7 +77,7 @@ public class GameTableManager : MonoBehaviour
         if (!stacksOnTable.Contains(stack))
         {
             stacksOnTable.Add(stack);
-            stack.OnStackModified += OnStackModified;
+            StackAddedOnTable?.Invoke(stack);
         }
     }
     
@@ -85,57 +86,7 @@ public class GameTableManager : MonoBehaviour
         if (stacksOnTable.Contains(stack))
         {
             stacksOnTable.Remove(stack);
-            stack.OnStackModified -= OnStackModified;
-        }
-    }
-    
-    private void OnStackModified(Stack stack)
-    {
-        if (stack.HasTimer)
-        {
-            if (!RecipeManager.Instance.CheckRecipe(stack, stack.producingRecipe))
-            {
-                stack.RemoveTimer();
-            }
-        }
-        
-        // Don't bother checking for recipes if the stack is empty or has only one card
-        if (stack.Length <= 1) return;
-        
-        Debug.Log($"Stack modified: {stack.name}. Checking for recipes...");
-        if (RecipeManager.Instance.TryFindMatchingRecipe(stack, out var matchedRecipe, out var consumedCards))
-        {
-            Debug.Log($"Recipe matched: {matchedRecipe.name} with {stack.name}, consumed cards: {string.Join(", ", consumedCards.Select(c => c.name))}");
-            
-            if (matchedRecipe.produceTime > 0)
-            {
-                stack.AddTimer(matchedRecipe, consumedCards);
-            }
-            else
-            {
-                ApplyRecipe(stack, matchedRecipe, consumedCards);
-            }
-        }
-    }
-
-    public void ApplyRecipe(Stack stack, Recipe recipe, List<Card> consumedCards)
-    {
-        var originStackPos = stack.cards[0].transform.position;
-        
-        if (recipe.consumeInputs)
-        {
-            stack.ConsumeCards(consumedCards);
-        }
-
-        var outputCards = recipe.outputCards;
-            
-        foreach (var spawningCard in outputCards)
-        {
-            var randomDirection = Random.insideUnitCircle.normalized;
-            var randomUnitCircle = randomDirection * 3f;
-            
-            var spawningPos = originStackPos + new Vector3(randomUnitCircle.x, randomUnitCircle.y, 0);
-            AddNewCardToTable(spawningCard, spawningPos);
+            StackRemovedFromTable?.Invoke(stack);
         }
     }
     
