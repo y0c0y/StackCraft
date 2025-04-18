@@ -37,28 +37,14 @@ public class CardInfoUI : MonoBehaviour
 
     void ShowStackInfo(Card card)
     {
-        var cardDataField = typeof(Card).GetField("cardData");
-        if (cardDataField == null) return;
-
-        CardData hoveredData = cardDataField.GetValue(card) as CardData;
-        if (hoveredData == null) return;
-        
-        var stackField = typeof(Card).GetField("owningStack"); // 필드명 정확히 확인
-        var stack = stackField.GetValue(card) as Stack;
-
-        if (stack != null)
+        var stack = card.owningStack;
+        string output = "";
+        foreach (var entry in stack.CardCounts)
         {
-            string output = "";
-            foreach (var entry in stack.CardCounts)
-            {
-                output += $"{entry.Key.description} x {entry.Value} ";
-            }
-            
-            descriptionText.text = output;
-            return;
+            output += $"{entry.Key.description} x {entry.Value} ";
         }
-
-        descriptionText.text = "Stack 없음";
+            
+        descriptionText.text = output;
     }
 
 }
