@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameTableManager : MonoBehaviour
@@ -41,6 +42,11 @@ public class GameTableManager : MonoBehaviour
         if (!cardsOnTable.Contains(card))
         {
             cardsOnTable.Add(card);
+            
+            #if UNITY_EDITOR
+                card.name = card.cardData.cardName + " " + cardsOnTable.Count((c) => c.cardData == card.cardData);
+            #endif
+            
             var cardDrag = card.GetComponent<CardDrag>();
             if (cardDrag != null)
             {
