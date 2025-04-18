@@ -100,12 +100,29 @@ public class GameTableManager : MonoBehaviour
     {
         //Debug.Log($"Card {card.name} started dragging");
         ShowCardCanStackIndicator(card);
+        var owningStack = card.owningStack;
+        if (owningStack)
+        {
+            foreach (var stackCard in owningStack.cards)
+            {
+                stackCard.gameObject.layer = LayerMask.NameToLayer("DraggingCard");
+            }
+        }
     }
 
     private void OnCardDragEnded(Card card)
     {
         //Debug.Log($"Card {obj.name} ended dragging");
         HideCardCanStackIndicator();
+        
+        var owningStack = card.owningStack;
+        if (owningStack)
+        {
+            foreach (var stackCard in owningStack.cards)
+            {
+                stackCard.gameObject.layer = LayerMask.NameToLayer("Card");
+            }
+        }
     }
     
     private void ShowCardCanStackIndicator(Card card)
