@@ -71,10 +71,7 @@ public class QuestUIController : MonoBehaviour
                     questUI.HideGoal();
                 }
             }
-            
-            Debug.Log($"Loaded: {quest.Value.description}");
         }
-        
         Canvas.ForceUpdateCanvases(); 
     }
     private QuestItem FindQuestItem(int index)
