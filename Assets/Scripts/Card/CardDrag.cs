@@ -8,6 +8,7 @@ public class CardDrag : MonoBehaviour
     public event Action<Card> CardDragEnded;
 
     private const float SELECTED_Z_OFFSET = -0.5f;
+    private const float DRAG_TELEPORT_THRESHOLD = 0.05f;
     
     [SerializeField] private float speed = 30f;
     
@@ -63,7 +64,7 @@ public class CardDrag : MonoBehaviour
             }
         }
 
-        if (Vector3.SqrMagnitude(transform.position - _targetPosition) > 0.05f)
+        if (Vector3.SqrMagnitude(transform.position - _targetPosition) > DRAG_TELEPORT_THRESHOLD)
         {
             transform.position = Vector3.Lerp(transform.position, _targetPosition, speed * Time.deltaTime);
         }
