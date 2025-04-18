@@ -9,11 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8f8a2badb2439f4488891cc7743ddfa, type: 3}
-  m_Name: Archery
+  m_Script: {fileID: 11500000, guid: d31735524893fa347abb70140f512618, type: 3}
+  m_Name: Gather Berry
   m_EditorClassIdentifier: 
-  cardName: "\uAD81\uBC29"
-  description: "\uAD81\uBC29"
-  sprite: {fileID: 21300000, guid: 14758915fc13ad149b58dc3531b64763, type: 3}
-  cardType: 4
-  isConsumable: 0
+  recipeName: "\uC5F4\uB9E4 \uC0DD\uC131"
+  inputCards: []
+  outputCards:
+  - {fileID: 11400000, guid: a37d463c341e1a24c9c33ef1465a86ff, type: 2}
+  consumeInputs: 0
+  produceTime: 0
