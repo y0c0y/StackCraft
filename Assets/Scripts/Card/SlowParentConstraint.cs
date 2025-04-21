@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class SlowParentConstraint : MonoBehaviour
@@ -5,9 +6,8 @@ public class SlowParentConstraint : MonoBehaviour
     public Transform target;
     public Vector3 offset;
     public float speed = 15f;
-
-    // Update is called once per frame
-    void Update()
+    
+    private void Update()
     {
         if (!target) return;
         if (!target.transform) return;

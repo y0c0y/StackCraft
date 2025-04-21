@@ -130,7 +130,7 @@ public class GameTableManager : MonoBehaviour
         foreach (var c in cardsOnTable)
         {
             if (c == card) continue;
-            if (!c.IsLastCard) continue;
+            if (!c.IsTopCard) continue;
             if (c.owningStack == card.owningStack) continue;
             
             var draggingCardData = card.cardData;
