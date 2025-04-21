@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d31735524893fa347abb70140f512618, type: 3}
   m_Name: Make Person Spear
   m_EditorClassIdentifier: 
-  recipeName: 
+  recipeName: "\uCC3D\uBCD1 \uC0DD\uC131"
   inputCards:
   - {fileID: 11400000, guid: 9b64babf688ac614589c3768fa2db8a7, type: 2}
   - {fileID: 11400000, guid: a77583dcd62f5274d8a6bf489e4ca8a6, type: 2}

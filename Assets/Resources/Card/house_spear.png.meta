@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 14758915fc13ad149b58dc3531b64763
+guid: a903ca087c5f4374eaaa4e6cf07a3392
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7903364201190432095
-    second: spearhouse_0
+      213: 3580234849064466893
+    second: house_spear 1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -122,24 +122,11 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: iOS
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: spearhouse_0
+      name: house_spear 1_0
       rect:
         serializedVersion: 2
         x: 1
@@ -154,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f5d9e7efdd36ead60800000000000000
-      internalID: 7903364201190432095
+      spriteID: dc936f650ac8fa130800000000000000
+      internalID: 3580234849064466893
       vertices: []
       indices: 
       edges: []
@@ -174,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      spearhouse_0: 7903364201190432095
+      house_spear 1_0: 3580234849064466893
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

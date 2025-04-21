@@ -16,4 +16,4 @@ MonoBehaviour:
   description: "\uCC3D\uBCD1"
   sprite: {fileID: 21300000, guid: fd88eb23dc0ea5141ad0afe29dc7575f, type: 3}
   cardType: 1
-  isConsumable: 0
+  isConsumable: 1

@@ -16,4 +16,4 @@ MonoBehaviour:
   description: "\uAD81\uBCD1"
   sprite: {fileID: 21300000, guid: 833d7bf5b0657934aaebdeddda422fcc, type: 3}
   cardType: 1
-  isConsumable: 0
+  isConsumable: 1
