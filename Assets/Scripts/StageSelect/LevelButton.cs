@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -5,11 +6,14 @@ using UnityEngine.EventSystems;
 
 public class LevelButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    
     [SerializeField] private LevelData levelData;
     [SerializeField] private Button button;
     [SerializeField] private TMP_Text label;
     [SerializeField] private GameObject lockIcon;
 
+    public event Action<LevelData> OnHoverd;
+    
     private bool _isUnlocked;
     
     public void Init()
@@ -23,12 +27,12 @@ public class LevelButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        StageInfoPanel.Instance?.SetInfo(levelData);
+        OnHoverd?.Invoke(levelData);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        StageInfoPanel.Instance?.Clear();
+        OnHoverd?.Invoke(null);
     }
 
     public void OnButtonClick()
