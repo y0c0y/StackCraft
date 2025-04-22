@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: a069b9d556963114897fc6f877d50ed4
+guid: d7e433a1d8e81d441a7bd92158f9106c
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7431543528212420794
-    second: builder_spear_0
+      213: -6000505875703759399
+    second: builder_spear 1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,7 +126,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: builder_spear_0
+      name: builder_spear 1_0
       rect:
         serializedVersion: 2
         x: 1
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 647ab0cf88addd890800000000000000
-      internalID: -7431543528212420794
+      spriteID: 9dd7806b2bbe9bca0800000000000000
+      internalID: -6000505875703759399
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      builder_spear_0: -7431543528212420794
+      builder_spear 1_0: -6000505875703759399
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
