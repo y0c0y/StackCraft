@@ -32,5 +32,4 @@ public class QuestItem : MonoBehaviour
     {
         label.text = $"{description}";
     }
-    
 }

@@ -83,8 +83,7 @@ public class CameraMove : MonoBehaviour
 
     private void HandleScroll()
     {
-        if (!QuestScrollHandler.Instance) return;
-        if (QuestScrollHandler.Instance.IsPointerOver) return;
+        if (QuestScrollHandler.Instance && QuestScrollHandler.Instance.IsPointerOver) return;
         
         Vector2 scrollDelta = scrollwheelAction.ReadValue<Vector2>();
         if (scrollDelta.y != 0)

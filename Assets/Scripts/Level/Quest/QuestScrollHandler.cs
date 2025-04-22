@@ -7,7 +7,6 @@ public class QuestScrollHandler : MonoBehaviour, IScrollHandler
     public static QuestScrollHandler Instance;
     public bool IsPointerOver { get; private set; }
     
-    
     private ScrollRect _scrollRect;
 
     private void Awake()
@@ -19,7 +18,6 @@ public class QuestScrollHandler : MonoBehaviour, IScrollHandler
         }
         
         IsPointerOver = false;
-        
         _scrollRect = GetComponent<ScrollRect>();
     }
 

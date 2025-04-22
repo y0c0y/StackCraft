@@ -10,13 +10,10 @@ public class QuestUIController : MonoBehaviour
     
     [SerializeField] private GameObject togglePrefab;
     [SerializeField] private Transform questListParent;
-    
     [SerializeField] private TMP_Text progressText;
-
-
+    
     private int _hideQuestIdx; 
     private string _hideQuestDescription;
-    
     
     private void Awake()
     {
@@ -27,12 +24,11 @@ public class QuestUIController : MonoBehaviour
         }
     }
 
-    public QuestItem FindQuestItem(int index)
+    public void Start()
     {
-        var item = questListParent.GetChild(index);
-        return item.gameObject.GetComponent<QuestItem>();
+        QuestManager.Instance.OnChangeQuestProgress += ChangeQuestProgress;
+        QuestManager.Instance.OnChangeQuestItemUI += ChangeQuestItemUI;
     }
-    
 
     public void ChangeQuestItemUI(QuestData questData)
     {
@@ -51,7 +47,6 @@ public class QuestUIController : MonoBehaviour
     {
         progressText.text = $"({completed}/{total})";
     }
-    
     
     public async UniTask LoadQuestsUI()
     {
@@ -76,10 +71,12 @@ public class QuestUIController : MonoBehaviour
                     questUI.HideGoal();
                 }
             }
-            
-            Debug.Log($"Loaded: {quest.Value.description}");
         }
-        
         Canvas.ForceUpdateCanvases(); 
+    }
+    private QuestItem FindQuestItem(int index)
+    {
+        var item = questListParent.GetChild(index);
+        return item.gameObject.GetComponent<QuestItem>();
     }
 }
