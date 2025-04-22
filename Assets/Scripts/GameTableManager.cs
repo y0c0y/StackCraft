@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameTableManager : MonoBehaviour
 {
@@ -29,12 +30,16 @@ public class GameTableManager : MonoBehaviour
     private void Start()
     {
         StackManager.Instance.CardAddedToStackByDrag += HideCardCanStackIndicator;
+        
+        Mouse.current.WarpCursorPosition(new Vector2(Screen.width / 2, Screen.height / 2));
     }
 
-    public void AddNewCardToTable(CardData newCardData, Vector3 position)
+    public Card AddNewCardToTable(CardData newCardData, Vector3 position)
     {
-        var newCard = Instantiate(cardPrefab, position, Quaternion.identity);
-        newCard.GetComponent<Card>().cardData = newCardData;
+        var newCardGo = Instantiate(cardPrefab, position, Quaternion.identity);
+        var newCard = newCardGo.GetComponent<Card>();
+        newCard.cardData = newCardData;
+        return newCard;
     }
 
     public void AddCardToTable(Card card)

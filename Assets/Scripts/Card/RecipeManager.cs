@@ -122,7 +122,19 @@ public class RecipeManager : MonoBehaviour
             var randomUnitCircle = randomDirection * 3f;
             
             var spawningPos = originStackPos + new Vector3(randomUnitCircle.x, randomUnitCircle.y, 0);
-            GameTableManager.Instance.AddNewCardToTable(spawningCard, spawningPos);
+            
+            var newCard = GameTableManager.Instance.AddNewCardToTable(spawningCard, spawningPos);
+
+            var closestStack = GameTableManager.Instance.stacksOnTable
+                .Where(st => st.IsOneKindOnly && st.cards[0].cardData == newCard.cardData &&
+                             (st.cards[0].transform.position - newCard.transform.position).magnitude <= 10f)
+                .OrderBy(st => (st.cards[0].transform.position - newCard.transform.position).sqrMagnitude)
+                .FirstOrDefault();
+
+            if (closestStack)
+            {
+                StackManager.Instance.AddCardToStack(newCard, closestStack);
+            }
         }
         
 
