@@ -150,4 +150,9 @@ public class GameTableManager : MonoBehaviour
             c.HideCanStackOnIndicator();
         }
     }
+
+    public void SetTimeScale(float timeScale)
+    {
+        Time.timeScale = timeScale;
+    }
 }

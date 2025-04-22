@@ -16,7 +16,7 @@ public class SlowParentConstraint : MonoBehaviour
         Vector3 desiredPosition = pos + offset;
         if (Vector3.SqrMagnitude(transform.position - desiredPosition) > Vector3.kEpsilon)
         {
-            transform.position = Vector3.Lerp(transform.position, desiredPosition, speed * Time.deltaTime);
+            transform.position = Vector3.Lerp(transform.position, desiredPosition, speed * Time.unscaledDeltaTime);
         }
         else
         {

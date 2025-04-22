@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
 {
     private static readonly Vector2 CARD_SIZE = new Vector2(3f, 4f);
 
@@ -55,7 +55,25 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         GameTableManager.Instance.RemoveCardFromTable(this);
     }
-    
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        var cardUiInfo = CardInfoUI.Instance;
+        if (cardUiInfo)
+        {
+            cardUiInfo.ShowStackInfo(this);
+        }
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        var cardUiInfo = CardInfoUI.Instance;
+        if (cardUiInfo)
+        {
+            cardUiInfo.HideStackInfo();
+        }
+    }
+
     public void OnPointerDown(PointerEventData eventData)
     {
         _drag?.OnPointerDown(eventData);
