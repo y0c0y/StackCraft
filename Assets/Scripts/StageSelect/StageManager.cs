@@ -1,14 +1,17 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class StageManager : MonoBehaviour
 {
-    [SerializeField] private LevelButton[] levelButtons;
+    [SerializeField] public LevelButton[] levelButtons;
 
-    private void Start()
+    public void Start()
     {
         foreach (var btn in levelButtons)
         {
             btn.Init();
+            btn.OnHoverd += StageInfoPanel.Instance.SetInfo;
         }
     }
+
 }

@@ -7,21 +7,26 @@ public class StageInfoPanel : MonoBehaviour
 
     [SerializeField] private TMP_Text titleText;
     [SerializeField] private TMP_Text descriptionText;
-
+    
     private void Awake()
     {
         Instance = this;
-    }
-
-    public void SetInfo(LevelData data)
-    {
-        titleText.text = data.displayName;
-        descriptionText.text = data.description;
+        if (Instance != this)
+        {
+            Destroy(this);
+        }
     }
     
-    public void Clear()
+    public void SetInfo(LevelData data)
     {
-        titleText.text = "";
-        descriptionText.text = "";
+        if (data == null)
+        {
+            titleText.text = "";
+            descriptionText.text = "";
+            return;
+        }
+        
+        titleText.text = data.displayName;
+        descriptionText.text = data.description;
     }
 }

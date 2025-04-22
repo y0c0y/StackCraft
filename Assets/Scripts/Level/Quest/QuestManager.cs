@@ -34,9 +34,6 @@ public class QuestManager : MonoBehaviour
 
    private void Start()
    {
-      OnChangeQuestProgress += QuestUIController.Instance.ChangeQuestProgress;
-      OnChangeQuestItemUI += QuestUIController.Instance.ChangeQuestItemUI;
-
       RecipeManager.Instance.OnRecipeFinished += CheckQuestComplete;
    }
 
@@ -80,40 +77,8 @@ public class QuestManager : MonoBehaviour
       CompletedQuestCnt = 0;
       
       OnChangeQuestProgress?.Invoke(TotalQuestCnt, CompletedQuestCnt);
-
-      Debug.Log($"총 퀘스트 {TotalQuestCnt}개 로드 완료");
    }
-
-   public void CheckQuestComplete(Recipe recipe)
-   {
-      foreach (var quest in Quests.Where(quest => quest.Value.questRecipe == recipe))
-      {
-         ChangeComplete(quest.Value);
-      }
-   }
-
-   public void ChangeComplete(QuestData quest)
-   {
-      string questID = quest.questID;
-      int idxInQuestList = quest.idxInQuestList;
-      
-      if (!Progresses.TryGetValue(questID, out var progress)) return;
-      if (progress.IsCompleted) return;
-      
-      progress.IsCompleted = true;
-      CompletedQuestCnt++;
-      
-      OnChangeQuestProgress?.Invoke(TotalQuestCnt, CompletedQuestCnt);
-      OnChangeQuestItemUI?.Invoke(quest);
-      
-      switch (questID)
-      {
-         case QuestInfo.GameClearQuestID:
-            GameClear();
-            break;
-      }
-   }
-
+   
    public static void GameClear()
    {
       var next = StageInfo.SelectedLevel.levelIndex + 1;
@@ -138,6 +103,34 @@ public class QuestManager : MonoBehaviour
    public bool IsCompleted(string questID)
    {
       return Progresses.TryGetValue(questID, out var progress) && progress.IsCompleted;
+   }
+   private void CheckQuestComplete(Recipe recipe)
+   {
+      foreach (var quest in Quests.Where(quest => quest.Value.questRecipe == recipe))
+      {
+         ChangeComplete(quest.Value);
+      }
+   }
+
+   private void ChangeComplete(QuestData quest)
+   {
+      var questID = quest.questID;
+
+      if (!Progresses.TryGetValue(questID, out var progress)) return;
+      if (progress.IsCompleted) return;
+      
+      progress.IsCompleted = true;
+      CompletedQuestCnt++;
+      
+      OnChangeQuestProgress?.Invoke(TotalQuestCnt, CompletedQuestCnt);
+      OnChangeQuestItemUI?.Invoke(quest);
+      
+      switch (questID)
+      {
+         case QuestInfo.GameClearQuestID:
+            GameClear();
+            break;
+      }
    }
 
    

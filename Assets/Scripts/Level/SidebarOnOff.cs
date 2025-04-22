@@ -8,7 +8,6 @@ public class SidebarOnOff : MonoBehaviour
     [SerializeField] private RectTransform sidebarGroup;
     [SerializeField] private float slideAmount;
     [SerializeField] private float slideSpeed;
-    
     [SerializeField] private TMP_Text toggleButtonText;
     
     private bool _isOpen = true;
@@ -32,5 +31,4 @@ public class SidebarOnOff : MonoBehaviour
         toggleButtonText.text = _isOpen ? "<" : ">";
         _targetPos += new Vector2(offset, 0);
     }
-    
 }
