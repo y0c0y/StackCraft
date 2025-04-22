@@ -5,8 +5,9 @@ using UnityEngine.InputSystem;
 public class CameraMove : MonoBehaviour
 {
     [SerializeField] private CinemachineCamera cam;
+    [SerializeField] private Transform target;
     [SerializeField] private LayerMask camLayerMask;
-    [SerializeField] private CinemachineConfiner2D confiner;
+    [SerializeField] private BoxCollider moveArea;
 
     private InputAction pointAction;
     private InputAction clickAction;
@@ -66,7 +67,13 @@ public class CameraMove : MonoBehaviour
             Vector2 delta = currentMousePosition - lastMousePosition;
             delta *= 0.01f;
 
-            cam.transform.position -= new Vector3(delta.x, delta.y, 0);
+            Vector3 newPosition = target.position - new Vector3(delta.x, delta.y, 0f);
+            Bounds bounds = moveArea.bounds;
+            
+            newPosition.x = Mathf.Clamp(newPosition.x, bounds.min.x, bounds.max.x);
+            newPosition.y = Mathf.Clamp(newPosition.y, bounds.min.y, bounds.max.y);
+
+            target.position = newPosition;
             lastMousePosition = currentMousePosition;
         }
     }

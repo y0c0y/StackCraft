@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: "\uC6C5\uC9D1 \uAC74\uCD95"
   description: "\uC6C5\uC9D1 \uAC74\uCD95"
-  sprite: {fileID: 21300000, guid: ee33ace98b78181488f9c926fafc1b3e, type: 3}
+  sprite: {fileID: 21300000, guid: b3a46b9d99be1874db97c2c552a30d8d, type: 3}
   cardType: 6
   isConsumable: 0

@@ -214,7 +214,7 @@ public class Stack: MonoBehaviour
             () => ApplyRecipe(matchedRecipe, consumedCards),
             onUpdate: (t) => this.TopCard.cardTimerUI.SetValue(t / matchedRecipe.produceTime),
             useRealTime: false,
-            isLooped: true);
+            isLooped: false);
     }
 
     private void ApplyRecipe(Recipe matchedRecipe, List<Card> consumedCards)
@@ -224,6 +224,14 @@ public class Stack: MonoBehaviour
         if (!RecipeManager.Instance.CheckRecipe(this, matchedRecipe))
         {
             RemoveTimer();
+        }
+        else
+        {
+            _produceTimer = this.AttachTimer(matchedRecipe.produceTime,
+                () => ApplyRecipe(matchedRecipe, RecipeManager.Instance.FindConsumedCards(cards, CardCounts)),
+                onUpdate: (t) => this.TopCard.cardTimerUI.SetValue(t / matchedRecipe.produceTime),
+                useRealTime: false,
+                isLooped: false);
         }
     }
 

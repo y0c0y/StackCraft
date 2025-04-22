@@ -5,7 +5,8 @@ public class UnlockAllStageButton : MonoBehaviour
 {
     public void OnButtonClick()
     {
-        const int totalStages = 4;
+        // TODO totalStages 수정 필요
+        const int totalStages = 2;
 
         for (var i = 0; i < totalStages; i++)
         {
