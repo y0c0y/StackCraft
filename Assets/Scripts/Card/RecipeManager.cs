@@ -229,7 +229,7 @@ public class RecipeManager : MonoBehaviour
         return false;
     }
 
-    private List<Card> FindConsumedCards(List<Card> cards, Dictionary<CardData, int> inputCards)
+    public List<Card> FindConsumedCards(List<Card> cards, Dictionary<CardData, int> inputCards)
     {
         List<Card> consumedCards = new List<Card>();
         // Copy the dictionary first

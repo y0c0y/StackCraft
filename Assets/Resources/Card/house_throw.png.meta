@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: d3474ae4bbdf98d4598badbdb3f02c01
+guid: c6cb13b644258494aab761ede98eaa8b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4982192016146770238
-    second: throwhouse_0
+      213: -6480800824910045342
+    second: house_throw 1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -122,24 +122,11 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: iOS
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: throwhouse_0
+      name: house_throw 1_0
       rect:
         serializedVersion: 2
         x: 1
@@ -154,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e39273ded3d442540800000000000000
-      internalID: 4982192016146770238
+      spriteID: 26f9d2b8cf19f06a0800000000000000
+      internalID: -6480800824910045342
       vertices: []
       indices: 
       edges: []
@@ -174,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      throwhouse_0: 4982192016146770238
+      house_throw 1_0: -6480800824910045342
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
