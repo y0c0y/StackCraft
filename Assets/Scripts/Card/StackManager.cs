@@ -87,17 +87,15 @@ public class StackManager : MonoBehaviour
         newStack.ReorderZOrder(1);
     }
 
-    private void OnCardReleasedOn(Card draggingCard, Card releasedCard)
+    public void AddCardToStack(Card cardToAdd, Stack stack)
     {
-        if (draggingCard == releasedCard) return;
-        
-        var lastCard = releasedCard.owningStack.LastCard;
-        
-        var draggingCardData = draggingCard.cardData;
+        var lastCard = stack.LastCard;
+        var draggingCardData = cardToAdd.cardData;
         var releasedCardData = lastCard.cardData;
+        
         if (draggingCardData == null || releasedCardData == null)
         {
-            Debug.LogError($"Card data is null. draggingCard: {draggingCard}, releasedCard: {releasedCard}");
+            Debug.LogError("Error while adding card to stack");
             return;
         }
 
@@ -106,23 +104,22 @@ public class StackManager : MonoBehaviour
             //Debug.Log($"Can't stack type {draggingCardData.cardType} on {releasedCardData.cardType}");
             return;
         }
-
-        var copyStack = draggingCard.owningStack;
         
-        /*
-        for (int i = 0; i < copyStack.cards.Count; i++)
-        {
-            lastCard.owningStack.AddCard(copyStack.cards[i]);
-        }
-        */
-        lastCard.owningStack.AddMultipleCards(copyStack.cards.ToArray());
+        var copyStack = cardToAdd.owningStack;
         
-        copyStack.RemoveRange(0, copyStack.cards.Count);
+        lastCard.owningStack.AddMultipleCards(copyStack?.cards.ToArray() ?? new []{ cardToAdd });
+        copyStack?.RemoveRange(0, copyStack.cards.Count);
         
-        var slowParentCon = draggingCard.gameObject.GetComponent<SlowParentConstraint>();
+        var slowParentCon = cardToAdd.gameObject.GetComponent<SlowParentConstraint>();
         slowParentCon.enabled = true;
         slowParentCon.target = lastCard.transform;
         
         CardAddedToStackByDrag?.Invoke();
+    }
+
+    private void OnCardReleasedOn(Card draggingCard, Card releasedCard)
+    {
+        if (draggingCard == releasedCard) return;
+        AddCardToStack(draggingCard, releasedCard.owningStack);
     }
 }
