@@ -41,7 +41,7 @@ public class CardInfoUI : MonoBehaviour
         string output = "";
         foreach (var entry in stack.CardCounts)
         {
-            output += $"{entry.Key.description} x {entry.Value} \n";
+            output += $"{entry.Key.description} x {entry.Value} ";
         }
             
         descriptionText.text = output;
