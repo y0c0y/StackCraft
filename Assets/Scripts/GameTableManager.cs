@@ -39,6 +39,7 @@ public class GameTableManager : MonoBehaviour
         var newCardGo = Instantiate(cardPrefab, position, Quaternion.identity);
         var newCard = newCardGo.GetComponent<Card>();
         newCard.cardData = newCardData;
+        AddCardToTable(newCard);
         return newCard;
     }
 
