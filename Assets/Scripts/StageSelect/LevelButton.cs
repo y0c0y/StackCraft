@@ -12,7 +12,7 @@ public class LevelButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     [SerializeField] private TMP_Text label;
     [SerializeField] private GameObject lockIcon;
 
-    public event Action<LevelData> OnHoverd;
+    public event Action<LevelData> OnHovered;
     
     private bool _isUnlocked;
     
@@ -27,12 +27,12 @@ public class LevelButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        OnHoverd?.Invoke(levelData);
+        OnHovered?.Invoke(levelData);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        OnHoverd?.Invoke(null);
+        OnHovered?.Invoke(null);
     }
 
     public void OnButtonClick()

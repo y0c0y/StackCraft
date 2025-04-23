@@ -19,6 +19,9 @@ public class QuestManager : MonoBehaviour
    public event Action<int, int> OnChangeQuestProgress;
    
    public event Action<QuestData> OnChangeQuestItemUI;
+   
+   public event Action<Recipe> OnBattleState;
+   
 
    public readonly Dictionary<string, QuestData> Quests = new();
    public readonly Dictionary<string, QuestProgress> Progresses = new();
@@ -34,7 +37,7 @@ public class QuestManager : MonoBehaviour
 
    private void Start()
    {
-      RecipeManager.Instance.OnRecipeFinished += CheckQuestComplete;
+      RecipeManager.Instance.OnRecipeFinished += CheckRecipe;
    }
 
    public async UniTask Init()
@@ -103,6 +106,20 @@ public class QuestManager : MonoBehaviour
    public bool IsCompleted(string questID)
    {
       return Progresses.TryGetValue(questID, out var progress) && progress.IsCompleted;
+   }
+
+   private void CheckRecipe(Recipe recipe)
+   {
+      if (recipe.recipeName == "Battle")
+      {
+         Debug.Log("Battle State");
+         OnBattleState?.Invoke(recipe);
+      }
+      else
+      {
+         CheckQuestComplete(recipe);
+      }
+      
    }
    private void CheckQuestComplete(Recipe recipe)
    {

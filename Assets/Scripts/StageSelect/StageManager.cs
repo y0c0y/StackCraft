@@ -10,7 +10,7 @@ public class StageManager : MonoBehaviour
         foreach (var btn in levelButtons)
         {
             btn.Init();
-            btn.OnHoverd += StageInfoPanel.Instance.SetInfo;
+            btn.OnHovered += StageInfoPanel.Instance.SetInfo;
         }
     }
 
