@@ -50,7 +50,7 @@ public class BattleManager : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             var enemy = results[i].GetComponent<Card>();
-            if (enemy == null || enemy.cardData.cardType != CardType.Enemy) continue;
+            if (enemy == null || enemy.cardData.cardType != CardType.None) continue;
 
             TryEngageBattle(card, enemy).Forget();
             return;

@@ -62,7 +62,7 @@ public class BattleSystem : MonoBehaviour
             case CardType.Person:
                 persons.Add(card);
                 break;
-            case CardType.Enemy:
+            case CardType.None:
                 enemies.Add(card);
                 break;
             default:
