@@ -14,7 +14,7 @@ PlayerSettings:
   accelerometerFrequency: 60
   companyName: MTVS5th
   productName: StackCraft
-  defaultCursor: {fileID: 0}
+  defaultCursor: {fileID: 2800000, guid: dbcba8f7853582046a7e4ea4cc04c483, type: 3}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
   m_ShowUnitySplashScreen: 0
