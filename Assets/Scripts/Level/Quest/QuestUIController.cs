@@ -57,6 +57,8 @@ public class QuestUIController : MonoBehaviour
 
         foreach (var quest in quests)
         {
+            if(quest.Value.questID == QuestInfo.GameOverQuestID) continue;
+            
             var go = Instantiate(togglePrefab, questListParent);
             var questUI = go.GetComponent<QuestItem>();
             

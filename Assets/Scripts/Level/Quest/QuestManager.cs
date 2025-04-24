@@ -13,14 +13,14 @@ public class QuestManager : MonoBehaviour
 
    public GameObject questList;
 
-   public int TotalQuestCnt {get; private set;}
-   public int CompletedQuestCnt {get; private set;}
+   private int TotalQuestCnt {get; set;}
+   private int CompletedQuestCnt {get; set;}
 
    public event Action<int, int> ChangeQuestProgress;
    public event Action<QuestData> ChangeQuestItemUI;
 
    public readonly Dictionary<string, QuestData> Quests = new();
-   public readonly Dictionary<string, QuestProgress> Progresses = new();
+   private readonly Dictionary<string, QuestProgress> _progresses = new();
 
    private void Awake()
    {
@@ -46,8 +46,7 @@ public class QuestManager : MonoBehaviour
       {
          var label = StageInfo.SelectedLevel.displayName + " Quests";
          Debug.Log(label);
-         var check = LoadQuests(label);
-      
+        
          await LoadQuests(label);
       }
       else
@@ -72,7 +71,7 @@ public class QuestManager : MonoBehaviour
          var quest = data[i];
          quest.idxInQuestList = i;
          Quests[quest.questID] = quest;
-         Progresses[quest.questID] = new QuestProgress(quest.questID);
+         _progresses[quest.questID] = new QuestProgress(quest.questID);
       } 
       
       TotalQuestCnt = Quests.Count;
@@ -81,7 +80,7 @@ public class QuestManager : MonoBehaviour
       ChangeQuestProgress?.Invoke(TotalQuestCnt, CompletedQuestCnt);
    }
    
-   public static void GameClear()
+   public static void GameClear(bool isClear)
    {
       if (StageInfo.SelectedLevel == null)
       {
@@ -89,19 +88,26 @@ public class QuestManager : MonoBehaviour
       }
       else
       {
-         var next = StageInfo.SelectedLevel.levelIndex + 1;
-      
-         if (next < 4)
+         if (isClear)
          {
-            PlayerPrefs.SetInt($"Stage_{next}", 1);
-            PlayerPrefs.Save();
+            var next = StageInfo.SelectedLevel.levelIndex + 1;
+      
+            if (next < 4)
+            {
+               PlayerPrefs.SetInt($"Stage_{next}", 1);
+               PlayerPrefs.Save();
+            }
+            else
+            {
+               for (var i = 1; i <= 4; i++)
+               {
+                  PlayerPrefs.DeleteKey("Stage_" + next);
+               }
+            }
          }
          else
          {
-            for (var i = 1; i <= 4; i++)
-            {
-               PlayerPrefs.DeleteKey("Stage_" + next);
-            }
+            Debug.Log("클리어 실패");
          }
       }
 
@@ -111,27 +117,29 @@ public class QuestManager : MonoBehaviour
    
    private void OnCheckStageClear()
    {
-      if (!CheckStageClearCondition()) return;
+      var allCards = GameTableManager.Instance.cardsOnTable;
+      if (allCards == null || allCards.Count == 0) 
+         return;
+    
+      var hasPlayer = allCards.Any(c => c.cardData.cardType == CardType.Person);
+      var hasEnemy  = allCards.Any(c => c.cardData.cardType == CardType.None);
+    
+      if (!hasPlayer)
+      {
+         Debug.Log("💀 게임 오버!");
+         ChangeComplete(Quests[QuestInfo.GameOverQuestID]);
+         return;
+      }
+
+      if (hasEnemy) return;
       
       Debug.Log("🎉 스테이지 클리어!");
       ChangeComplete(Quests[QuestInfo.GameClearQuestID]);
    }
 
-   private static bool CheckStageClearCondition()
-   {
-      var allCards = GameTableManager.Instance.cardsOnTable;
-      
-      if (allCards == null) return false;
-
-      var hasPerson = allCards.Any(c => c.cardData.cardType == CardType.Person);
-      var hasEnemy = allCards.Any(c => c.cardData.cardType == CardType.None);
-
-      return hasPerson && !hasEnemy;
-   }
-
    public bool IsCompleted(string questID)
    {
-      return Progresses.TryGetValue(questID, out var progress) && progress.IsCompleted;
+      return _progresses.TryGetValue(questID, out var progress) && progress.IsCompleted;
    }
 
    private void CheckRecipe(Recipe recipe)
@@ -146,22 +154,21 @@ public class QuestManager : MonoBehaviour
    {
       var questID = quest.questID;
 
-      if (!Progresses.TryGetValue(questID, out var progress)) return;
+      if (!_progresses.TryGetValue(questID, out var progress)) return;
       if (progress.IsCompleted) return;
       
       progress.IsCompleted = true;
       CompletedQuestCnt++;
+
+      if (questID == QuestInfo.GameOverQuestID)
+      {
+         GameClear(false);
+         return;
+      }
       
       ChangeQuestProgress?.Invoke(TotalQuestCnt, CompletedQuestCnt);
       ChangeQuestItemUI?.Invoke(quest);
       
-      switch (questID)
-      {
-         case QuestInfo.GameClearQuestID:
-            GameClear();
-            break;
-      }
+      if(questID ==  QuestInfo.GameClearQuestID) GameClear(true);
    }
-
-   
 }
