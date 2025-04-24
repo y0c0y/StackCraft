@@ -1,20 +1,26 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(AudioSource)), ExecuteInEditMode]
+[ExecuteInEditMode]
 public class AudioManager : MonoBehaviour
 {
     [SerializeField] private SoundList[] soundList;
+    [SerializeField] private AudioSource sfxAudioSource;
+    [SerializeField] private AudioSource bgmAudioSource;
+
     public static AudioManager Instance { get; private set; }
-    private AudioSource _audioSource;
     
     private void Awake()
     {
         if (Application.isPlaying)
         {
+            Debug.Assert(sfxAudioSource != null);
+            Debug.Assert(bgmAudioSource != null);
+            
             if (Instance != null)
             {
                 Destroy(gameObject);
+                return;
             }
             Instance = this;
             
@@ -22,14 +28,9 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        _audioSource = GetComponent<AudioSource>();
-    }
-
     public static void PlaySound(SoundType sound, float volume = 1f)
     {
-        Instance._audioSource.PlayOneShot(Instance.soundList[(int)sound].sound, volume);
+        Instance.sfxAudioSource.PlayOneShot(Instance.soundList[(int)sound].sound, volume);
     }
 
 #if UNITY_EDITOR

@@ -58,6 +58,7 @@ public class CardDrag : MonoBehaviour
             if (!_wasDragging)
             {
                 CardDragStarted?.Invoke(_card);
+                AudioManager.PlaySound(SoundType.PICKUP);
             }
             _wasDragging = true;
             
@@ -79,6 +80,7 @@ public class CardDrag : MonoBehaviour
             {
                 _wasDragging = false;
                 CardDragEnded?.Invoke(_card);
+                AudioManager.PlaySound(SoundType.PICKDOWN);
             }
         }
 

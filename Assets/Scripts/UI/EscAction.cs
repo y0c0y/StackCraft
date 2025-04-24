@@ -9,7 +9,7 @@ public class EscAction : MonoBehaviour
     [SerializeField] private string defaultUI;
     [SerializeField] private string escTargetUI;
 
-    private readonly string _cancle = "Cancle";
+    private const string CANCEL_STRING = "Cancel";
     private string _currentUI;
 
     private void Start()
@@ -19,7 +19,7 @@ public class EscAction : MonoBehaviour
 
     private void OnEnable()
     {
-        var cancel = InputSystem.actions.FindAction("Cancel");
+        var cancel = InputSystem.actions.FindAction(CANCEL_STRING);
 
         if (cancel == null)
         {
@@ -32,7 +32,7 @@ public class EscAction : MonoBehaviour
 
     private void OnDisable()
     {
-        var cancel = InputSystem.actions.FindAction("Cancel");
+        var cancel = InputSystem.actions.FindAction(CANCEL_STRING);
         if (cancel != null)
         {
             cancel.performed -= OnCancel;
