@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class StageManager : MonoBehaviour
 {
@@ -10,8 +9,7 @@ public class StageManager : MonoBehaviour
         foreach (var btn in levelButtons)
         {
             btn.Init();
-            btn.OnHoverd += StageInfoPanel.Instance.SetInfo;
+            btn.OnHovered += StageInfoPanel.Instance.SetInfo;
         }
     }
-
 }

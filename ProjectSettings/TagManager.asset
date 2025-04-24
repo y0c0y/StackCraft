@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Card
   - Field
+  - SceneTransition
   layers:
   - Default
   - TransparentFX
