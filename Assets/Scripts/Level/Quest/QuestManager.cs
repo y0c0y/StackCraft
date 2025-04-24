@@ -16,12 +16,8 @@ public class QuestManager : MonoBehaviour
    public int TotalQuestCnt {get; private set;}
    public int CompletedQuestCnt {get; private set;}
 
-   public event Action<int, int> OnChangeQuestProgress;
-   
-   public event Action<QuestData> OnChangeQuestItemUI;
-   
-   public event Action<Recipe> OnBattleState;
-   
+   public event Action<int, int> ChangeQuestProgress;
+   public event Action<QuestData> ChangeQuestItemUI;
 
    public readonly Dictionary<string, QuestData> Quests = new();
    public readonly Dictionary<string, QuestProgress> Progresses = new();
@@ -34,10 +30,13 @@ public class QuestManager : MonoBehaviour
          Destroy(this);
       }
    }
+   
 
    private void Start()
    {
       RecipeManager.Instance.OnRecipeFinished += CheckRecipe;
+
+      BattleManager.Instance.CheckStageClear += OnCheckStageClear;
    }
 
    public async UniTask Init()
@@ -79,28 +78,55 @@ public class QuestManager : MonoBehaviour
       TotalQuestCnt = Quests.Count;
       CompletedQuestCnt = 0;
       
-      OnChangeQuestProgress?.Invoke(TotalQuestCnt, CompletedQuestCnt);
+      ChangeQuestProgress?.Invoke(TotalQuestCnt, CompletedQuestCnt);
    }
    
    public static void GameClear()
    {
-      var next = StageInfo.SelectedLevel.levelIndex + 1;
-      
-      if (next < 4)
+      if (StageInfo.SelectedLevel == null)
       {
-         PlayerPrefs.SetInt($"Stage_{next}", 1);
-         PlayerPrefs.Save();
+         Debug.Log("Test 중");
       }
       else
       {
-         for (var i = 1; i <= 4; i++)
+         var next = StageInfo.SelectedLevel.levelIndex + 1;
+      
+         if (next < 4)
          {
-            PlayerPrefs.DeleteKey("Stage_" + next);
+            PlayerPrefs.SetInt($"Stage_{next}", 1);
+            PlayerPrefs.Save();
+         }
+         else
+         {
+            for (var i = 1; i <= 4; i++)
+            {
+               PlayerPrefs.DeleteKey("Stage_" + next);
+            }
          }
       }
 
       SceneManager.LoadScene("StageSelect");
 
+   }
+   
+   private void OnCheckStageClear()
+   {
+      if (!CheckStageClearCondition()) return;
+      
+      Debug.Log("🎉 스테이지 클리어!");
+      ChangeComplete(Quests[QuestInfo.GameClearQuestID]);
+   }
+
+   private static bool CheckStageClearCondition()
+   {
+      var allCards = GameTableManager.Instance.cardsOnTable;
+      
+      if (allCards == null) return false;
+
+      var hasPerson = allCards.Any(c => c.cardData.cardType == CardType.Person);
+      var hasEnemy = allCards.Any(c => c.cardData.cardType == CardType.None);
+
+      return hasPerson && !hasEnemy;
    }
 
    public bool IsCompleted(string questID)
@@ -109,19 +135,6 @@ public class QuestManager : MonoBehaviour
    }
 
    private void CheckRecipe(Recipe recipe)
-   {
-      if (recipe.recipeName == "Battle")
-      {
-         Debug.Log("Battle State");
-         OnBattleState?.Invoke(recipe);
-      }
-      else
-      {
-         CheckQuestComplete(recipe);
-      }
-      
-   }
-   private void CheckQuestComplete(Recipe recipe)
    {
       foreach (var quest in Quests.Where(quest => quest.Value.questRecipe == recipe))
       {
@@ -139,8 +152,8 @@ public class QuestManager : MonoBehaviour
       progress.IsCompleted = true;
       CompletedQuestCnt++;
       
-      OnChangeQuestProgress?.Invoke(TotalQuestCnt, CompletedQuestCnt);
-      OnChangeQuestItemUI?.Invoke(quest);
+      ChangeQuestProgress?.Invoke(TotalQuestCnt, CompletedQuestCnt);
+      ChangeQuestItemUI?.Invoke(quest);
       
       switch (questID)
       {

@@ -26,11 +26,11 @@ public class QuestUIController : MonoBehaviour
 
     public void Start()
     {
-        QuestManager.Instance.OnChangeQuestProgress += ChangeQuestProgress;
-        QuestManager.Instance.OnChangeQuestItemUI += ChangeQuestItemUI;
+        QuestManager.Instance.ChangeQuestProgress += OnChangeQuestProgress;
+        QuestManager.Instance.ChangeQuestItemUI += OnChangeQuestItemUI;
     }
 
-    public void ChangeQuestItemUI(QuestData questData)
+    public void OnChangeQuestItemUI(QuestData questData)
     {
         var item = FindQuestItem(questData.idxInQuestList);
         
@@ -43,7 +43,7 @@ public class QuestUIController : MonoBehaviour
         item.OnChange();
     }
 
-    public void ChangeQuestProgress(int total, int completed)
+    public void OnChangeQuestProgress(int total, int completed)
     {
         progressText.text = $"({completed}/{total})";
     }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
@@ -5,22 +6,36 @@ using UnityEngine;
 
 public class BattleManager : MonoBehaviour
 {
+    public static BattleManager Instance;
+    
     public GameObject battleSystemPrefab;
     public List<BattleSystem> battleSystems = new();
 
+    public event Action CheckStageClear;
+    
+    private void Awake()
+    {
+        Instance = this;
+        if (Instance != this)
+        {
+            Destroy(this);
+        }
+    }
+    
+    
     private void Start()
     {
-        GameTableManager.Instance.CardAddedOnTable += RegisterCard;
-        GameTableManager.Instance.CardRemovedFromTable += UnregisterCard;
+        GameTableManager.Instance.CardAddedOnTable +=  OnCardAddedToTable;
+        GameTableManager.Instance.CardRemovedFromTable += OnCardRemovedFromTable;
     }
 
     private void OnDestroy()
     {
-        GameTableManager.Instance.CardAddedOnTable -= RegisterCard;
-        GameTableManager.Instance.CardRemovedFromTable -= UnregisterCard;
+        GameTableManager.Instance.CardAddedOnTable -= OnCardAddedToTable;
+        GameTableManager.Instance.CardRemovedFromTable -= OnCardRemovedFromTable;
     }
 
-    private void RegisterCard(Card card)
+    private void  OnCardAddedToTable(Card card)
     {
         var drag = card.GetComponent<CardDrag>();
         if (drag != null)
@@ -30,7 +45,7 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    private void UnregisterCard(Card card)
+    private void OnCardRemovedFromTable(Card card)
     {
         var drag = card.GetComponent<CardDrag>();
         if (drag != null)
@@ -41,7 +56,9 @@ public class BattleManager : MonoBehaviour
 
     private void OnCardDragEnded(Card card)
     {
-        if (card.cardData.cardType != CardType.Person) return;
+        if (!BattleCommon.IsValidCardType(card)) return;
+        if (battleSystems.Any(bs => bs.IsCardInBattle(card)))
+            return;
         
         var results = new Collider2D[5];
         var filter = new ContactFilter2D().NoFilter();
@@ -59,7 +76,11 @@ public class BattleManager : MonoBehaviour
 
     private async UniTaskVoid TryEngageBattle(Card person, Card enemy)
     {
-        var center = (person.transform.position + enemy.transform.position) / 2f;
+        
+        await UniTask.NextFrame();
+
+        
+        var center = enemy.transform.position;
         
         var existingBattle = battleSystems.FirstOrDefault(bs =>
             bs.IsCardInBattle(person) ||
@@ -68,28 +89,34 @@ public class BattleManager : MonoBehaviour
         
         if (existingBattle != null)
         {
-            if (!existingBattle.IsCardInBattle(person)) existingBattle.AddCard(person);
-            if (!existingBattle.IsCardInBattle(enemy)) existingBattle.AddCard(enemy);
+            if (!existingBattle.IsCardInBattle(person)) await existingBattle.AddCard(person);
+            if (!existingBattle.IsCardInBattle(enemy)) await existingBattle.AddCard(enemy);
             return;
         }
 
-        Debug.Log("[⚔ 새 전투 생성]");
+        Debug.Log("새 전투 생성");
 
         var battleSystemObj = Instantiate(battleSystemPrefab, center, Quaternion.identity);
         var battleSystem = battleSystemObj.GetComponent<BattleSystem>();
         battleSystemObj.transform.SetParent(transform);
         
-        battleSystem.OnDeleteBattle += DeleteBattle;
+        battleSystem.DeleteBattle += OnDeleteBattle;
+        battleSystems.Add(battleSystem);
         
         await battleSystem.Init(person, enemy);
-        battleSystems.Add(battleSystem);
+        
     }
 
-    private void DeleteBattle(BattleSystem battleSystem)
+    private void OnDeleteBattle(BattleSystem battleSystem)
     {
+        battleSystem.DeleteBattle -= OnDeleteBattle;
+        battleSystems.Remove(battleSystem);
+        
         Destroy(battleSystem.gameObject);
-        battleSystem.OnDeleteBattle -= DeleteBattle;
-       battleSystems.Remove(battleSystem);
+        
+        CheckStageClear?.Invoke();
+        
+        
     }
     
 }
