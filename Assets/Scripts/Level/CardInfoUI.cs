@@ -18,6 +18,11 @@ public class CardInfoUI : MonoBehaviour
         Instance = this;
     }
 
+    private void Start()
+    {
+        HideStackInfo();
+    }
+
     public void ShowStackInfo(Card card)
     {
         var stack = card.owningStack;
