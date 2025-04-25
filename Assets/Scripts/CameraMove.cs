@@ -36,6 +36,9 @@ public class CameraMove : MonoBehaviour
 
     private void HandleDrag()
     {
+        if (!QuestScrollHandler.Instance) return;
+        if (QuestScrollHandler.Instance.IsPointerOver) return;
+        
         if (clickAction == null || pointAction == null)
             return;
 
