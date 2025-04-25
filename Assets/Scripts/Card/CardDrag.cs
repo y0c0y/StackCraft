@@ -54,6 +54,17 @@ public class CardDrag : MonoBehaviour
             
             _targetPosition = screenPos - new Vector3(_dragOrigin.x * transform.localScale.x,
                 _dragOrigin.y * transform.localScale.y, 0);
+            
+            if (Vector3.SqrMagnitude(transform.position - _targetPosition) > DRAG_TELEPORT_THRESHOLD)
+            {
+                transform.position = Vector3.Lerp(transform.position, _targetPosition, speed * Time.deltaTime);
+            }
+            else
+            {
+                var pos = transform.position;
+                pos.z = _targetPosition.z;
+                transform.position = pos;
+            }
         }
         else
         {
@@ -64,16 +75,7 @@ public class CardDrag : MonoBehaviour
             }
         }
 
-        if (Vector3.SqrMagnitude(transform.position - _targetPosition) > DRAG_TELEPORT_THRESHOLD)
-        {
-            transform.position = Vector3.Lerp(transform.position, _targetPosition, speed * Time.deltaTime);
-        }
-        else
-        {
-            var pos = transform.position;
-            pos.z = _targetPosition.z;
-            transform.position = pos;
-        }
+        
     }
 
     public void OnPointerDown(PointerEventData eventData)
