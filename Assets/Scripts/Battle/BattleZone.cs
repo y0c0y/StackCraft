@@ -6,8 +6,6 @@ using UnityEngine;
 public class BattleZone : MonoBehaviour
 {
     public event Action<Vector3, Vector2> OnBackgroundSizeChanged;
-    public event Action<Card> OnCardEntered;
-    public event Action<Card> OnCardExited;
     
     [SerializeField] private Transform enemyArea;
     [SerializeField] private Transform personArea;
@@ -28,23 +26,6 @@ public class BattleZone : MonoBehaviour
         return GetComponent<Collider2D>().bounds.Contains(worldPos);
     }
     
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        var card = other.GetComponent<Card>();
-        if (card == null || !BattleCommon.IsValidCardType(card)) return;
-        
-        OnCardEntered?.Invoke(card);
-    }
-    
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        var card = other.GetComponent<Card>();
-        if (card == null || !BattleCommon.IsValidCardType(card)) return;
-        
-        OnCardExited?.Invoke(card);
-    }
-
-
     private ComponentState DisableCardComponents(Card card)
     {
         var slow = card.GetComponent<SlowParentConstraint>();
@@ -111,10 +92,23 @@ public class BattleZone : MonoBehaviour
 
     public void ResizeBackground(int maxCardCount)
     {
-        var width = maxCardCount * (cardWidth + horizontalSpacing);
-        var height = (cardHeight + verticalSpacing) * 2f;
+        if (maxCardCount <= 0)
+        {
+            OnBackgroundSizeChanged?.Invoke(transform.position, Vector2.zero);
+            return;
+        }
 
-        OnBackgroundSizeChanged?.Invoke(transform.position, new Vector2(width, height));
+      
+        float totalWidth = (maxCardCount - 1) * (cardWidth + horizontalSpacing) + cardWidth;
+        float totalHeight = cardHeight * 2 + verticalSpacing;
+
+        var size = new Vector2(totalWidth, totalHeight);
+        
+        OnBackgroundSizeChanged?.Invoke(transform.position, size);
+        
+        var bc = GetComponent<BoxCollider2D>();
+        if (bc != null)
+            bc.size = size;
     }
 
 }
