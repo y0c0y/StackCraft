@@ -207,8 +207,6 @@ public class BattleSystem : MonoBehaviour
         zone.OnCardEntered -= AddCard;
         zone.OnCardExited  -= TryRemoveAfterDelay;
         
-        Destroy(zone.gameObject);
-        
         DeleteBattle?.Invoke(this);
     }
 }
