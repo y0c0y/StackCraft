@@ -10,12 +10,6 @@ public class EscAction : MonoBehaviour
     [SerializeField] private string escTargetUI;
 
     private const string CANCEL_STRING = "Cancel";
-    private string _currentUI;
-
-    private void Start()
-    {
-        _currentUI = defaultUI;
-    }
 
     private void OnEnable()
     {
@@ -39,18 +33,11 @@ public class EscAction : MonoBehaviour
         }
     }
 
-    public void SetCurrentUI(string currentUI)
-    {
-        _currentUI = currentUI;
-    }
-
     private void OnCancel(InputAction.CallbackContext ctx)
     {
-        Debug.Log($"{_currentUI} {defaultUI}");
-        if (_currentUI == defaultUI)
+        if (UIManager.Instance.currentUI == defaultUI)
         {
             UIManager.Instance.ChangeUI(escTargetUI);
-            _currentUI = escTargetUI;
         }
     }
 }

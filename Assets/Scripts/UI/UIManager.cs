@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class UIManager : MonoBehaviour
 { 
@@ -7,6 +9,10 @@ public class UIManager : MonoBehaviour
     
     [SerializeField] private List<GameObject> canvasUI;
     private Dictionary<string, GameObject> canvasDict;
+    private const string defaultUI = "Level Canvas";
+    
+    public string currentUI {get; private set;}
+    public bool isDefaultUI {get; private set;}
     
     private void Awake()
     {
@@ -20,11 +26,26 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        currentUI = defaultUI;
+        isDefaultUI = true;
+    }
+
     public void ChangeUI(string canvasName)
     {
         foreach (var kv in canvasDict)
         {
-            kv.Value.SetActive(kv.Key == canvasName);
+            if (kv.Key == canvasName)
+            {
+                kv.Value.SetActive(true);
+                currentUI = canvasName;
+                isDefaultUI = (canvasName == defaultUI);
+            }
+            else
+            {
+                kv.Value.SetActive(false);
+            }
         }
     }
 }

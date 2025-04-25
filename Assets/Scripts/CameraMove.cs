@@ -30,6 +30,7 @@ public class CameraMove : MonoBehaviour
 
     private void Update()
     {
+        if (!UIManager.Instance.isDefaultUI) return;
         HandleDrag();
         HandleScroll();
     }
@@ -56,6 +57,7 @@ public class CameraMove : MonoBehaviour
 
             // 2D 레이캐스트 수행
             RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.zero, 11f, camLayerMask);
+            
             isDraggingCard = (hit.collider != null);
         }
         else if (!isPressed && isDragging)
@@ -68,7 +70,7 @@ public class CameraMove : MonoBehaviour
         {
             Vector2 currentMousePosition = pointAction.ReadValue<Vector2>();
             Vector2 delta = currentMousePosition - lastMousePosition;
-            delta *= 0.01f;
+            delta *= 0.02f;
 
             Vector3 newPosition = target.position - new Vector3(delta.x, delta.y, 0f);
             Bounds bounds = moveArea.bounds;
@@ -88,9 +90,9 @@ public class CameraMove : MonoBehaviour
         Vector2 scrollDelta = scrollwheelAction.ReadValue<Vector2>();
         if (scrollDelta.y != 0)
         {
-            float zoomAmount = scrollDelta.y * 1f;
+            float zoomAmount = scrollDelta.y * 2f;
             float newFOV = cam.Lens.FieldOfView - zoomAmount;
-            cam.Lens.FieldOfView = Mathf.Clamp(newFOV, 75f, 105f);
+            cam.Lens.FieldOfView = Mathf.Clamp(newFOV, 75f, 120f);
         }
     }
 }
