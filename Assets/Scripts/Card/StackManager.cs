@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
 public class StackManager : MonoBehaviour
@@ -22,7 +23,7 @@ public class StackManager : MonoBehaviour
 
     private void Start()
     {
-        var startingStacks = stacksHolderGameObject.GetComponents<Stack>();
+        var startingStacks = stacksHolderGameObject.GetComponentsInChildren<Stack>();
         foreach (var stack in startingStacks)
         {
             for (int i = 0; i < stack.cards.Count; i++)
@@ -50,7 +51,13 @@ public class StackManager : MonoBehaviour
 
     public Stack AddNewStack()
     {
-        return stacksHolderGameObject.AddComponent<Stack>();
+        var stackHolder = new GameObject();
+        stackHolder.transform.SetParent(stacksHolderGameObject.transform);
+        var newStack = stackHolder.AddComponent<Stack>();
+#if UNITY_EDITOR
+        newStack.OnStackModified += (stack) => stack.gameObject.name = stack.CardCounts.Aggregate("", (s, kv) => s + kv.Key.cardName + ":" + kv.Value + " ");  
+#endif
+        return newStack;
     }
 
     private void OnCardAddedToTable(Card card)

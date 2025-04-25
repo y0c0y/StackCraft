@@ -9,8 +9,7 @@ public class CardDrag : MonoBehaviour
 
     private const float SELECTED_Z_OFFSET = -0.5f;
     private const float DRAG_TELEPORT_THRESHOLD = 0.05f;
-    
-    [SerializeField] private float speed = 30f;
+    private const float SPEED = 30f;
     
     private Vector3 _targetPosition;
     
@@ -20,8 +19,7 @@ public class CardDrag : MonoBehaviour
     private bool _wasDragging = false;
 
     private Vector2 _fieldSize;
-    private Vector2 _cardClamp;
-    private const float CARD_CLAMP_OFFSET = 0.5f;
+    private const float CARD_CLAMP_OFFSET = 0.35f;
     
     private void Awake()
     {
@@ -69,10 +67,27 @@ public class CardDrag : MonoBehaviour
             
             _targetPosition = screenPos - new Vector3(_dragOrigin.x * transform.localScale.x,
                 _dragOrigin.y * transform.localScale.y, 0);
-            _targetPosition.x = Mathf.Clamp(_targetPosition.x, -_fieldSize.x / 2 + Card.CARD_SIZE.x / 2 + CARD_CLAMP_OFFSET,
-                                                                _fieldSize.x / 2 - Card.CARD_SIZE.x / 2 - CARD_CLAMP_OFFSET);
-            _targetPosition.y = Mathf.Clamp(_targetPosition.y, -_fieldSize.y / 2 + Card.CARD_SIZE.y / 2 + CARD_CLAMP_OFFSET,
-                                                                _fieldSize.y / 2 - Card.CARD_SIZE.y / 2 - CARD_CLAMP_OFFSET);
+            _targetPosition.x = Mathf.Clamp(
+                                    _targetPosition.x, 
+                                -_fieldSize.x / 2 + Card.CARD_SIZE.x / 2 + CARD_CLAMP_OFFSET,
+                                _fieldSize.x / 2 - Card.CARD_SIZE.x / 2 - CARD_CLAMP_OFFSET
+                                    );
+            _targetPosition.y = Mathf.Clamp(
+                                    _targetPosition.y, 
+                                -_fieldSize.y / 2 + _card.owningStack.bounds.size.y - Card.CARD_SIZE.y / 2 + CARD_CLAMP_OFFSET,
+                                _fieldSize.y / 2 - Card.CARD_SIZE.y / 2 - CARD_CLAMP_OFFSET
+                                    );
+            
+            if (Vector3.SqrMagnitude(transform.position - _targetPosition) > DRAG_TELEPORT_THRESHOLD)
+            {
+                transform.position = Vector3.Lerp(transform.position, _targetPosition, SPEED * Time.unscaledDeltaTime);
+            }
+            else
+            {
+                var pos = transform.position;
+                pos.z = _targetPosition.z;
+                transform.position = pos;
+            }
         }
         else
         {
@@ -81,18 +96,12 @@ public class CardDrag : MonoBehaviour
                 _wasDragging = false;
                 CardDragEnded?.Invoke(_card);
                 AudioManager.PlaySound(SoundType.PICKDOWN);
+                
+                // TODO: CHANGE INTO ANIMATION
+                var pos = transform.position;
+                pos.z = _targetPosition.z;
+                transform.position = pos;
             }
-        }
-
-        if (Vector3.SqrMagnitude(transform.position - _targetPosition) > DRAG_TELEPORT_THRESHOLD)
-        {
-            transform.position = Vector3.Lerp(transform.position, _targetPosition, speed * Time.deltaTime);
-        }
-        else
-        {
-            var pos = transform.position;
-            pos.z = _targetPosition.z;
-            transform.position = pos;
         }
     }
 
