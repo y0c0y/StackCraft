@@ -16,7 +16,7 @@ public static class BattleCommon
 		if (!IsValidCardType(card))
 			throw new ArgumentException($"Invalid card type: {card}");
 
-		bool isEnemy = card.cardData.cardType == CardType.None;
+		var isEnemy = card.cardData.cardType == CardType.None;
 		return (isEnemy ? enemies : persons, isEnemy);
 	}
 	

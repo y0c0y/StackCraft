@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -24,46 +25,24 @@ public class BattleSystem : MonoBehaviour
     private int _prePersonCount;
     
     private Dictionary<Card, int> _cardHp = new();
-
-    readonly Random _random =  new Random();
-
-    private void HandleCardEnter(Card card) => _ = AddCard(card);
-    private void HandleCardExit(Card card)
-    {
-        _ = TryRemoveAfterDelay(card);
-    }
     
-    private async UniTaskVoid TryRemoveAfterDelay(Card card)
-    {
-        await UniTask.Delay(200);
+    private bool _isInBattle;
 
-        if (card == null || card.gameObject == null) return;
-
-        if (!zone.IsInside(card.transform.position))
-        {
-            Debug.Log($"📤 {card.name} 실제로 전투존 이탈 → 제거");
-            await HandleRemove(card, false);
-        }
-        else
-        {
-            Debug.Log($"↩ {card.name} 다시 진입함 → 유지");
-        }
-    }
-
+    private readonly Random _random = new Random();
     
     public async UniTask Init(Card person, Card enemy)
     {
         zone.OnBackgroundSizeChanged -= zoneUI.ShowZone;
         zone.OnBackgroundSizeChanged += zoneUI.ShowZone;
 
-        zone.OnCardEntered += HandleCardEnter;
-        zone.OnCardExited  += HandleCardExit;
+        zone.OnCardEntered += AddCard;
+        zone.OnCardExited  += TryRemoveAfterDelay;
 
         if (canvas.renderMode == RenderMode.WorldSpace && canvas.worldCamera == null)
             canvas.worldCamera = Camera.main;
 
-        await AddCard(person);
-        await AddCard(enemy);
+        AddCard(person);
+        AddCard(enemy);
 
         await TryStartBattle();
     }
@@ -81,24 +60,32 @@ public class BattleSystem : MonoBehaviour
 
         for (int i = 0; i < attackers.Count; i++)
         {
-            if (targetIdx >= targets.Count) break;
-            
+            if (targets.Count == 0) 
+                break;
+            if (targetIdx >= targets.Count) 
+                targetIdx = 0;
+
+            var attacker  = attackers[i];
             var targetCard = targets[targetIdx];
-            int damage = _random.Next(0, 6);
 
-            Debug.Log($"{attackers[i].name} → {targetCard.name}에게 {damage} 피해");
-
-            _cardHp[targetCard] -= damage;
-            // BattleCommon.UpdateCardHpUI(targetCard, _cardHp[targetCard]);
-
-            if (_cardHp[targetCard] <= 0)
+            if (!_cardHp.TryGetValue(targetCard, out var hp))
             {
-                await HandleRemove(targetCard, true);
-                // Debug.Log($"🟥 {targetCard.name} 파괴됨");
+                continue;
+            }
+
+            int damage = _random.Next(0, 6);
+            Debug.Log($"{attacker.name} → {targetCard.name}에게 {damage} 피해");
+
+            hp -= damage;
+            if (hp <= 0)
+            {
+                Debug.Log($"🟥 {targetCard.name} 파괴됨");
+                HandleRemove(targetCard, true);
             }
             else
             {
-                targetIdx++; // 다음 타겟으로
+                _cardHp[targetCard] = hp;
+                targetIdx++;
             }
 
             await UniTask.Delay(300);
@@ -106,19 +93,19 @@ public class BattleSystem : MonoBehaviour
 
         return targets.Count == 0;
     }
-    
 
     private async UniTask TryStartBattle()
     {
+        _isInBattle = true;
         var preemptiveFlag = false;
 
         while (true)
         {
             Debug.Log($"🕛 { (preemptiveFlag ? "적" : "아군")} 턴 시작");
 
-            bool battleOver = preemptiveFlag
+            var battleOver = preemptiveFlag
                     ? await Attack(enemies, persons)
-                : await Attack(persons, enemies);
+                    : await Attack(persons, enemies);
 
             if (battleOver)
             {
@@ -132,24 +119,51 @@ public class BattleSystem : MonoBehaviour
         await UniTask.Delay(1000);
         EndBattle();
     }
-    public async UniTask AddCard(Card card)
+    
+    private void TryRemoveAfterDelay(Card card)
+    {
+        if (card == null || card.gameObject == null) return;
+
+        if (!zone.IsInside(card.transform.position))
+        {
+            Debug.Log($"📤 {card.name} 실제로 전투존 이탈 → 제거");
+            HandleRemove(card, false);
+        }
+        else
+        {
+            Debug.Log($"↩ {card.name} 다시 진입함 → 유지");
+        }
+    }
+    
+    public void AddCard(Card card)
     {
         if (IsCardInBattle(card)) return;
-
+        
         var (group, isEnemy) = BattleCommon.GetCardTargetList(card, persons, enemies);
         group.Add(card);
         _cardHp[card] = 5;
         // BattleCommon.UpdateCardHpUI(card, 5);
 
-        await RepositionAllCards(group, isEnemy);
+        Debug.Log("시작");
+        
+        RepositionAllCards(group, isEnemy);
+        
+        Debug.Log("끛");
+
     }
     
-    private async UniTask HandleRemove(Card card, bool shouldDestroy)
+    private void HandleRemove(Card card, bool shouldDestroy)
     {
         var (group, isEnemy) = BattleCommon.GetCardTargetList(card, persons, enemies);
         if (!group.Remove(card)) return;
 
         _cardHp.Remove(card);
+        
+        Debug.Log("시작");
+        
+        RepositionAllCards(group, isEnemy);
+        
+        Debug.Log("끛");
 
         if (shouldDestroy)
         {
@@ -158,11 +172,13 @@ public class BattleSystem : MonoBehaviour
             Destroy(card);
         }
 
-        await RepositionAllCards(group, isEnemy);
     }
+    
 
-    private async UniTask RepositionAllCards(List<Card> cards, bool flag)
+    private void RepositionAllCards(List<Card> cards, bool flag)
     {
+        Debug.Log("하는 중");
+        
         var pre = flag ? _preEnemiesCount : _prePersonCount;
         
         if(cards.Count == pre) return;
@@ -176,7 +192,7 @@ public class BattleSystem : MonoBehaviour
             _prePersonCount = cards.Count;
         }
 
-        await zone.ArrangeCard(cards, flag);
+        zone.ArrangeCard(cards, flag);
 
         zone.ResizeBackground(Mathf.Max(persons.Count, enemies.Count));
     }
@@ -188,8 +204,8 @@ public class BattleSystem : MonoBehaviour
 
         zone.OnBackgroundSizeChanged -= zoneUI.ShowZone;
 
-        zone.OnCardEntered -= HandleCardEnter;
-        zone.OnCardExited  -= HandleCardExit;
+        zone.OnCardEntered -= AddCard;
+        zone.OnCardExited  -= TryRemoveAfterDelay;
         
         Destroy(zone.gameObject);
         

@@ -56,42 +56,47 @@ public class BattleManager : MonoBehaviour
 
     private void OnCardDragEnded(Card card)
     {
-        if (!BattleCommon.IsValidCardType(card)) return;
-        if (battleSystems.Any(bs => bs.IsCardInBattle(card)))
+        if (!BattleCommon.IsValidCardType(card)) 
             return;
-        
+    
         var results = new Collider2D[5];
-        var filter = new ContactFilter2D().NoFilter();
-        var count = Physics2D.OverlapCollider(card.GetComponent<Collider2D>(), filter, results);
+        var filter  = new ContactFilter2D().NoFilter();
+        var count   = Physics2D.OverlapCollider(card.GetComponent<Collider2D>(), filter, results);
 
         for (int i = 0; i < count; i++)
         {
-            var enemy = results[i].GetComponent<Card>();
-            if (enemy == null || enemy.cardData.cardType != CardType.None) continue;
+            var other = results[i].GetComponent<Card>();
+            if (other == null) 
+                continue;
+            if (!BattleCommon.IsValidCardType(other)) 
+                continue;
 
-            TryEngageBattle(card, enemy).Forget();
+            var me   = card.cardData.cardType;
+            var you  = other.cardData.cardType;
+            if (me == you) continue;  
+            
+            if (battleSystems.Any(bs => bs.IsCardInBattle(card)))
+                return;
+
+            TryEngageBattle(card, other).Forget();
             return;
         }
     }
 
+
     private async UniTaskVoid TryEngageBattle(Card person, Card enemy)
     {
-        
-        await UniTask.NextFrame();
-
+        await UniTask.Yield(PlayerLoopTiming.Update);
         
         var center = enemy.transform.position;
         
-        var existingBattle = battleSystems.FirstOrDefault(bs =>
-            bs.IsCardInBattle(person) ||
-            bs.IsCardInBattle(enemy) ||
-            bs.IsEnemyNearby(center, 1.5f));
-        
-        if (existingBattle != null)
+        var existingBattle = battleSystems
+            .FirstOrDefault(bs => bs.IsCardInBattle(person) || bs.IsCardInBattle(enemy));
+
+        if (existingBattle == null)
         {
-            if (!existingBattle.IsCardInBattle(person)) await existingBattle.AddCard(person);
-            if (!existingBattle.IsCardInBattle(enemy)) await existingBattle.AddCard(enemy);
-            return;
+            existingBattle = battleSystems
+                .FirstOrDefault(bs => bs.IsEnemyNearby(center, 1.5f));
         }
 
         Debug.Log("새 전투 생성");
@@ -115,8 +120,6 @@ public class BattleManager : MonoBehaviour
         Destroy(battleSystem.gameObject);
         
         CheckStageClear?.Invoke();
-        
-        
     }
     
 }
