@@ -25,6 +25,9 @@ public class CameraMove : MonoBehaviour
         clickAction = InputSystem.actions.FindAction("Click");
         scrollwheelAction = InputSystem.actions.FindAction("ScrollWheel");
 
+        isDragging = false;
+        isDraggingCard = false;
+        
         pointAction?.Enable();
         clickAction?.Enable();
         scrollwheelAction?.Enable();
@@ -33,7 +36,6 @@ public class CameraMove : MonoBehaviour
     private void Update()
     {
         if (!UIManager.Instance.isDefaultUI) return;
-        if (EventSystem.current.IsPointerOverGameObject()) return;
         HandleDrag();
         HandleScroll();
     }
@@ -42,7 +44,7 @@ public class CameraMove : MonoBehaviour
     {
         if (clickAction == null || pointAction == null)
             return;
-
+        
         bool isPressed = clickAction.ReadValue<float>() > 0;
 
         if (isPressed && !isDragging)
@@ -68,6 +70,12 @@ public class CameraMove : MonoBehaviour
 
         if (isDragging && !isDraggingCard)
         {
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                lastMousePosition = pointAction.ReadValue<Vector2>();
+                return;
+            }
+
             Vector2 currentMousePosition = pointAction.ReadValue<Vector2>();
             Vector2 delta = currentMousePosition - lastMousePosition;
             float fovScale = cam.Lens.FieldOfView / baseFOV;
@@ -86,6 +94,7 @@ public class CameraMove : MonoBehaviour
 
     private void HandleScroll()
     {
+        if (EventSystem.current.IsPointerOverGameObject()) return;
         Vector2 scrollDelta = scrollwheelAction.ReadValue<Vector2>();
         if (scrollDelta.y != 0)
         {

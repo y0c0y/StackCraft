@@ -11,6 +11,8 @@ public class TimeManager : MonoBehaviour
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
+        
+        Time.timeScale = timeScale;
     }
 
     private void OnEnable()
