@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class BattleZone : MonoBehaviour
 {
-    public event Action<Vector3, Vector2> OnBackgroundSizeChanged;
-    
     [SerializeField] private Transform enemyArea;
     [SerializeField] private Transform personArea;
     [SerializeField] private GameObject background;
@@ -17,12 +15,7 @@ public class BattleZone : MonoBehaviour
     [SerializeField] private float verticalSpacing = 1f;
     [SerializeField] private float horizontalSpacing = 0.2f;
     
-    public bool IsInside(Vector3 worldPos)
-    {
-        return GetComponent<Collider2D>().bounds.Contains(worldPos);
-    }
-    
-    public void ResizeBackground(int personsCount, int enemiesCount)
+    public (Vector3,Vector3) ResizeBackground(int personsCount, int enemiesCount)
     {
         var maxCardCount = Mathf.Max(personsCount, enemiesCount);
 
@@ -30,6 +23,12 @@ public class BattleZone : MonoBehaviour
         var height = (cardHeight) * 2;
         
         background.transform.localScale = new Vector3(maxCardCount, 2.5f, 0f);
+        
+        var zoneCollider = GetComponent<BoxCollider2D>();
+        var bounds       = zoneCollider.bounds;
+        
+        
+        return (bounds.size, bounds.center);
     }
     
     public async UniTask ArrangeCard(List<Card> persons, List<Card> enemies)

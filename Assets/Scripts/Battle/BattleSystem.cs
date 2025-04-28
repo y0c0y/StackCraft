@@ -8,10 +8,11 @@ using Random = System.Random;
 
 public class BattleSystem : MonoBehaviour
 {
+    public static BattleSystem Instance;
+    
     [Header("Prefabs")] 
     public BattleZone zone;
-    // public BattleZoneUIController zoneUI;
-    // public Canvas canvas;
+    public BattleEffectManager zoneUI;
 
     [Header("InBattleCards")]
     public List<Card> persons = new();
@@ -20,11 +21,13 @@ public class BattleSystem : MonoBehaviour
     public readonly float RemoveCardDelay = 0.2f;
     
     public event Action<BattleSystem> DeleteBattle;
+    public event Action<Card, Card> AttackEffect;
+    
+    public event Action<Vector3, Vector3> SetCanvas;
+    
     
     private Dictionary<Card, int> _cardHp = new();
     
-    private bool _isInBattle;
-
     private readonly Random _random = new Random();
     
     public bool IsCardInBattle(Card card) => persons.Contains(card) || enemies.Contains(card);
@@ -33,8 +36,17 @@ public class BattleSystem : MonoBehaviour
     {
         return Vector3.Distance(zone.transform.position, pos) <= range;
     }
-    
-    
+
+    private void Awake()
+    {
+        Instance = this;
+        if (Instance != this)
+        {
+            Destroy(this);
+        }
+    }
+
+
     public async UniTask Init(List<Card> oriPerson, List<Card> oriEnemy)
     {
         await UniTask.WaitForFixedUpdate();
@@ -43,7 +55,9 @@ public class BattleSystem : MonoBehaviour
         persons.AddRange(oriPerson);
         enemies.AddRange(oriEnemy);
         
-        zone.ResizeBackground(enemies.Count, persons.Count);
+        var data = zone.ResizeBackground(enemies.Count, persons.Count);
+        
+        SetCanvas?.Invoke(data.Item1, data.Item2);
         
         
         InitHp();
@@ -69,7 +83,6 @@ public class BattleSystem : MonoBehaviour
     {
         await zone.ArrangeCard(persons, enemies);
         
-        _isInBattle = true;
         var preemptiveFlag = false;
 
         while (true)
@@ -109,6 +122,9 @@ public class BattleSystem : MonoBehaviour
         var targetCard = targets[targetIdx];
         
         var damage = _random.Next(1, 6);
+        
+        AttackEffect?.Invoke(attacker, targetCard);
+        
         // Debug.Log($"{attacker.name} → {targetCard.name}에게 {damage} 피해");
 
         var hp = _cardHp[targetCard];
