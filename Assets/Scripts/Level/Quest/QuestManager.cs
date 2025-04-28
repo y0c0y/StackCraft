@@ -122,7 +122,7 @@ public class QuestManager : MonoBehaviour
          return;
     
       var hasPlayer = allCards.Any(c => c.cardData.cardType == CardType.Person);
-      var hasEnemy  = allCards.Any(c => c.cardData.cardType == CardType.None);
+      var hasEnemy  = allCards.Any(c => c.cardData.cardType == CardType.Enemy);
     
       if (!hasPlayer)
       {

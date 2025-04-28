@@ -57,28 +57,31 @@ public class BattleManager : MonoBehaviour
 
     private bool Flag(Card c) => battleSystems.Any(bs => bs.IsCardInBattle(c));
 
+    private bool IsValidCardType(Card card)
+    {
+        return card != null && 
+               card.cardData.cardType is CardType.Person or CardType.Enemy;
+    }
+
     private void OnCardDragEnded(Card card)
     {
-        if (!BattleCommon.IsValidCardType(card)) 
+        if (!IsValidCardType(card)) 
             return;
-    
+        if (Flag(card)) return;
+
         var results = new Collider2D[5];
-        var filter  = new ContactFilter2D().NoFilter();
-        var count   = Physics2D.OverlapCollider(card.GetComponent<Collider2D>(), filter, results);
+        var filter = new ContactFilter2D().NoFilter();
+        var count = Physics2D.OverlapCollider(card.GetComponent<Collider2D>(), filter, results);
 
         for (var i = 0; i < count; i++)
         {
             var other = results[i].GetComponent<Card>();
-            if (other == null) 
-                continue;
-            if (!BattleCommon.IsValidCardType(other)) 
-                continue;
+            if (other == null) continue;
+            if (!IsValidCardType(other)) continue;
+            if (Flag(other)) continue;
 
-            if (Flag(card)) return;
-            
-            
-            var me   = card.cardData.cardType;
-            var you  = other.cardData.cardType;
+            var me = card.cardData.cardType;
+            var you = other.cardData.cardType;
             if (me == you) continue;
 
             if (me == CardType.Person)
@@ -89,13 +92,47 @@ public class BattleManager : MonoBehaviour
             {
                 TryEngageBattle(other.owningStack, card.owningStack).Forget();
             }
+
+            return;
         }
     }
 
-
-    private async UniTaskVoid TryEngageBattle(Stack persons, Stack enemies)
+    
+    private List<Card> SplitStack(Stack stack)
     {
-        var center = enemies.TopCard.transform.position * 0.5f;
+        var separatedCards = new List<Card>();
+
+        foreach (var oldCard in stack.cards.ToList())
+        {
+            var slow = oldCard.GetComponent<SlowParentConstraint>();
+            var drag = oldCard.GetComponent<CardDrag>();
+            
+            if (slow != null)
+            {
+                slow.enabled = false;
+                slow.target = null;
+            }
+            
+            if (drag != null) drag.enabled = false;
+                            
+            stack.RemoveCard(oldCard);
+            
+            var newStack =  StackManager.Instance.AddNewStack();
+            
+            newStack.AddCard(oldCard);
+            
+            separatedCards.Add(oldCard);
+        }
+
+        GameTableManager.Instance.RemoveStackFromTable(stack);
+
+        Debug.Log($"SplitStack 완료 : {separatedCards.Count}개 카드 추출");
+        return separatedCards;
+    }
+
+    private async UniTaskVoid TryEngageBattle(Stack personStack, Stack enemyStack)
+    {
+        var center = enemyStack.TopCard.transform.position * 0.5f;
 
         Debug.Log("새 전투 생성");
 
@@ -106,7 +143,10 @@ public class BattleManager : MonoBehaviour
         battleSystem.DeleteBattle += OnDeleteBattle;
         battleSystems.Add(battleSystem);
         
-        await battleSystem.Init(persons.cards, enemies.cards);
+        var personsForBattle = SplitStack(personStack);
+        var enemiesForBattle = SplitStack(enemyStack);
+
+        await battleSystem.Init(personsForBattle, enemiesForBattle);
     }
 
     private void OnDeleteBattle(BattleSystem battleSystem)

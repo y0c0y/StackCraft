@@ -34,10 +34,9 @@ public class BattleSystem : MonoBehaviour
         return Vector3.Distance(zone.transform.position, pos) <= range;
     }
     
-    public async UniTask Init(List<Card> oriPerson, List<Card> oriEnemy)// 여기가 스택이 되어야 하네
+    
+    public async UniTask Init(List<Card> oriPerson, List<Card> oriEnemy)
     {
-        zone.OnBackgroundSizeChanged -= zoneUI.ShowZone;
-        zone.OnBackgroundSizeChanged += zoneUI.ShowZone;
 
         if (canvas.renderMode == RenderMode.WorldSpace && canvas.worldCamera == null)
             canvas.worldCamera = Camera.main;
@@ -45,11 +44,10 @@ public class BattleSystem : MonoBehaviour
         persons.AddRange(oriPerson);
         enemies.AddRange(oriEnemy);
         
-        zone.ArrangeCard(persons, enemies);
+        zone.ResizeBackground(enemies.Count, persons.Count);
+        
         
         InitHp();
-        
-        zone.ResizeBackground(Mathf.Max(enemies.Count, persons.Count));
 
         await TryStartBattle();
     }
@@ -70,6 +68,8 @@ public class BattleSystem : MonoBehaviour
 
     private async UniTask TryStartBattle()
     {
+        await zone.ArrangeCard(persons, enemies);
+        
         _isInBattle = true;
         var preemptiveFlag = false;
 
@@ -110,7 +110,7 @@ public class BattleSystem : MonoBehaviour
         var targetCard = targets[targetIdx];
         
         var damage = _random.Next(1, 6);
-        Debug.Log($"{attacker.name} → {targetCard.name}에게 {damage} 피해");
+        // Debug.Log($"{attacker.name} → {targetCard.name}에게 {damage} 피해");
 
         var hp = _cardHp[targetCard];
         hp -= damage;
@@ -146,13 +146,27 @@ public class BattleSystem : MonoBehaviour
         Destroy(card);
 
     }
+    
+    public void RestoreCardComponents(List<Card> list, bool isEnemy)
+    {
+        foreach (var card in list)
+        {
+            if (card == null) continue;
+            var drag = card.GetComponent<CardDrag>();
+            
+            drag.enabled = true;
 
-    private void EndBattle(bool win)
+            card.cardData.cardType = isEnemy ? CardType.Enemy : CardType.Person;
+
+        }
+    } 
+
+    private void EndBattle(bool isEnemy)
     {
         Debug.Log("전투 종료");
         
-        var list = win ? enemies : persons;
-        zone.RestoreCardComponents(list);
+        var list = isEnemy ? enemies : persons;
+        RestoreCardComponents(list, isEnemy);
         
         DeleteBattle?.Invoke(this);
     }
