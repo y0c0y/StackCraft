@@ -18,6 +18,8 @@ public class BattleZone : MonoBehaviour
     [SerializeField] private float verticalSpacing = 1f;
     [SerializeField] private float horizontalSpacing = 0.2f;
     
+    private List<(Card card, ComponentState state)> _list;
+    
     private struct ComponentState
     {
         public bool SlowEnabled;
@@ -28,93 +30,94 @@ public class BattleZone : MonoBehaviour
         return GetComponent<Collider2D>().bounds.Contains(worldPos);
     }
     
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        var card = other.GetComponent<Card>();
-        if (card == null || !BattleCommon.IsValidCardType(card)) return;
         
-        OnCardEntered?.Invoke(card);
-    }
-    
-    private void OnTriggerExit2D(Collider2D other)
+    public void RestoreCardComponents(List<Card> list)
     {
-        var card = other.GetComponent<Card>();
-        if (card == null || !BattleCommon.IsValidCardType(card)) return;
-        
-        OnCardExited?.Invoke(card);
-    }
-
-
-    private ComponentState DisableCardComponents(Card card)
-    {
-        var slow = card.GetComponent<SlowParentConstraint>();
-        var drag = card.GetComponent<CardDrag>();
-    
-        var state = new ComponentState {
-            SlowEnabled = slow.enabled,
-            DragEnabled = drag.enabled
-        };
-    
-        slow.enabled = false;
-        drag.enabled = false;
-        return state;
-    }
-
-    public void ArrangeCard(List<Card> cards, bool isEnemy)
-    {
-        int cnt = cards.Count;
-        if (cnt == 0) return;
-
-        var list = new List<(Card card, ComponentState state)>(cards.Count);
-        float totalWidth     = (cards.Count - 1) * (cardWidth + horizontalSpacing);
-        Vector3 centerOffset = new Vector3(totalWidth * 0.5f, 0f, 0f);
-        Vector3 origin       = (isEnemy ? enemyArea : personArea).position;
-
-        for (int i = 0; i < cards.Count; i++)
+        foreach (var card in list)
         {
-            if(i >= cards.Count) continue;
+            if (card == null) continue;
+            var slow = card.GetComponent<SlowParentConstraint>();
+            var drag = card.GetComponent<CardDrag>();
             
-            var card  = cards[i];
-            if (card == null) continue;
-            var state = DisableCardComponents(card);
-            list.Add((card, state));
-
-            Vector3 offset    = new Vector3(i * (cardWidth + horizontalSpacing), 0f, 0f);
-            Vector3 targetPos = origin - centerOffset + offset;
-
-            MoveCardInstant(card, targetPos);
+            slow.enabled = false;
+            drag.enabled = true;
         }
-        
-        foreach (var (card, state) in list)
-        {
-            if (card == null) continue;
-            RestoreCardComponents(card, state);
-        }
-    }
-
-
-    private void RestoreCardComponents(Card card, ComponentState state)
-    {
-        var slow = card.GetComponent<SlowParentConstraint>();
-        var drag = card.GetComponent<CardDrag>();
+    } 
     
-        slow.enabled = state.SlowEnabled;
-        drag.enabled = state.DragEnabled;
-    }
-
-
-    private void MoveCardInstant(Card card, Vector3 targetPos)
-    {
-        var rb = card.GetComponent<Rigidbody2D>();
-        rb.position = targetPos;
-    }
-
     public void ResizeBackground(int maxCardCount)
     {
-        var width = maxCardCount * (cardWidth + horizontalSpacing);
-        var height = (cardHeight + verticalSpacing) * 2f;
+        if (maxCardCount <= 0)
+        {
+            OnBackgroundSizeChanged?.Invoke(transform.position, Vector2.zero);
+            return;
+        }
+        
+        var totalWidth = (maxCardCount - 1) * (cardWidth + horizontalSpacing) + cardWidth;
+        var totalHeight = cardHeight * 2 + verticalSpacing;
 
-        OnBackgroundSizeChanged?.Invoke(transform.position, new Vector2(width, height));
+        var size = new Vector2(totalWidth, totalHeight);
+        
+        OnBackgroundSizeChanged?.Invoke(transform.position, size);
+        
+        var bc = GetComponent<BoxCollider2D>();
+        if (bc != null)
+            bc.size = size;
+    }
+
+    
+    public void ArrangeCard(List<Card> persons, List<Card> enemies)
+    {
+        int maxCnt = Mathf.Max(persons.Count, enemies.Count);
+        if (maxCnt == 0) return;
+
+        var totalWidth = (maxCnt - 1) * (cardWidth + horizontalSpacing);
+        var centerOffset = new Vector3(totalWidth * 0.5f, 0f, 0f);
+
+        _ = ArrangeGroup(persons, transform.position + personArea.localPosition, centerOffset);
+        _ = ArrangeGroup(enemies, transform.position + enemyArea.localPosition, centerOffset);
+    }
+
+    private async UniTask ArrangeGroup(List<Card> cards, Vector3 origin, Vector3 centerOffset)
+    {
+        for (int i = 0; i < cards.Count; i++)
+        {
+            var card = cards[i];
+            if (card == null) continue;
+
+            DisableConstraints(card);
+
+            var offset = new Vector3(i * (cardWidth + horizontalSpacing), 0f, 0f);
+            var targetPos = origin - centerOffset + offset;
+
+            await MoveCardSmooth(card, targetPos, 0.3f); // ✨ 천천히 이동
+        }
+    }
+
+    private void DisableConstraints(Card card)
+    {
+        var slow = card.GetComponent<SlowParentConstraint>();
+        var drag = card.GetComponent<CardDrag>();
+        if (slow != null) slow.enabled = false;
+        if (drag != null) drag.enabled = false;
+    }
+
+    private async UniTask MoveCardSmooth(Card card, Vector3 targetPos, float duration)
+    {
+        var rb = card.GetComponent<Rigidbody2D>();
+        if (rb == null) return;
+
+        Vector3 startPos = rb.position;
+        var elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            var t = Mathf.Clamp01(elapsed / duration);
+            rb.MovePosition(Vector3.Lerp(startPos, targetPos, t));
+            await UniTask.Yield();
+        }
+
+        rb.MovePosition(targetPos);
     }
 
 }

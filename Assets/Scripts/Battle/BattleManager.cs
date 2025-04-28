@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BattleManager : MonoBehaviour
@@ -54,6 +55,8 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    private bool Flag(Card c) => battleSystems.Any(bs => bs.IsCardInBattle(c));
+
     private void OnCardDragEnded(Card card)
     {
         if (!BattleCommon.IsValidCardType(card)) 
@@ -63,7 +66,7 @@ public class BattleManager : MonoBehaviour
         var filter  = new ContactFilter2D().NoFilter();
         var count   = Physics2D.OverlapCollider(card.GetComponent<Collider2D>(), filter, results);
 
-        for (int i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
             var other = results[i].GetComponent<Card>();
             if (other == null) 
@@ -71,15 +74,21 @@ public class BattleManager : MonoBehaviour
             if (!BattleCommon.IsValidCardType(other)) 
                 continue;
 
+            if (Flag(card)) return;
+            
+            
             var me   = card.cardData.cardType;
             var you  = other.cardData.cardType;
-            if (me == you) continue;  
-            
-            if (battleSystems.Any(bs => bs.IsCardInBattle(card)))
-                return;
+            if (me == you) continue;
 
-            TryEngageBattle(card, other).Forget();
-            return;
+            if (me == CardType.Person)
+            {
+                TryEngageBattle(card.owningStack, other.owningStack).Forget();
+            }
+            else
+            {
+                TryEngageBattle(other.owningStack, card.owningStack).Forget();
+            }
         }
     }
 
@@ -108,8 +117,7 @@ public class BattleManager : MonoBehaviour
         battleSystem.DeleteBattle += OnDeleteBattle;
         battleSystems.Add(battleSystem);
         
-        await battleSystem.Init(person, enemy);
-        
+        await battleSystem.Init(persons.cards, enemies.cards);
     }
 
     private void OnDeleteBattle(BattleSystem battleSystem)
