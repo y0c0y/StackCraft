@@ -130,10 +130,7 @@ public class PortalCard : MonoBehaviour
 
     private void SendConfirmCallback()
     {
-        foreach (var card in _cardsToSend)
-        {
-            GameTableManager.MoveCardToField(GameTableManager.FieldType.EnemyField, card);
-        }
+        GameTableManager.MoveCardsToField(GameTableManager.FieldType.EnemyField, _cardsToSend);
         
         portalState = PortalState.AfterSend;
         GameTableManager.Instance.ChangeField(GameTableManager.FieldType.EnemyField);

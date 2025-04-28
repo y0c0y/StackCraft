@@ -183,7 +183,7 @@ public class GameTableManager : MonoBehaviour
         }
     }
 
-    public static void MoveCardToField(FieldType field, Card card)
+    public static Stack MoveCardToField(FieldType field, Card card)
     {
         if (card.owningStack)
         {
@@ -199,5 +199,21 @@ public class GameTableManager : MonoBehaviour
         Instance.AddStackToTable(newStack);
         card.transform.position = GameTableManager.Instance.fields[(int)field].transform.position;
         CardColliderManager.Instance.ModifyColliders(newStack);
+        
+        return newStack;
+    }
+
+    public static void MoveCardsToField(FieldType field, List<Card> cards)
+    {
+        if (cards.Count <= 0) return;
+
+        var newStack = MoveCardToField(field, cards[0]);
+
+        for (int i = 1; i < cards.Count; i++)
+        {
+            var card = cards[i];
+            card.owningStack.RemoveCard(card);
+            newStack.AddCard(card);
+        }
     }
 }
