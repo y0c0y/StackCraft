@@ -15,6 +15,7 @@ public class CameraMove : MonoBehaviour
 
     private bool isDragging = false;
     private bool isDraggingCard = false;
+    private float baseFOV = 75f;
     private Vector2 lastMousePosition;
 
     private void Awake()
@@ -70,7 +71,8 @@ public class CameraMove : MonoBehaviour
         {
             Vector2 currentMousePosition = pointAction.ReadValue<Vector2>();
             Vector2 delta = currentMousePosition - lastMousePosition;
-            delta *= 0.02f;
+            float fovScale = cam.Lens.FieldOfView / baseFOV;
+            delta *= 0.01f * fovScale;
 
             Vector3 newPosition = target.position - new Vector3(delta.x, delta.y, 0f);
             Bounds bounds = moveArea.bounds;
