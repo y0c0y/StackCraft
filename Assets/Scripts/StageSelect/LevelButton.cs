@@ -39,7 +39,23 @@ public class LevelButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     {
         if(!_isUnlocked) return;
         StageInfo.SelectedLevel = levelData;
+
+        var allCanvas = FindObjectsByType<Canvas>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        foreach (var canvas in allCanvas)
+        {
+            if (canvas.renderMode != RenderMode.ScreenSpaceCamera)
+            {
+                canvas.enabled = false;
+            }
+        }
+        
+        var sceneTransition = FindFirstObjectByType<SceneTransition>();
+        sceneTransition.onFadeOutTransitionDone.AddListener(LoadScene);
+        sceneTransition.StartFadeOutTransition();
+    }
+
+    private void LoadScene()
+    {
         UnityEngine.SceneManagement.SceneManager.LoadScene(levelData.sceneName);
     }
-    
 }

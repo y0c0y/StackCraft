@@ -15,11 +15,11 @@ public class ChangePercentage : MonoBehaviour
 
     private void Start()
     {
-        text.text = $"{slider.value} %";
+        text.text = $"{slider.value * 100:N0} %";
     }
 
     public void OnValueChanged()
     {
-        text.text = $"{slider.value} %";
+        text.text = $"{slider.value* 100:N0} %";
     }
 }

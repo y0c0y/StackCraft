@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class StageManager : MonoBehaviour
 {
@@ -13,5 +12,4 @@ public class StageManager : MonoBehaviour
             btn.OnHovered += StageInfoPanel.Instance.SetInfo;
         }
     }
-
 }

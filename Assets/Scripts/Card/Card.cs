@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    private static readonly Vector2 CARD_SIZE = new Vector2(3f, 4f);
+    public static readonly Vector2 CARD_SIZE = new Vector2(3f, 4f);
 
     // Events
     public event Action<Card, Card> CardReleasedOn;

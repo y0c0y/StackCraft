@@ -144,7 +144,8 @@ public class QuestManager : MonoBehaviour
 
    private void CheckRecipe(Recipe recipe)
    {
-      foreach (var quest in Quests.Where(quest => quest.Value.questRecipe == recipe))
+      if (!recipe) return;
+      foreach (var quest in Quests.Where(quest => quest.Value.questRecipe?.recipeName == recipe.recipeName))
       {
          ChangeComplete(quest.Value);
       }
