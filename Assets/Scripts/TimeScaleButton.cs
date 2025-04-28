@@ -16,9 +16,11 @@ public class TimeScaleButton : MonoBehaviour
     void Start()
     {
         var gameTableManager = GameTableManager.Instance;
+        var timeManager = TimeManager.Instance;
         if (gameTableManager)
         {
             _button.onClick.AddListener(() => gameTableManager.SetTimeScale(timeScale));
+            _button.onClick.AddListener(() => timeManager.SetTimeScale(timeScale));
         }
     }
 }
