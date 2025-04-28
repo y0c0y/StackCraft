@@ -1,5 +1,6 @@
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class CameraMove : MonoBehaviour
@@ -32,14 +33,13 @@ public class CameraMove : MonoBehaviour
     private void Update()
     {
         if (!UIManager.Instance.isDefaultUI) return;
+        if (EventSystem.current.IsPointerOverGameObject()) return;
         HandleDrag();
         HandleScroll();
     }
 
     private void HandleDrag()
     {
-        if (QuestScrollHandler.Instance && QuestScrollHandler.Instance.IsPointerOver) return;
-        
         if (clickAction == null || pointAction == null)
             return;
 
@@ -86,8 +86,6 @@ public class CameraMove : MonoBehaviour
 
     private void HandleScroll()
     {
-        if (QuestScrollHandler.Instance && QuestScrollHandler.Instance.IsPointerOver) return;
-        
         Vector2 scrollDelta = scrollwheelAction.ReadValue<Vector2>();
         if (scrollDelta.y != 0)
         {
