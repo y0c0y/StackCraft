@@ -74,7 +74,7 @@ public class QuestManager : MonoBehaviour
          _progresses[quest.questID] = new QuestProgress(quest.questID);
       } 
       
-      TotalQuestCnt = Quests.Count;
+      TotalQuestCnt = Quests.Count - 1;
       CompletedQuestCnt = 0;
       
       ChangeQuestProgress?.Invoke(TotalQuestCnt, CompletedQuestCnt);

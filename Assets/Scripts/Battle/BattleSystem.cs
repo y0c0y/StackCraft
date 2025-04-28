@@ -10,8 +10,8 @@ public class BattleSystem : MonoBehaviour
 {
     [Header("Prefabs")] 
     public BattleZone zone;
-    public BattleZoneUIController zoneUI;
-    public Canvas canvas;
+    // public BattleZoneUIController zoneUI;
+    // public Canvas canvas;
 
     [Header("InBattleCards")]
     public List<Card> persons = new();
@@ -37,9 +37,8 @@ public class BattleSystem : MonoBehaviour
     
     public async UniTask Init(List<Card> oriPerson, List<Card> oriEnemy)
     {
-
-        if (canvas.renderMode == RenderMode.WorldSpace && canvas.worldCamera == null)
-            canvas.worldCamera = Camera.main;
+        await UniTask.WaitForFixedUpdate();
+        
         
         persons.AddRange(oriPerson);
         enemies.AddRange(oriEnemy);
@@ -142,7 +141,9 @@ public class BattleSystem : MonoBehaviour
         
         await UniTask.Delay(500);
         
+        
         Destroy(card.gameObject);
+        Destroy(card.owningStack.gameObject);
         Destroy(card);
 
     }
@@ -152,11 +153,10 @@ public class BattleSystem : MonoBehaviour
         foreach (var card in list)
         {
             if (card == null) continue;
-            var drag = card.GetComponent<CardDrag>();
-            
-            drag.enabled = true;
+            card.GetComponent<CardDrag>().enabled = true;
+            card.owningStack.GetComponent<StackRepulsion>().enabled = true;
 
-            card.cardData.cardType = isEnemy ? CardType.Enemy : CardType.Person;
+            // card.cardData.cardType = isEnemy ? CardType.Enemy : CardType.Person;
 
         }
     } 

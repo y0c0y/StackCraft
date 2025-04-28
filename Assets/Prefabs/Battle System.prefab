@@ -390,8 +390,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   zone: {fileID: 2143629418180512919}
-  zoneUI: {fileID: 8568922079185979603}
-  canvas: {fileID: 3035743702093108450}
   persons: []
   enemies: []
 --- !u!1 &8130954623696539935
@@ -412,7 +410,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5487872381719514768
 RectTransform:
   m_ObjectHideFlags: 0

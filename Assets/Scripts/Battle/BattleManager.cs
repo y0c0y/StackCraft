@@ -75,22 +75,26 @@ public class BattleManager : MonoBehaviour
 
         for (var i = 0; i < count; i++)
         {
+            
             var other = results[i].GetComponent<Card>();
             if (other == null) continue;
             if (!IsValidCardType(other)) continue;
             if (Flag(other)) continue;
+            
+            Debug.Log($"Card {other.name}");
 
             var me = card.cardData.cardType;
             var you = other.cardData.cardType;
             if (me == you) continue;
 
-            if (me == CardType.Person)
+            switch (me)
             {
-                TryEngageBattle(card.owningStack, other.owningStack).Forget();
-            }
-            else
-            {
-                TryEngageBattle(other.owningStack, card.owningStack).Forget();
+                case CardType.Person:
+                    TryEngageBattle(card.owningStack, other.owningStack).Forget();
+                    break;
+                case CardType.Enemy:
+                    TryEngageBattle(other.owningStack, card.owningStack).Forget();
+                    break;
             }
 
             return;
@@ -98,14 +102,17 @@ public class BattleManager : MonoBehaviour
     }
 
     
-    private List<Card> SplitStack(Stack stack)
+    private async UniTask<List<Card>> SplitStack(Stack stack)
     {
         var separatedCards = new List<Card>();
+
+        stack.GetComponent<StackRepulsion>().enabled = false;
 
         foreach (var oldCard in stack.cards.ToList())
         {
             var slow = oldCard.GetComponent<SlowParentConstraint>();
             var drag = oldCard.GetComponent<CardDrag>();
+            var rig = oldCard.GetComponent<Rigidbody2D>();
             
             if (slow != null)
             {
@@ -114,12 +121,24 @@ public class BattleManager : MonoBehaviour
             }
             
             if (drag != null) drag.enabled = false;
+            
+            // if(rig != null) rig
+            
                             
             stack.RemoveCard(oldCard);
             
             var newStack =  StackManager.Instance.AddNewStack();
             
             newStack.AddCard(oldCard);
+
+            await UniTask.WaitForEndOfFrame();
+            
+            var sr = newStack.GetComponent<StackRepulsion>();
+            if (sr != null)
+            {
+                Debug.Log("Stack Repulsion");
+                sr.enabled = false;
+            }
             
             separatedCards.Add(oldCard);
         }
@@ -132,10 +151,18 @@ public class BattleManager : MonoBehaviour
 
     private async UniTaskVoid TryEngageBattle(Stack personStack, Stack enemyStack)
     {
-        var center = enemyStack.TopCard.transform.position * 0.5f;
-
+        await UniTask.WaitForFixedUpdate();
+        
+        var personsForBattle = await SplitStack(personStack);
+        var enemiesForBattle = await SplitStack(enemyStack);
+        
+        Debug.Log($"{personsForBattle.Count}");
+        
         Debug.Log("새 전투 생성");
 
+        var center = new Vector3();
+        if (enemiesForBattle[0] != null) center = enemiesForBattle[0].transform.position;
+        
         var battleSystemObj = Instantiate(battleSystemPrefab, center, Quaternion.identity);
         var battleSystem = battleSystemObj.GetComponent<BattleSystem>();
         battleSystemObj.transform.SetParent(transform);
@@ -143,8 +170,6 @@ public class BattleManager : MonoBehaviour
         battleSystem.DeleteBattle += OnDeleteBattle;
         battleSystems.Add(battleSystem);
         
-        var personsForBattle = SplitStack(personStack);
-        var enemiesForBattle = SplitStack(enemyStack);
 
         await battleSystem.Init(personsForBattle, enemiesForBattle);
     }

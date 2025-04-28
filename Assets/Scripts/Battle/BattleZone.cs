@@ -65,7 +65,7 @@ public class BattleZone : MonoBehaviour
 
         Vector3 startPos = rb.position;
         var elapsed = 0f;
-
+        
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
@@ -75,6 +75,7 @@ public class BattleZone : MonoBehaviour
         }
 
         rb.MovePosition(targetPos);
+        
     }
 
 }
