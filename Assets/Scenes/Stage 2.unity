@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 42918156}
   - component: {fileID: 42918157}
   m_Layer: 0
-  m_Name: ConfineArea
+  m_Name: AllyConfineArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -68532,7 +68532,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 1
-  m_Size: {x: 36, y: 24}
+  m_Size: {x: 50, y: 48}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -68570,7 +68570,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4831202f17dd4322a7f6ce189af15bcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: {x: 36, y: 24}
+  size: {x: 50, y: 48}
   confineArea: {fileID: 42918157}
 --- !u!1 &766522857
 GameObject:
@@ -138306,7 +138306,7 @@ GameObject:
   - component: {fileID: 1906713788}
   - component: {fileID: 1906713787}
   m_Layer: 0
-  m_Name: ConfineArea (1)
+  m_Name: PortalConfineArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -138782,7 +138782,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b968fc16a1ae52a4db9b87cc7322cbec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  portalType: 0
+  portalType: 1
   portalState: 0
   descriptionMessageText: "\uC774 \uACF3\uC5D0 \uC8FC\uBBFC \uCE74\uB4DC\uB97C \uC62C\uB9AC\uBA74
     5\uCD08\uD6C4 \uC801\uC9C4\uC73C\uB85C \uC774\uB3D9\uC2DC\uD0B5\uB2C8\uB2E4 "
@@ -139063,7 +139063,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9013709638632425590, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1152060
+      value: 1343580
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
