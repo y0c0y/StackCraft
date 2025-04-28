@@ -27,20 +27,6 @@ public class BattleSystem : MonoBehaviour
 
     private readonly Random _random = new Random();
     
-    public async UniTask Init(Stack person, Stack enemy)// 여기가 스택이 되어야 하네
-    {
-        zone.OnBackgroundSizeChanged -= zoneUI.ShowZone;
-        zone.OnBackgroundSizeChanged += zoneUI.ShowZone;
-
-        if (canvas.renderMode == RenderMode.WorldSpace && canvas.worldCamera == null)
-            canvas.worldCamera = Camera.main;
-
-        AddStack(person);
-        AddStack(enemy);
-
-        await TryStartBattle();
-    }
-
     public bool IsCardInBattle(Card card) => persons.Contains(card) || enemies.Contains(card);
 
     public bool IsEnemyNearby(Vector3 pos, float range)
@@ -48,40 +34,38 @@ public class BattleSystem : MonoBehaviour
         return Vector3.Distance(zone.transform.position, pos) <= range;
     }
     
-    private async UniTask<bool> Attack(List<Card> attackers, List<Card> targets)
+    public async UniTask Init(List<Card> oriPerson, List<Card> oriEnemy)// 여기가 스택이 되어야 하네
     {
-        var attackerIdx = _random.Next(0, attackers.Count);
-        var targetIdx = _random.Next(0, targets.Count);
+        zone.OnBackgroundSizeChanged -= zoneUI.ShowZone;
+        zone.OnBackgroundSizeChanged += zoneUI.ShowZone;
 
-        if (attackerIdx >= attackers.Count || targetIdx >= targets.Count)
+        if (canvas.renderMode == RenderMode.WorldSpace && canvas.worldCamera == null)
+            canvas.worldCamera = Camera.main;
+        
+        persons.AddRange(oriPerson);
+        enemies.AddRange(oriEnemy);
+        
+        zone.ArrangeCard(persons, enemies);
+        
+        InitHp();
+        
+        zone.ResizeBackground(Mathf.Max(enemies.Count, persons.Count));
+
+        await TryStartBattle();
+    }
+
+    private void InitHp()
+    {
+        foreach (var card in persons)
         {
-            attackerIdx = 0;
-            targetIdx = 0;
+            _cardHp[card] = 5;
+            // BattleCommon.UpdateCardHpUI(card, 5);
         }
-        
-        var attacker  = attackers[attackerIdx];
-        var targetCard = targets[targetIdx];
-        
-        var damage = _random.Next(0, 6);
-        Debug.Log($"{attacker.name} → {targetCard.name}에게 {damage} 피해");
-
-        int hp = _cardHp[targetCard];
-        
-        
-        hp -= damage;
-        if (hp <= 0)
+        foreach (var card in enemies)
         {
-            Debug.Log($"🟥 {targetCard.name} 파괴됨");
-            HandleRemove(targetCard, true);
+            _cardHp[card] = 5;
+            // BattleCommon.UpdateCardHpUI(card, 5);
         }
-        else
-        {
-            _cardHp[targetCard] = hp;
-        }
-
-        await UniTask.Delay(500);
-
-        return targets.Count == 0;
     }
 
     private async UniTask TryStartBattle()
@@ -108,41 +92,67 @@ public class BattleSystem : MonoBehaviour
         
         await UniTask.Delay(500);
         
-        EndBattle();
+        EndBattle(preemptiveFlag);
     }
     
-    public void AddStack(Stack stack)
+    private async UniTask<bool> Attack(List<Card> attackers, List<Card> targets)
     {
-        if (IsCardInBattle(card)) return;
-        
-        var (group, isEnemy) = BattleCommon.GetCardTargetList(card, persons, enemies);
-        group.Add(card);
-        _cardHp[card] = 5;
-        // BattleCommon.UpdateCardHpUI(card, 5);
+        var attackerIdx = _random.Next(0, attackers.Count);
+        var targetIdx = _random.Next(0, targets.Count);
 
+        if (attackerIdx >= attackers.Count || targetIdx >= targets.Count)
+        {
+            attackerIdx = 0;
+            targetIdx = 0;
+        }
+        
+        var attacker  = attackers[attackerIdx];
+        var targetCard = targets[targetIdx];
+        
+        var damage = _random.Next(1, 6);
+        Debug.Log($"{attacker.name} → {targetCard.name}에게 {damage} 피해");
+
+        var hp = _cardHp[targetCard];
+        hp -= damage;
+        if (hp <= 0)
+        {
+            Debug.Log($"🟥 {targetCard.name} 파괴됨");
+            await HandleRemove(targets, targetCard);
+        }
+        else
+        {
+            _cardHp[targetCard] = hp;
+        }
+
+        await UniTask.Delay(500);
+
+        return targets.Count == 0;
     }
+
     
-    private void HandleRemove(Card card, bool shouldDestroy)
+    private async UniTask HandleRemove(List<Card> group, Card card)
     {
-        var (group, isEnemy) = BattleCommon.GetCardTargetList(card, persons, enemies);
         if (!group.Remove(card)) return;
+
+        Debug.Log($"{card.cardData.cardType}");
 
         _cardHp.Remove(card);
 
-        if (shouldDestroy)
-        {
-            Debug.Log("Destroy");
-            Destroy(card.gameObject);
-            Destroy(card);
-        }
+        Debug.Log("Destroy");
+        
+        await UniTask.Delay(500);
+        
+        Destroy(card.gameObject);
+        Destroy(card);
 
     }
 
-    private void EndBattle()
+    private void EndBattle(bool win)
     {
         Debug.Log("전투 종료");
-
-        zone.OnBackgroundSizeChanged -= zoneUI.ShowZone;
+        
+        var list = win ? enemies : persons;
+        zone.RestoreCardComponents(list);
         
         DeleteBattle?.Invoke(this);
     }
