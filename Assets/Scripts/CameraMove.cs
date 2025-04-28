@@ -104,18 +104,9 @@ public class CameraMove : MonoBehaviour
         if (field == null) return;
 
         moveArea = field.confineArea;
-        
-        Vector2 currentMousePosition = pointAction.ReadValue<Vector2>();
-        Vector2 delta = currentMousePosition - lastMousePosition;
-        delta *= 0.02f;
-
-        Vector3 newPosition = target.position - new Vector3(delta.x, delta.y, 0f);
-        Bounds bounds = moveArea.bounds;
-            
-        newPosition.x = Mathf.Clamp(newPosition.x, bounds.min.x, bounds.max.x);
-        newPosition.y = Mathf.Clamp(newPosition.y, bounds.min.y, bounds.max.y);
-
-        target.position = newPosition;
-        lastMousePosition = currentMousePosition;
+        var targetPosition = target.position;
+        targetPosition.x = field.transform.position.x;
+        targetPosition.y = field.transform.position.y;
+        target.position = targetPosition;
     }
 }
