@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
@@ -5,33 +7,27 @@ public class StackRepulsion : MonoBehaviour
 {
     private const float DAMPING = 0.85f;
     private const float REPULSION_FORCE = 110f;
-    private const float XZ_BOUNCE_ELASITICTY = 0.35f;
-
-    public Vector2 MinBounds = new Vector2(-18f, -12f);
-    public Vector2 MaxBounds = new Vector2(18f, 12f);
+    private const float XY_BOUNCE_ELASITICTY = 0.35f;
     
     public Vector3 velocity;
+    
     private Stack _stack;
     private Card TopCard => _stack.TopCard;
     private Bounds bounds => _stack.bounds;
+    private Field _currentField => _stack.currentField;
     
     private Vector3 _netForceThisFrame;
+    private Rigidbody2D _rb2d;
     
     private void Awake()
     {
         _stack = GetComponent<Stack>();
-        
-        var field = GameObject.FindGameObjectWithTag("Field");
-        if (field)
-        {
-            var fieldSize = field.GetComponent<SpriteRenderer>().size;
-            MinBounds = new Vector2(-fieldSize.x / 2, -fieldSize.y / 2);
-            MaxBounds = new Vector2(fieldSize.x / 2, fieldSize.y / 2);
-        }
+        _rb2d = TopCard.GetComponent<Rigidbody2D>();
     }
 
     private void FixedUpdate()
     {
+        //Debug.Log($"Fixedupdate : {Time.time}");
         if (!TopCard) return;
         if (TopCard.gameObject.layer == LayerMask.NameToLayer("DraggingCard")) return;
         ApplyRepulsion();
@@ -41,7 +37,7 @@ public class StackRepulsion : MonoBehaviour
         if (!TopCard.IsChild && velocity.magnitude > 0.05f)
         {
             TopCard.transform.position += velocity * Time.fixedUnscaledDeltaTime;
-            ApplyBounce();
+            ApplyBoundAndBounce();
         }
         else
         {
@@ -51,28 +47,28 @@ public class StackRepulsion : MonoBehaviour
         _netForceThisFrame = Vector3.zero;
     }
 
-    private void ApplyBounce()
+    private void ApplyBoundAndBounce()
     {
         var currentPosition = TopCard.transform.position;
-        if (bounds.min.x < MinBounds.x)
+        if (bounds.min.x < _currentField.MinX)
         {
-            velocity.x *= -1f * XZ_BOUNCE_ELASITICTY;
-            TopCard.transform.position = new Vector3(MinBounds.x + Card.CARD_SIZE.x / 2f, currentPosition.y, currentPosition.z);
+            velocity.x *= -1f * XY_BOUNCE_ELASITICTY;
+            TopCard.transform.position = new Vector3(_currentField.MinX + Card.CARD_SIZE.x / 2f, currentPosition.y, currentPosition.z);
         }
-        else if (bounds.max.x > MaxBounds.x)
+        else if (bounds.max.x > _currentField.MaxX)
         {
-            velocity.x *= -1f * XZ_BOUNCE_ELASITICTY;
-            TopCard.transform.position = new Vector3(MaxBounds.x - Card.CARD_SIZE.x / 2f, currentPosition.y, currentPosition.z);
+            velocity.x *= -1f * XY_BOUNCE_ELASITICTY;
+            TopCard.transform.position = new Vector3(_currentField.MaxX - Card.CARD_SIZE.x / 2f, currentPosition.y, currentPosition.z);
         }
-        if (bounds.min.y < MinBounds.y)
+        if (bounds.min.y < _currentField.MinY)
         {
-            velocity.y *= -1f * XZ_BOUNCE_ELASITICTY;
-            TopCard.transform.position = new Vector3(currentPosition.x, MinBounds.y + bounds.size.y - Card.CARD_SIZE.y / 2f, currentPosition.z);
+            velocity.y *= -1f * XY_BOUNCE_ELASITICTY;
+            TopCard.transform.position = new Vector3(currentPosition.x, _currentField.MinY + bounds.size.y - Card.CARD_SIZE.y / 2f, currentPosition.z);
         }
-        else if (bounds.max.y > MaxBounds.y)
+        else if (bounds.max.y > _currentField.MaxY)
         {
-            velocity.y *= -1f * XZ_BOUNCE_ELASITICTY;
-            TopCard.transform.position = new Vector3(currentPosition.x, MaxBounds.y - Card.CARD_SIZE.y / 2f, currentPosition.z);
+            velocity.y *= -1f * XY_BOUNCE_ELASITICTY;
+            TopCard.transform.position = new Vector3(currentPosition.x, _currentField.MaxY - Card.CARD_SIZE.y / 2f, currentPosition.z);
         }
     }
 
