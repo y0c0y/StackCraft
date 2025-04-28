@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class QuestUIController : MonoBehaviour
 {
+    public static event Action OnQuestLoaded;
     
     public static QuestUIController Instance;
     
@@ -73,6 +74,7 @@ public class QuestUIController : MonoBehaviour
             }
         }
         Canvas.ForceUpdateCanvases(); 
+        OnQuestLoaded?.Invoke();
     }
     private QuestItem FindQuestItem(int index)
     {
