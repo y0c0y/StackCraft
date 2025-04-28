@@ -6,8 +6,6 @@ using UnityEngine;
 public class BattleZone : MonoBehaviour
 {
     public event Action<Vector3, Vector2> OnBackgroundSizeChanged;
-    public event Action<Card> OnCardEntered;
-    public event Action<Card> OnCardExited;
     
     [SerializeField] private Transform enemyArea;
     [SerializeField] private Transform personArea;

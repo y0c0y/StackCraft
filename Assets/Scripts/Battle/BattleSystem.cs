@@ -20,9 +20,6 @@ public class BattleSystem : MonoBehaviour
     public readonly float RemoveCardDelay = 0.2f;
     
     public event Action<BattleSystem> DeleteBattle;
-
-    private int _preEnemiesCount;
-    private int _prePersonCount;
     
     private Dictionary<Card, int> _cardHp = new();
     
@@ -140,12 +137,6 @@ public class BattleSystem : MonoBehaviour
         Debug.Log($"{card.cardData.cardType}");
 
         _cardHp.Remove(card);
-        
-        Debug.Log("시작");
-        
-        RepositionAllCards(group, isEnemy);
-        
-        Debug.Log("끛");
 
         Debug.Log("Destroy");
         
@@ -155,7 +146,6 @@ public class BattleSystem : MonoBehaviour
         Destroy(card);
 
     }
-    
 
     private void EndBattle(bool win)
     {

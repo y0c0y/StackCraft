@@ -93,20 +93,9 @@ public class BattleManager : MonoBehaviour
     }
 
 
-    private async UniTaskVoid TryEngageBattle(Card person, Card enemy)
+    private async UniTaskVoid TryEngageBattle(Stack persons, Stack enemies)
     {
-        await UniTask.Yield(PlayerLoopTiming.Update);
-        
-        var center = enemy.transform.position;
-        
-        var existingBattle = battleSystems
-            .FirstOrDefault(bs => bs.IsCardInBattle(person) || bs.IsCardInBattle(enemy));
-
-        if (existingBattle == null)
-        {
-            existingBattle = battleSystems
-                .FirstOrDefault(bs => bs.IsEnemyNearby(center, 1.5f));
-        }
+        var center = enemies.TopCard.transform.position * 0.5f;
 
         Debug.Log("새 전투 생성");
 
@@ -122,11 +111,14 @@ public class BattleManager : MonoBehaviour
 
     private void OnDeleteBattle(BattleSystem battleSystem)
     {
-        battleSystem.DeleteBattle -= OnDeleteBattle;
-        battleSystems.Remove(battleSystem);
+        if (battleSystem != null)
+        {
+            battleSystem.DeleteBattle -= OnDeleteBattle;
+            battleSystems.Remove(battleSystem);
         
-        Destroy(battleSystem.gameObject);
-        
+            Destroy(battleSystem.gameObject);
+        }
+
         CheckStageClear?.Invoke();
     }
     
