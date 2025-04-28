@@ -24,7 +24,6 @@ public class UIManager : MonoBehaviour
         canvasDict = new Dictionary<string, Canvas>();
         foreach (var canvas in canvasUI)
         {
-            Debug.Log(canvas.name);
             canvasDict.Add(canvas.name, canvas);
         }
     }
