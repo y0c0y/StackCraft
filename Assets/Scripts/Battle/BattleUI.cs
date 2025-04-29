@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI; // or TMPro
 using UnityEngine.EventSystems; // if needed
 
-public class BattleUIController : MonoBehaviour
+public class BattleUI : MonoBehaviour
 {
     [Header("UI Canvas (World Space)")]
     [SerializeField] private Canvas battleZoneCanvas;

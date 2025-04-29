@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CardBattleUIController : MonoBehaviour
+public class CardBattleUI : MonoBehaviour
 {
 	[Header("UI Elements")]
 	public Canvas canvas;
@@ -25,12 +25,4 @@ public class CardBattleUIController : MonoBehaviour
 	{
 		hpText.text = hp.ToString();
 	}
-	
-	
-	
-	
-	
-	
-	
-	
 }
