@@ -9,16 +9,16 @@ using UnityEngine.SceneManagement;
 
 public class QuestManager : MonoBehaviour
 {
+   public event Action<int, int> QuestProgressChanged;
+   public event Action<QuestData> QuestCompleted;
+   
    public static QuestManager Instance {get; private set;}
 
    public GameObject questList;
 
    private int TotalQuestCnt {get; set;}
    private int CompletedQuestCnt {get; set;}
-
-   public event Action<int, int> ChangeQuestProgress;
-   public event Action<QuestData> ChangeQuestItemUI;
-
+   
    public readonly Dictionary<string, QuestData> Quests = new();
    private readonly Dictionary<string, QuestProgress> _progresses = new();
 
@@ -35,13 +35,11 @@ public class QuestManager : MonoBehaviour
    private void Start()
    {
       RecipeManager.Instance.OnRecipeFinished += CheckRecipe;
-
       BattleManager.Instance.CheckStageClear += OnCheckStageClear;
    }
 
    public async UniTask Init()
    {
-
       if (StageInfo.SelectedLevel != null)
       {
          var label = StageInfo.SelectedLevel.displayName + " Quests";
@@ -77,7 +75,7 @@ public class QuestManager : MonoBehaviour
       TotalQuestCnt = Quests.Count - 1;
       CompletedQuestCnt = 0;
       
-      ChangeQuestProgress?.Invoke(TotalQuestCnt, CompletedQuestCnt);
+      QuestProgressChanged?.Invoke(TotalQuestCnt, CompletedQuestCnt);
    }
    
    public static void GameClear(bool isClear)
@@ -167,8 +165,8 @@ public class QuestManager : MonoBehaviour
          return;
       }
       
-      ChangeQuestProgress?.Invoke(TotalQuestCnt, CompletedQuestCnt);
-      ChangeQuestItemUI?.Invoke(quest);
+      QuestProgressChanged?.Invoke(TotalQuestCnt, CompletedQuestCnt);
+      QuestCompleted?.Invoke(quest);
       
       if(questID ==  QuestInfo.GameClearQuestID) GameClear(true);
    }

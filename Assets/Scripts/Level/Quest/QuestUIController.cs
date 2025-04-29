@@ -26,8 +26,8 @@ public class QuestUIController : MonoBehaviour
 
     private void Start()
     {
-        QuestManager.Instance.ChangeQuestProgress += OnChangeQuestProgress;
-        QuestManager.Instance.ChangeQuestItemUI += OnChangeQuestItemUI;
+        QuestManager.Instance.QuestProgressChanged += OnQuestProgressChanged;
+        QuestManager.Instance.QuestCompleted += OnQuestCompleted;
     }
 
     public async UniTask LoadQuestsUI()
@@ -58,7 +58,7 @@ public class QuestUIController : MonoBehaviour
         Canvas.ForceUpdateCanvases();
     }
     
-    private void OnChangeQuestItemUI(QuestData questData)
+    private void OnQuestCompleted(QuestData questData)
     {
         var item = FindQuestItem(questData.idxInQuestList);
         
@@ -71,7 +71,7 @@ public class QuestUIController : MonoBehaviour
         item.OnChange();
     }
 
-    private void OnChangeQuestProgress(int total, int completed)
+    private void OnQuestProgressChanged(int total, int completed)
     {
         progressText.text = $"({completed}/{total})";
     }
