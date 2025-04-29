@@ -8,4 +8,5 @@ public enum CardType
     Weapon,
     Construction,
     Enemy,
+    Portal
 }

@@ -38,7 +38,6 @@ public class CardDataSprite : MonoBehaviour
     {
         yield return new WaitUntil(() => _owner.cardData != null);
         artworkSprite.sprite = _owner.cardData.sprite;
-        //cardNameText.text = _owner.cardData.cardName;
     }
     
     private void SetSortingLayer(int sortingOrder, int sortingLayerId = 0)

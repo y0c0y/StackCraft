@@ -6,16 +6,29 @@ using UnityEngine.InputSystem;
 
 public class GameTableManager : MonoBehaviour
 {
+    public enum FieldType
+    {
+        PlayerField,
+        EnemyField
+    }
+    
     public static GameTableManager Instance;
+    
     public event Action<Card> CardAddedOnTable;
     public event Action<Card> CardRemovedFromTable;
 
     public event Action<Stack> StackAddedOnTable;
     public event Action<Stack> StackRemovedFromTable;
+
+    public event Action<Field> FieldChanged;
     
     [SerializeField] public List<Card> cardsOnTable;
     [SerializeField] public List<Stack> stacksOnTable;
-
+    [SerializeField] public List<Field> fields;
+    
+    public List<Card> GetAllCardsInField(FieldType field) => 
+        cardsOnTable.FindAll((c) => c.owningStack.currentField == fields[(int)field]);
+    
     [SerializeField] private GameObject cardPrefab;
     
     private void Awake()
@@ -82,7 +95,7 @@ public class GameTableManager : MonoBehaviour
             CardRemovedFromTable?.Invoke(card);
         }
     }
-    
+
     public void AddStackToTable(Stack stack)
     {
         if (!stacksOnTable.Contains(stack))
@@ -159,5 +172,51 @@ public class GameTableManager : MonoBehaviour
     public void SetTimeScale(float timeScale)
     {
         Time.timeScale = timeScale;
+    }
+
+    public void ChangeField(FieldType fieldType)
+    {
+        if (fields[(int)fieldType] != null)
+        {
+            FieldChanged?.Invoke(fields[(int)fieldType]);
+        }
+        else
+        {
+            Debug.LogError("Field not found");
+        }
+    }
+
+    public static Stack MoveCardToField(FieldType field, Card card)
+    {
+        if (card.owningStack)
+        {
+            card.owningStack.RemoveCard(card);
+            var parentConstraint = card.GetComponent<SlowParentConstraint>();
+            parentConstraint.target = null;
+            parentConstraint.enabled = false;
+        }
+        
+        var newStack = StackManager.Instance.AddNewStack();
+        newStack.AddCard(card);
+        newStack.currentField = GameTableManager.Instance.fields[(int)field];
+        Instance.AddStackToTable(newStack);
+        card.transform.position = GameTableManager.Instance.fields[(int)field].transform.position;
+        CardColliderManager.Instance.ModifyColliders(newStack);
+        
+        return newStack;
+    }
+
+    public static void MoveCardsToField(FieldType field, List<Card> cards)
+    {
+        if (cards.Count <= 0) return;
+
+        var newStack = MoveCardToField(field, cards[0]);
+
+        for (int i = 1; i < cards.Count; i++)
+        {
+            var card = cards[i];
+            card.owningStack.RemoveCard(card);
+            newStack.AddCard(card);
+        }
     }
 }

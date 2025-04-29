@@ -9,10 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 898d86f94e71dec479b7876ff7e44a7a, type: 3}
-  m_Name: QuestData 7
+  m_Script: {fileID: 11500000, guid: f8f8a2badb2439f4488891cc7743ddfa, type: 3}
+  m_Name: Portal
   m_EditorClassIdentifier: 
-  questID: Quest_Fail
-  description: 
-  questRecipe: {fileID: 0}
-  idxInQuestList: 7
+  cardName: "\uD3EC\uD0C8"
+  description: "\uD3EC\uD0C8"
+  sprite: {fileID: 5002509553983478421, guid: 5064e532fe08e7149a3ed19df2197310, type: 3}
+  cardType: 8
+  isConsumable: 0

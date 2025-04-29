@@ -17,8 +17,10 @@ public class Stack: MonoBehaviour
     public Dictionary<CardData, int> CardCounts = new();
     public bool IsOneKindOnly => CardCounts.Count == 1;
     
-    private Timer _produceTimer;
+    public Field currentField;
+    
     public Recipe producingRecipe;
+    private Timer _produceTimer;
     public bool HasTimer => _produceTimer is { isDone: false };
     public Bounds bounds;
     private Vector2 _boundOffset = new Vector2(0.5f, 0.5f);
@@ -91,7 +93,8 @@ public class Stack: MonoBehaviour
     {
         GameTableManager.Instance.AddStackToTable(this);
         
-        if (TopCard.cardData.cardType != CardType.Construction)
+        if (TopCard.cardData.cardType != CardType.Construction &&
+            TopCard.cardData.cardType != CardType.Portal)
         {
             gameObject.AddComponent<StackRepulsion>();
         }
@@ -107,6 +110,15 @@ public class Stack: MonoBehaviour
         cards.Add(card);
         card.owningStack = this;
         ReorderZOrder();
+
+        if (card == TopCard)
+        {
+            currentField = GameTableManager.Instance.fields.FirstOrDefault(this.IsInsideField);
+            if (currentField == null)
+            {
+                currentField = GameTableManager.Instance.fields[0];
+            }
+        }
         
         if (!CardCounts.TryAdd(card.cardData, 1))
         {
@@ -123,6 +135,15 @@ public class Stack: MonoBehaviour
             cards.Add(card);
             card.owningStack = this;
             
+            if (card == TopCard)
+            {
+                currentField = GameTableManager.Instance.fields.FirstOrDefault(this.IsInsideField);
+                if (currentField == null)
+                {
+                    currentField = GameTableManager.Instance.fields[0];
+                }
+            }
+            
             if (!CardCounts.TryAdd(card.cardData, 1))
             {
                 CardCounts[card.cardData]++;
@@ -135,6 +156,11 @@ public class Stack: MonoBehaviour
     
     public void RemoveCard(Card card)
     {
+        if (card.owningStack != this || !cards.Contains(card))
+        {
+            return;
+        }
+        
         cards.Remove(card);
         ReorderZOrder();
         if (cards.Count == 0)

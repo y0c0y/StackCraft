@@ -8,12 +8,15 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoin
     public static readonly Vector2 CARD_SIZE = new Vector2(3f, 4f);
 
     // Events
+    public event Action CardClicked;
     public event Action<Card, Card> CardReleasedOn;
     public event Action<Card> RequestSplitFromStack;
     public event Action<int, int> OnSortingLayerChanged;
     public event Action OnShowCanStackOnIndicator;
     public event Action OnHideCanStackOnIndicator;
 
+    public void RequestSplit() => RequestSplitFromStack?.Invoke(this);
+    
     // Data
     [SerializeField] public CardData cardData;
     
@@ -53,6 +56,10 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoin
 
     private void OnDestroy()
     {
+        if (owningStack)
+        {
+            owningStack.RemoveCard(this);
+        }
         GameTableManager.Instance.RemoveCardFromTable(this);
     }
 
@@ -80,8 +87,10 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoin
 
         if (!IsTopCard)
         {
-            RequestSplitFromStack?.Invoke(this);
+            RequestSplit();
         }
+        
+        CardClicked?.Invoke();
     }
 
     public void OnPointerUp(PointerEventData eventData)
