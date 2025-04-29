@@ -137700,7 +137700,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowDebugText: 0
   ShowCameraFrustum: 1
-  IgnoreTimeScale: 0
+  IgnoreTimeScale: 1
   WorldUpOverride: {fileID: 0}
   ChannelMask: -1
   UpdateMethod: 2
@@ -137710,7 +137710,7 @@ MonoBehaviour:
     DefaultMode: 2
   DefaultBlend:
     Style: 1
-    Time: 2
+    Time: 3
     CustomCurve:
       serializedVersion: 2
       m_Curve: []
@@ -139341,19 +139341,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8162429303310264220, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8162429303310264220, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8162429303310264220, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 186
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8162429303310264220, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -39.651
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8797926320936918869, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
       propertyPath: m_Value
@@ -139365,7 +139365,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9013709638632425590, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 319200
+      value: 337260
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
