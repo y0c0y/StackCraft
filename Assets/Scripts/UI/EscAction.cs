@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public class EscAction : MonoBehaviour
 {
-    private InputAction _cancleAction;
+    private InputAction _cancelAction;
     
     [SerializeField] private string defaultUI;
     [SerializeField] private string escTargetUI;

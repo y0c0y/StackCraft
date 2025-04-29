@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 12912804}
   - component: {fileID: 12912803}
+  - component: {fileID: 12912805}
   m_Layer: 0
   m_Name: CardField
   m_TagString: Field
@@ -208,6 +209,20 @@ Transform:
   - {fileID: 2099055584}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &12912805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 12912802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4831202f17dd4322a7f6ce189af15bcc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  size: {x: 50, y: 48}
+  confineArea: {fileID: 5400125469473087722}
 --- !u!1 &80823676
 GameObject:
   m_ObjectHideFlags: 0
@@ -437,6 +452,7 @@ MonoBehaviour:
   - {fileID: 1478809978}
   - {fileID: 963283933}
   - {fileID: 857110679}
+  descriptionUI: {fileID: 0}
 --- !u!114 &208793399
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1474,6 +1490,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardsOnTable: []
   stacksOnTable: []
+  fields:
+  - {fileID: 12912805}
   cardPrefab: {fileID: 8875983536118978043, guid: 516e59c89f26ff24482b1b6ace821be4, type: 3}
 --- !u!4 &934492944
 Transform:
@@ -70670,6 +70688,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d7f1dead95e35f4419b52578180199d0, type: 3}
+--- !u!65 &5400125469473087722 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 3741816268949953743, guid: d7f1dead95e35f4419b52578180199d0, type: 3}
+  m_PrefabInstance: {fileID: 5400125469473087721}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

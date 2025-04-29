@@ -1,3 +1,4 @@
+using System;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -26,6 +27,8 @@ public class CameraMove : MonoBehaviour
         pointAction?.Enable();
         clickAction?.Enable();
         scrollwheelAction?.Enable();
+
+        GameTableManager.Instance.FieldChanged += OnFieldChanged;
     }
 
     private void Update()
@@ -94,5 +97,16 @@ public class CameraMove : MonoBehaviour
             float newFOV = cam.Lens.FieldOfView - zoomAmount;
             cam.Lens.FieldOfView = Mathf.Clamp(newFOV, 75f, 120f);
         }
+    }
+    
+    private void OnFieldChanged(Field field)
+    {
+        if (field == null) return;
+
+        moveArea = field.confineArea;
+        var targetPosition = target.position;
+        targetPosition.x = field.transform.position.x;
+        targetPosition.y = field.transform.position.y;
+        target.position = targetPosition;
     }
 }

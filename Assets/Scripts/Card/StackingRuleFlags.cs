@@ -11,4 +11,5 @@ public enum StackingRuleFlags
     Weapon       = 1 << 4,
     Construction = 1 << 5,
     Enemy        = 1 << 6,
+    Portal       = 1 << 7
 }

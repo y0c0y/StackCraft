@@ -90,6 +90,7 @@ GameObject:
   - component: {fileID: 5681786504811287192}
   - component: {fileID: 7908148216612855758}
   - component: {fileID: 7067789622200495550}
+  - component: {fileID: 6462393853291223718}
   m_Layer: 5
   m_Name: Description Canvas
   m_TagString: Untagged
@@ -181,6 +182,21 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &6462393853291223718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1742505778452347090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbefce8aed704413b4f16014635cad71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  descriptionText: {fileID: 8978053304552043751}
+  yesButton: {fileID: 4820559140996116836}
+  noButton: {fileID: 1541564858362422870}
 --- !u!1 &4888499405144141318
 GameObject:
   m_ObjectHideFlags: 0
@@ -603,7 +619,7 @@ GameObject:
   - component: {fileID: 3005678657188591651}
   - component: {fileID: 8661205206539886296}
   m_Layer: 5
-  m_Name: Dum
+  m_Name: Dim
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

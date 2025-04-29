@@ -47,7 +47,7 @@ public class CardColliderManager : MonoBehaviour
         stack.OnStackModified -= ModifyColliders;
     }
 
-    private void ModifyColliders(Stack stack)
+    public void ModifyColliders(Stack stack)
     {
         if (stack.cards.Count <= 0) return;
         foreach (var card in stack.cards)

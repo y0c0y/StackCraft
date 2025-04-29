@@ -22,7 +22,5 @@ public class SlowParentConstraint : MonoBehaviour
         {
             transform.position = desiredPosition;
         }
-        
-        //transform.position = new Vector3(transform.position.x, transform.position.y, pos.z);
     }
 }
