@@ -10,7 +10,8 @@ public class CameraMove : MonoBehaviour
     [SerializeField] private Transform target;
     [SerializeField] private LayerMask camLayerMask;
     [SerializeField] private BoxCollider moveArea;
-
+    [SerializeField] private float maxFov;
+    
     private InputAction pointAction;
     private InputAction clickAction;
     private InputAction scrollwheelAction;
@@ -104,7 +105,7 @@ public class CameraMove : MonoBehaviour
         {
             float zoomAmount = scrollDelta.y * 2f;
             float newFOV = cam.Lens.FieldOfView - zoomAmount;
-            cam.Lens.FieldOfView = Mathf.Clamp(newFOV, 75f, 120f);
+            cam.Lens.FieldOfView = Mathf.Clamp(newFOV, 75f, maxFov);
         }
     }
     
