@@ -1255,6 +1255,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 5899760761725104108}
+  volumeType: 2
 --- !u!114 &741111037260942263
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1793,6 +1794,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 7425747975669014993}
+  volumeType: 0
 --- !u!114 &2338441458028566460
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2238,6 +2240,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 1887520270482868309}
+  volumeType: 1
 --- !u!114 &4775867915165213653
 MonoBehaviour:
   m_ObjectHideFlags: 0
