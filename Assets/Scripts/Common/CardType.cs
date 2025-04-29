@@ -6,5 +6,7 @@ public enum CardType
     Producer,
     Building,
     Weapon,
-    Construction
+    Construction,
+    Enemy,
+    Portal
 }

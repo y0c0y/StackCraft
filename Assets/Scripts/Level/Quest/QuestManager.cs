@@ -9,19 +9,18 @@ using UnityEngine.SceneManagement;
 
 public class QuestManager : MonoBehaviour
 {
+   public event Action<int, int> QuestProgressChanged;
+   public event Action<QuestData> QuestCompleted;
+   
    public static QuestManager Instance {get; private set;}
 
    public GameObject questList;
 
-   public int TotalQuestCnt {get; private set;}
-   public int CompletedQuestCnt {get; private set;}
-
-   public event Action<int, int> OnChangeQuestProgress;
+   private int TotalQuestCnt {get; set;}
+   private int CompletedQuestCnt {get; set;}
    
-   public event Action<QuestData> OnChangeQuestItemUI;
-
    public readonly Dictionary<string, QuestData> Quests = new();
-   public readonly Dictionary<string, QuestProgress> Progresses = new();
+   private readonly Dictionary<string, QuestProgress> _progresses = new();
 
    private void Awake()
    {
@@ -31,21 +30,21 @@ public class QuestManager : MonoBehaviour
          Destroy(this);
       }
    }
+   
 
    private void Start()
    {
-      RecipeManager.Instance.OnRecipeFinished += CheckQuestComplete;
+      RecipeManager.Instance.OnRecipeFinished += CheckRecipe;
+      BattleManager.Instance.CheckStageClear += OnCheckStageClear;
    }
 
    public async UniTask Init()
    {
-
       if (StageInfo.SelectedLevel != null)
       {
          var label = StageInfo.SelectedLevel.displayName + " Quests";
          Debug.Log(label);
-         var check = LoadQuests(label);
-      
+        
          await LoadQuests(label);
       }
       else
@@ -70,41 +69,78 @@ public class QuestManager : MonoBehaviour
          var quest = data[i];
          quest.idxInQuestList = i;
          Quests[quest.questID] = quest;
-         Progresses[quest.questID] = new QuestProgress(quest.questID);
+         _progresses[quest.questID] = new QuestProgress(quest.questID);
       } 
       
-      TotalQuestCnt = Quests.Count;
+      TotalQuestCnt = Quests.Count - 1;
       CompletedQuestCnt = 0;
       
-      OnChangeQuestProgress?.Invoke(TotalQuestCnt, CompletedQuestCnt);
+      QuestProgressChanged?.Invoke(TotalQuestCnt, CompletedQuestCnt);
    }
    
-   public static void GameClear()
+   public static void GameClear(bool isClear)
    {
-      var next = StageInfo.SelectedLevel.levelIndex + 1;
-      
-      if (next < 4)
+      if (StageInfo.SelectedLevel == null)
       {
-         PlayerPrefs.SetInt($"Stage_{next}", 1);
-         PlayerPrefs.Save();
+         Debug.Log("Test 중");
       }
       else
       {
-         for (var i = 1; i <= 4; i++)
+         if (isClear)
          {
-            PlayerPrefs.DeleteKey("Stage_" + next);
+            var next = StageInfo.SelectedLevel.levelIndex + 1;
+      
+            if (next < 4)
+            {
+               PlayerPrefs.SetInt($"Stage_{next}", 1);
+               PlayerPrefs.Save();
+            }
+            else
+            {
+               for (var i = 1; i <= 4; i++)
+               {
+                  PlayerPrefs.DeleteKey("Stage_" + next);
+               }
+            }
+         }
+         else
+         {
+            Debug.Log("클리어 실패");
          }
       }
 
       SceneManager.LoadScene("StageSelect");
 
    }
+   
+   private void OnCheckStageClear()
+   {
+      var allCards = GameTableManager.Instance.cardsOnTable;
+      if (allCards == null || allCards.Count == 0) 
+         return;
+    
+      var hasPlayer = allCards.Any(c => c.cardData.cardType == CardType.Person);
+      var hasEnemy  = allCards.Any(c => c.cardData.cardType == CardType.Enemy);
+    
+      if (!hasPlayer)
+      {
+         Debug.Log("💀 게임 오버!");
+         ChangeComplete(Quests[QuestInfo.GameOverQuestID]);
+         return;
+      }
+
+      if (hasEnemy) return;
+      
+      Debug.Log("🎉 스테이지 클리어!");
+      ChangeComplete(Quests[QuestInfo.GameClearQuestID]);
+   }
 
    public bool IsCompleted(string questID)
    {
-      return Progresses.TryGetValue(questID, out var progress) && progress.IsCompleted;
+      return _progresses.TryGetValue(questID, out var progress) && progress.IsCompleted;
    }
-   private void CheckQuestComplete(Recipe recipe)
+
+   private void CheckRecipe(Recipe recipe)
    {
       if (!recipe) return;
       foreach (var quest in Quests.Where(quest => quest.Value.questRecipe?.recipeName == recipe.recipeName))
@@ -117,22 +153,21 @@ public class QuestManager : MonoBehaviour
    {
       var questID = quest.questID;
 
-      if (!Progresses.TryGetValue(questID, out var progress)) return;
+      if (!_progresses.TryGetValue(questID, out var progress)) return;
       if (progress.IsCompleted) return;
       
       progress.IsCompleted = true;
       CompletedQuestCnt++;
-      
-      OnChangeQuestProgress?.Invoke(TotalQuestCnt, CompletedQuestCnt);
-      OnChangeQuestItemUI?.Invoke(quest);
-      
-      switch (questID)
-      {
-         case QuestInfo.GameClearQuestID:
-            GameClear();
-            break;
-      }
-   }
 
-   
+      if (questID == QuestInfo.GameOverQuestID)
+      {
+         GameClear(false);
+         return;
+      }
+      
+      QuestProgressChanged?.Invoke(TotalQuestCnt, CompletedQuestCnt);
+      QuestCompleted?.Invoke(quest);
+      
+      if(questID ==  QuestInfo.GameClearQuestID) GameClear(true);
+   }
 }

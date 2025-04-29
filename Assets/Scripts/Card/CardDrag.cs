@@ -14,26 +14,16 @@ public class CardDrag : MonoBehaviour
     private Vector3 _targetPosition;
     
     private Card _card;
+    private Field _currentField => _card.owningStack.currentField;
     private Vector2 _dragOrigin;
     private bool _isDragging = false;
     private bool _wasDragging = false;
 
-    private Vector2 _fieldSize;
     private const float CARD_CLAMP_OFFSET = 0.35f;
     
     private void Awake()
     {
         _card = GetComponent<Card>();
-        var field = GameObject.FindGameObjectWithTag("Field");
-        if (field)
-        {
-            _fieldSize = field.GetComponent<SpriteRenderer>().size;
-        }
-        else
-        {
-            _fieldSize = new Vector2(36, 24);
-        }
-        
         _targetPosition = transform.position;
     }
 
@@ -69,18 +59,19 @@ public class CardDrag : MonoBehaviour
                 _dragOrigin.y * transform.localScale.y, 0);
             _targetPosition.x = Mathf.Clamp(
                                     _targetPosition.x, 
-                                -_fieldSize.x / 2 + Card.CARD_SIZE.x / 2 + CARD_CLAMP_OFFSET,
-                                _fieldSize.x / 2 - Card.CARD_SIZE.x / 2 - CARD_CLAMP_OFFSET
+                                _currentField.MinX + Card.CARD_SIZE.x / 2 + CARD_CLAMP_OFFSET,
+                                _currentField.MaxX - Card.CARD_SIZE.x / 2 - CARD_CLAMP_OFFSET
                                     );
             _targetPosition.y = Mathf.Clamp(
                                     _targetPosition.y, 
-                                -_fieldSize.y / 2 + _card.owningStack.bounds.size.y - Card.CARD_SIZE.y / 2 + CARD_CLAMP_OFFSET,
-                                _fieldSize.y / 2 - Card.CARD_SIZE.y / 2 - CARD_CLAMP_OFFSET
+                                _currentField.MinY + _card.owningStack.bounds.size.y - Card.CARD_SIZE.y / 2 + CARD_CLAMP_OFFSET,
+                                _currentField.MaxY - Card.CARD_SIZE.y / 2 - CARD_CLAMP_OFFSET
                                     );
             
             if (Vector3.SqrMagnitude(transform.position - _targetPosition) > DRAG_TELEPORT_THRESHOLD)
             {
                 transform.position = Vector3.Lerp(transform.position, _targetPosition, SPEED * Time.unscaledDeltaTime);
+                Physics2D.SyncTransforms();
             }
             else
             {
