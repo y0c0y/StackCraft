@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class QuestUIController : MonoBehaviour
 {
+    public static event Action OnQuestLoaded;
+    
     public static QuestUIController Instance;
     
     [SerializeField] private GameObject togglePrefab;
