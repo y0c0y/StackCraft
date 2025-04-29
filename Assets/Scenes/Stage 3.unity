@@ -136836,6 +136836,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1118534529
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1118534531}
+  - component: {fileID: 1118534530}
+  m_Layer: 0
+  m_Name: Time Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1118534530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1118534529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64eaa9ce03275514abfa0c0e86f5b2f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1118534531
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1118534529}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1130195154
 GameObject:
   m_ObjectHideFlags: 0
@@ -138610,7 +138654,6 @@ MonoBehaviour:
   onFadeOutTransitionDone:
     m_PersistentCalls:
       m_Calls: []
-  transitionMaterial: {fileID: 2100000, guid: 3139f57f27c73ac4e8befc96cbc9b753, type: 2}
   doFadeIn: 1
   fadeInTransitionTime: 0.55
   fadeOutTransitionTime: 0.55
@@ -139287,6 +139330,7 @@ GameObject:
   - component: {fileID: 2088946449}
   - component: {fileID: 2088946451}
   - component: {fileID: 2088946450}
+  - component: {fileID: 2088946453}
   m_Layer: 0
   m_Name: Scene Manager
   m_TagString: Untagged
@@ -139353,6 +139397,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2088946453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2088946448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 714659609d1e1144db876ccfef43f0da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stopPanel: {fileID: 2093437800}
 --- !u!1 &2090608542
 GameObject:
   m_ObjectHideFlags: 0
@@ -139548,7 +139605,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9013709638632425590, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 479640
+      value: 486360
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -139563,6 +139620,11 @@ GameObject:
 --- !u!223 &2093437799 stripped
 Canvas:
   m_CorrespondingSourceObject: {fileID: 7111702213389333732, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
+  m_PrefabInstance: {fileID: 2093437797}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2093437800 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 558270893475155484, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
   m_PrefabInstance: {fileID: 2093437797}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &2122979681 stripped
@@ -139699,6 +139761,7 @@ SceneRoots:
   - {fileID: 2088946452}
   - {fileID: 490210883}
   - {fileID: 1473849307}
+  - {fileID: 1118534531}
   - {fileID: 1351213716}
   - {fileID: 1095263106}
   - {fileID: 1153571823}

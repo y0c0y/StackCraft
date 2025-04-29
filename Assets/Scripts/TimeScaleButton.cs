@@ -15,11 +15,10 @@ public class TimeScaleButton : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        var gameTableManager = GameTableManager.Instance;
+        _button.onClick.AddListener(() => GameTableManager.Instance.SetTimeScale(timeScale));
         var timeManager = TimeManager.Instance;
-        if (gameTableManager)
+        if (timeManager)
         {
-            _button.onClick.AddListener(() => gameTableManager.SetTimeScale(timeScale));
             _button.onClick.AddListener(() => timeManager.SetTimeScale(timeScale));
         }
     }
