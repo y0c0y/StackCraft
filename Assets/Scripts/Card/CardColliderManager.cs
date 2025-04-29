@@ -52,7 +52,6 @@ public class CardColliderManager : MonoBehaviour
         if (stack.cards.Count <= 0) return;
         foreach (var card in stack.cards)
         {
-            
             if (!cardToCollider.TryGetValue(card, out var modifier)) continue;
             modifier.SetColliderMode(card.IsLastCard);
         }

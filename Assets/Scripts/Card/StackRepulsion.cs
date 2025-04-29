@@ -35,6 +35,7 @@ public class StackRepulsion : MonoBehaviour
         {
             TopCard.transform.position += velocity * Time.unscaledDeltaTime;
             ApplyBoundAndBounce();
+            Physics2D.SyncTransforms();
         }
         else
         {
