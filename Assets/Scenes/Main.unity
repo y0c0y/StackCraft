@@ -806,8 +806,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4282137660
+  m_fontColor: {r: 0.23529412, g: 0.23529412, b: 0.23529412, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1119,7 +1119,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  transitionMaterial: {fileID: 2100000, guid: 3139f57f27c73ac4e8befc96cbc9b753, type: 2}
   doFadeIn: 1
   fadeInTransitionTime: 0.55
   fadeOutTransitionTime: 0.55
@@ -1214,10 +1213,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1092773697581974799, guid: 4a9dbf17ca1c8be4480da845fd3375dd, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2823482880393333826, guid: 4a9dbf17ca1c8be4480da845fd3375dd, type: 3}
-      propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3872318768694272602, guid: 4a9dbf17ca1c8be4480da845fd3375dd, type: 3}
@@ -1317,25 +1312,9 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6798735794754822320, guid: 4a9dbf17ca1c8be4480da845fd3375dd, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6798735794754822320, guid: 4a9dbf17ca1c8be4480da845fd3375dd, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 565620331}
-    - target: {fileID: 6798735794754822320, guid: 4a9dbf17ca1c8be4480da845fd3375dd, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
-      value: 
-      objectReference: {fileID: 565620328}
-    - target: {fileID: 6798735794754822320, guid: 4a9dbf17ca1c8be4480da845fd3375dd, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 6798735794754822320, guid: 4a9dbf17ca1c8be4480da845fd3375dd, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
-      value: Main Canvas
-      objectReference: {fileID: 0}
     - target: {fileID: 7647241843772904625, guid: 4a9dbf17ca1c8be4480da845fd3375dd, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0.4994995
