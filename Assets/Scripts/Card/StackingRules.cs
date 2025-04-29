@@ -10,6 +10,7 @@ public static class StackingRules
             case CardType.Building:      return StackingRuleFlags.Building;
             case CardType.Weapon:        return StackingRuleFlags.Weapon;
             case CardType.Construction:  return StackingRuleFlags.Construction;
+            case CardType.Enemy :        return StackingRuleFlags.Enemy;
             case CardType.None:
             default:                     return StackingRuleFlags.None;
         }
@@ -29,6 +30,8 @@ public static class StackingRules
                 return StackingRuleFlags.Resource;
             case CardType.Construction:
                 return StackingRuleFlags.Resource;
+            case CardType.Enemy:
+                return StackingRuleFlags.Enemy;
             case CardType.Weapon:
             case CardType.None:
             default:
@@ -46,6 +49,8 @@ public static class StackingRules
                 return StackingRuleFlags.Resource | StackingRuleFlags.Building | StackingRuleFlags.Construction;
             case CardType.Weapon:
                 return StackingRuleFlags.Person;
+            case CardType.Enemy:
+                return StackingRuleFlags.Enemy;
             case CardType.Producer:
             case CardType.Building:
             case CardType.Construction:
