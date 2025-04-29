@@ -87318,6 +87318,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: OnLoadStageSelect
       objectReference: {fileID: 0}
+    - target: {fileID: 8880387242659495885, guid: 05e46f6d019488644ace53728bd8e779, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -87546,7 +87550,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 768
   moveArea: {fileID: 42918157}
-  maxFov: 125
+  scrollSpeed: 6
+  minFOV: 75
+  maxFOV: 120
 --- !u!114 &1460611657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88476,19 +88482,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8162429303310264220, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8162429303310264220, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8162429303310264220, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 186
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8162429303310264220, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -39.651
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8797926320936918869, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
       propertyPath: m_Value
