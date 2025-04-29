@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
-{ 
+{
+    public static event Action<bool> OnUIChanged;
+    
     public static UIManager Instance;
     
     [SerializeField] private List<GameObject> canvasUI;
@@ -47,6 +49,8 @@ public class UIManager : MonoBehaviour
                 kv.Value.SetActive(false);
             }
         }
+        
+        OnUIChanged?.Invoke(isDefaultUI);
     }
 
     public void OpenConfirmMessage(string message, Action yesCallback = null)
