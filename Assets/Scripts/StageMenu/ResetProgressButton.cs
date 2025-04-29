@@ -3,6 +3,8 @@ using UnityEngine.SceneManagement;
 
 public class ResetProgressButton : MonoBehaviour
 {
+    [SerializeField] private SceneTransition sceneTransition;
+    
     public void OnButtonClick()
     {
         for (var i = 1; i < 4; i++)
@@ -11,6 +13,12 @@ public class ResetProgressButton : MonoBehaviour
         }
 
         PlayerPrefs.Save();
+        sceneTransition.onFadeOutTransitionDone.AddListener(LoadScene);
+        sceneTransition.StartFadeOutTransition();
+    }
+
+    public void LoadScene()
+    {
         SceneManager.LoadScene("StageSelect");
     }
 }

@@ -42,7 +42,7 @@ public class QuestManager : MonoBehaviour
    {
       if (StageInfo.SelectedLevel != null)
       {
-         var label = StageInfo.SelectedLevel.displayName + " Quests";
+         var label = StageInfo.SelectedLevel.sceneName + " Quests";
          Debug.Log(label);
         
          await LoadQuests(label);

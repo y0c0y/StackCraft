@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 576ac396fb9afd64485371333fff2e43
+guid: aa906f6fb9943cf46a64f8004b7e644a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1537439292812723389
-    second: KakaoTalk_20250429_221649430_0
+      213: -5381033903624012806
+    second: KakaoTalk_20250429_221926697_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,13 +46,13 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
-  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteBorder: {x: 2, y: 1, z: 1, w: 2}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
@@ -126,23 +126,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: KakaoTalk_20250429_221649430_0
+      name: KakaoTalk_20250429_221926697_0
       rect:
         serializedVersion: 2
-        x: 1
-        y: 1
-        width: 299
-        height: 47
+        x: 6
+        y: 0
+        width: 40
+        height: 50
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: db484df14e4165510800000000000000
-      internalID: 1537439292812723389
+      spriteID: afb3822bc2ab255b0800000000000000
+      internalID: -5381033903624012806
       vertices: []
       indices: 
       edges: []
@@ -152,7 +152,7 @@ TextureImporter:
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
-    internalID: 0
+    internalID: 1537655665
     vertices: []
     indices: 
     edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      KakaoTalk_20250429_221649430_0: 1537439292812723389
+      KakaoTalk_20250429_221926697_0: -5381033903624012806
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
