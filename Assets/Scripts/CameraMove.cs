@@ -34,6 +34,7 @@ public class CameraMove : MonoBehaviour
     private void Update()
     {
         if (!UIManager.Instance.isDefaultUI) return;
+        if (cam.IsParticipatingInBlend()) return;
         HandleDrag();
         HandleScroll();
     }

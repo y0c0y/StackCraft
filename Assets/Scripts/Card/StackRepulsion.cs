@@ -25,9 +25,8 @@ public class StackRepulsion : MonoBehaviour
         _rb2d = TopCard.GetComponent<Rigidbody2D>();
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-        //Debug.Log($"Fixedupdate : {Time.time}");
         if (!TopCard) return;
         if (TopCard.gameObject.layer == LayerMask.NameToLayer("DraggingCard")) return;
         ApplyRepulsion();
