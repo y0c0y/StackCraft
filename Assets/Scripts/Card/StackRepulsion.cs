@@ -17,12 +17,10 @@ public class StackRepulsion : MonoBehaviour
     private Field _currentField => _stack.currentField;
     
     private Vector3 _netForceThisFrame;
-    private Rigidbody2D _rb2d;
     
     private void Awake()
     {
         _stack = GetComponent<Stack>();
-        _rb2d = TopCard.GetComponent<Rigidbody2D>();
     }
 
     private void Update()
@@ -31,11 +29,11 @@ public class StackRepulsion : MonoBehaviour
         if (TopCard.gameObject.layer == LayerMask.NameToLayer("DraggingCard")) return;
         ApplyRepulsion();
         
-        velocity += _netForceThisFrame * Time.fixedUnscaledDeltaTime;
+        velocity += _netForceThisFrame * Time.unscaledDeltaTime;
         velocity *= DAMPING;
         if (!TopCard.IsChild && velocity.magnitude > 0.05f)
         {
-            TopCard.transform.position += velocity * Time.fixedUnscaledDeltaTime;
+            TopCard.transform.position += velocity * Time.unscaledDeltaTime;
             ApplyBoundAndBounce();
         }
         else
@@ -74,10 +72,11 @@ public class StackRepulsion : MonoBehaviour
     private void ApplyRepulsion()
     {
         var stacksOnTable = GameTableManager.Instance.stacksOnTable;
-        
+
+        const float checkDistanceRange = 100f;
         var closeStacks = 
             stacksOnTable.Where(s => s != _stack && s.TopCard?.gameObject.layer != LayerMask.NameToLayer("DraggingCard")
-                                               && (s.bounds.center - _stack.bounds.center).magnitude <= 100f);
+                                               && (s.bounds.center - _stack.bounds.center).magnitude <= checkDistanceRange);
         
         var myBounds = _stack.bounds;
         var myCenter = myBounds.center;
