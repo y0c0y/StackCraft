@@ -17,8 +17,8 @@ public class PortalCard : MonoBehaviour
     public enum PortalState
     {
         None,
-        BeforeSend,
-        AfterSend
+        CanSend,
+        CannotSend
     }
 
     public PortalType portalType;
@@ -42,14 +42,29 @@ public class PortalCard : MonoBehaviour
 
     private void Start()
     {
-        portalState = PortalState.BeforeSend;
+        portalState = PortalState.CanSend;
         _ = ConnectStackEvent();
+        
+        BattleManager.Instance.BattleFinished += OnBattleFinished;
     }
+    
 
     private async UniTask ConnectStackEvent()
     {
         await UniTask.WaitUntil(() => _card.owningStack != null);
         _card.owningStack.OnStackModified += OnStackModified;
+    }
+    
+    private void OnBattleFinished()
+    {
+        if (portalType != PortalType.PlayerField || portalState != PortalState.CannotSend) return;
+        
+        // Check if all allies in portal field are dead
+        var cardsInEnemyField = GameTableManager.Instance.GetAllCardsInField(GameTableManager.FieldType.EnemyField);
+        if (cardsInEnemyField.All(c => c.cardData.cardType != CardType.Person))
+        {
+            portalState = PortalState.CanSend;
+        }
     }
 
     private void OnCardClicked()
@@ -59,10 +74,10 @@ public class PortalCard : MonoBehaviour
             case PortalType.PlayerField:
                 switch (portalState)
                 {
-                    case PortalState.BeforeSend:
+                    case PortalState.CanSend:
                         UIManager.Instance.OpenConfirmMessage(descriptionMessageText);
                         break;
-                    case PortalState.AfterSend:
+                    case PortalState.CannotSend:
                         UIManager.Instance.OpenYesOrNoMessage(moveFieldConfirmationText,
                                                               () => MoveFieldConfirmCallback(GameTableManager.FieldType.EnemyField));
                         break;
@@ -82,7 +97,7 @@ public class PortalCard : MonoBehaviour
 
     private void OnStackModified(Stack stack)
     {
-        if (portalType == PortalType.EnemyField || portalState == PortalState.AfterSend)
+        if (portalType == PortalType.EnemyField || portalState == PortalState.CannotSend)
         {
             return;
         }
@@ -131,8 +146,7 @@ public class PortalCard : MonoBehaviour
     private void SendConfirmCallback()
     {
         GameTableManager.MoveCardsToField(GameTableManager.FieldType.EnemyField, _cardsToSend);
-        
-        portalState = PortalState.AfterSend;
+        portalState = PortalState.CannotSend;
         GameTableManager.Instance.ChangeField(GameTableManager.FieldType.EnemyField);
     }
 }

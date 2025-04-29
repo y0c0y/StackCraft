@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class BattleManager : MonoBehaviour
 {
+    public event Action BattleFinished;
     public static BattleManager Instance;
     
     public GameObject battleSystemPrefab;
@@ -181,6 +182,8 @@ public class BattleManager : MonoBehaviour
             battleSystems.Remove(battleSystem);
         
             Destroy(battleSystem.gameObject);
+            
+            BattleFinished?.Invoke();
         }
 
         CheckStageClear?.Invoke();

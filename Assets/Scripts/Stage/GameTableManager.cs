@@ -26,6 +26,9 @@ public class GameTableManager : MonoBehaviour
     [SerializeField] public List<Stack> stacksOnTable;
     [SerializeField] public List<Field> fields;
     
+    public List<Card> GetAllCardsInField(FieldType field) => 
+        cardsOnTable.FindAll((c) => c.owningStack.currentField == fields[(int)field]);
+    
     [SerializeField] private GameObject cardPrefab;
     
     private void Awake()
