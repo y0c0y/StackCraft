@@ -21,31 +21,32 @@ public class DescriptionUI: MonoBehaviour
         SetText(message);
         yesButton.onClick.RemoveAllListeners();
         noButton.onClick.RemoveAllListeners();
+
+        if (yesCallback != null)
+        {
+            yesButton.onClick.AddListener(() => { yesCallback.Invoke(); ChangeToDefaultUI();});
+        }
+        else
+        {
+            yesButton.onClick.AddListener(ChangeToDefaultUI);
+        }
+        
+        
+        if (noCallback != null)
+        {
+            noButton.onClick.AddListener(() => { noCallback.Invoke(); ChangeToDefaultUI(); });
+        }
+        else
+        {
+            noButton.onClick.AddListener(ChangeToDefaultUI);
+        }
+        
         switch (descriptionType)
         {
             case DescriptionType.Confirm:
-                yesButton.onClick.AddListener(ChangeToDefaultUI);
                 noButton.gameObject.SetActive(false);
                 break;
             case DescriptionType.YesOrNo:
-                if (yesCallback != null)
-                {
-                    yesButton.onClick.AddListener(() => { yesCallback.Invoke(); ChangeToDefaultUI(); });
-                }
-                else
-                {
-                    yesButton.onClick.AddListener(ChangeToDefaultUI);
-                }
-
-                if (noCallback != null)
-                {
-                    noButton.onClick.AddListener(() => { noCallback.Invoke(); ChangeToDefaultUI(); });
-                }
-                else
-                {
-                    noButton.onClick.AddListener(ChangeToDefaultUI);
-                }
-                
                 noButton.gameObject.SetActive(true);
                 break;
             default:

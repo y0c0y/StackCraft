@@ -47,7 +47,7 @@ public static class StackingRules
         switch (cardToPlaceType)
         {
             case CardType.Person:
-                return StackingRuleFlags.Person | StackingRuleFlags.Producer;
+                return StackingRuleFlags.Person | StackingRuleFlags.Producer | StackingRuleFlags.Portal;
             case CardType.Resource:
                 return StackingRuleFlags.Resource | StackingRuleFlags.Building | StackingRuleFlags.Construction;
             case CardType.Weapon:

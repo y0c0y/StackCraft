@@ -108,9 +108,9 @@ public class QuestManager : MonoBehaviour
             Debug.Log("클리어 실패");
          }
       }
-
-      SceneManager.LoadScene("StageSelect");
-
+      
+      UIManager.Instance.OpenConfirmMessage("승리했습니다!",
+         () => SceneManager.LoadScene("StageSelect"));
    }
    
    private void OnCheckStageClear()

@@ -1,7 +1,7 @@
-using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class SceneTransition : MonoBehaviour
 {
@@ -10,27 +10,35 @@ public class SceneTransition : MonoBehaviour
     
     private static readonly int ProgressID = Shader.PropertyToID("_Progress");
     
-    [SerializeField] private Material transitionMaterial;
     [SerializeField] private bool doFadeIn = true;
     [SerializeField] private float fadeInTransitionTime = 1f;
     [SerializeField] private float fadeOutTransitionTime = 1f;
 
-    public void Start()
+    private Material _transitionMaterial;
+
+    private void Awake()
+    {
+        var image = GetComponentInChildren<Image>();
+        _transitionMaterial = Instantiate(image.material);
+        image.material = _transitionMaterial;
+    }
+
+    private void Start()
     {
         if (!doFadeIn)
         {
-            transitionMaterial.SetFloat(ProgressID, 0f);
+            _transitionMaterial.SetFloat(ProgressID, 0f);
         }
         else
         {
-            transitionMaterial.SetFloat(ProgressID, 1f);
+            _transitionMaterial.SetFloat(ProgressID, 1f);
             Run(fadeInTransitionTime, false).Forget();
         }
     }
 
     public void StartFadeOutTransition()
     {
-        transitionMaterial.SetFloat(ProgressID, 0f);
+        _transitionMaterial.SetFloat(ProgressID, 0f);
         Run(fadeOutTransitionTime).Forget();
     }
     
@@ -49,7 +57,7 @@ public class SceneTransition : MonoBehaviour
                 progress = 1f - progress;
             }
             
-            transitionMaterial.SetFloat(ProgressID, progress);
+            _transitionMaterial.SetFloat(ProgressID, progress);
             await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate);
         }
 

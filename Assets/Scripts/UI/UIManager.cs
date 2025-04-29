@@ -49,9 +49,9 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void OpenConfirmMessage(string message)
+    public void OpenConfirmMessage(string message, Action yesCallback = null)
     {
-        descriptionUI.SetDescription(DescriptionUI.DescriptionType.Confirm, message);
+        descriptionUI.SetDescription(DescriptionUI.DescriptionType.Confirm, message, yesCallback);
         ChangeUI("Description Canvas");
     }
     
