@@ -3,6 +3,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 public class CameraMove : MonoBehaviour
 {
@@ -10,8 +11,11 @@ public class CameraMove : MonoBehaviour
     [SerializeField] private Transform target;
     [SerializeField] private LayerMask camLayerMask;
     [SerializeField] private BoxCollider moveArea;
-    [SerializeField] private float maxFov;
     
+    [SerializeField] private float scrollSpeed = 6f;
+    [SerializeField] private float minFOV = 75f;
+    [SerializeField] private float maxFOV = 120f;
+
     private InputAction pointAction;
     private InputAction clickAction;
     private InputAction scrollwheelAction;
@@ -19,7 +23,9 @@ public class CameraMove : MonoBehaviour
     private bool isDragging = false;
     private bool isDraggingCard = false;
     private float baseFOV = 75f;
+    private float targetFOV = 75f;
     private Vector2 lastMousePosition;
+
 
     private void Awake()
     {
@@ -104,8 +110,13 @@ public class CameraMove : MonoBehaviour
         if (scrollDelta.y != 0)
         {
             float zoomAmount = scrollDelta.y * 2f;
-            float newFOV = cam.Lens.FieldOfView - zoomAmount;
-            cam.Lens.FieldOfView = Mathf.Clamp(newFOV, 75f, maxFov);
+            targetFOV -= zoomAmount;
+            targetFOV = Mathf.Clamp(targetFOV, minFOV, maxFOV);
+        }
+
+        if (!Mathf.Approximately(cam.Lens.FieldOfView, targetFOV))
+        {
+            cam.Lens.FieldOfView = Mathf.Lerp(cam.Lens.FieldOfView, targetFOV, scrollSpeed * Time.deltaTime);
         }
     }
     
