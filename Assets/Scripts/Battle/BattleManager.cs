@@ -11,6 +11,9 @@ public class BattleManager : MonoBehaviour
     
     public GameObject battleSystemPrefab;
     public List<BattleSystem> battleSystems = new();
+    
+    public static Dictionary<Card, BattleAbility> BattleAbilities;
+    public static Dictionary<Card, CardBattleUIController> UIMap;
 
     public event Action CheckStageClear;
     
@@ -21,8 +24,10 @@ public class BattleManager : MonoBehaviour
         {
             Destroy(this);
         }
+        
+        BattleAbilities = new Dictionary<Card, BattleAbility>();
+        UIMap = new Dictionary<Card, CardBattleUIController>();
     }
-    
     
     private void Start()
     {
@@ -36,8 +41,20 @@ public class BattleManager : MonoBehaviour
         GameTableManager.Instance.CardRemovedFromTable -= OnCardRemovedFromTable;
     }
 
-    private void  OnCardAddedToTable(Card card)
+    private void OnCardAddedToTable(Card card)
     {
+        if (!IsValidCardType(card)) return;
+        
+        if (!BattleAbilities.ContainsKey(card))
+        {
+            var ability = BattleAbility.FindAbility(card.cardData);
+            BattleAbilities.Add(card, ability);
+            
+            var ui = card.GetComponentInChildren<CardBattleUIController>();
+            ui.Init(card, ability);
+            UIMap[card] = ui;
+        }
+
         var drag = card.GetComponent<CardDrag>();
         if (drag != null)
         {
@@ -48,6 +65,11 @@ public class BattleManager : MonoBehaviour
 
     private void OnCardRemovedFromTable(Card card)
     {
+        if (!IsValidCardType(card)) return;
+        
+        BattleAbilities.Remove(card);
+        UIMap.Remove(card);
+        
         var drag = card.GetComponent<CardDrag>();
         if (drag != null)
         {
@@ -57,7 +79,7 @@ public class BattleManager : MonoBehaviour
 
     private bool Flag(Card c) => battleSystems.Any(bs => bs.IsCardInBattle(c));
 
-    private bool IsValidCardType(Card card)
+    private static bool IsValidCardType(Card card)
     {
         return card != null && 
                card.cardData.cardType is CardType.Person or CardType.Enemy;
@@ -65,8 +87,6 @@ public class BattleManager : MonoBehaviour
 
     private void OnCardDragEnded(Card card)
     {
-        if (!IsValidCardType(card)) 
-            return;
         if (Flag(card)) return;
 
         var results = new Collider2D[5];
@@ -75,7 +95,6 @@ public class BattleManager : MonoBehaviour
 
         for (var i = 0; i < count; i++)
         {
-            
             var other = results[i].GetComponent<Card>();
             if (other == null) continue;
             if (!IsValidCardType(other)) continue;
