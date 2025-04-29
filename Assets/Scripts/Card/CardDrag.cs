@@ -71,6 +71,7 @@ public class CardDrag : MonoBehaviour
             if (Vector3.SqrMagnitude(transform.position - _targetPosition) > DRAG_TELEPORT_THRESHOLD)
             {
                 transform.position = Vector3.Lerp(transform.position, _targetPosition, SPEED * Time.unscaledDeltaTime);
+                Physics2D.SyncTransforms();
             }
             else
             {

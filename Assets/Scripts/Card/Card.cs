@@ -87,7 +87,7 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoin
 
         if (!IsTopCard)
         {
-            RequestSplitFromStack?.Invoke(this);
+            RequestSplit();
         }
         
         CardClicked?.Invoke();
