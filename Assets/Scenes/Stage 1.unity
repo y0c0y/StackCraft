@@ -77869,6 +77869,14 @@ PrefabInstance:
       propertyPath: maxFov
       value: 120
       objectReference: {fileID: 0}
+    - target: {fileID: 6003804055431622851, guid: d7f1dead95e35f4419b52578180199d0, type: 3}
+      propertyPath: minFOV
+      value: 55
+      objectReference: {fileID: 0}
+    - target: {fileID: 6003804055431622851, guid: d7f1dead95e35f4419b52578180199d0, type: 3}
+      propertyPath: scrollSpeed
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 6961227875569940428, guid: d7f1dead95e35f4419b52578180199d0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

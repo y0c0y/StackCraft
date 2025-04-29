@@ -7,7 +7,7 @@ public class CardDrag : MonoBehaviour
     public event Action<Card> CardDragStarted;
     public event Action<Card> CardDragEnded;
 
-    private const float SELECTED_Z_OFFSET = -0.5f;
+    private const float SELECTED_Z_OFFSET = -0.25f;
     private const float DRAG_TELEPORT_THRESHOLD = 0.05f;
     private const float SPEED = 30f;
     

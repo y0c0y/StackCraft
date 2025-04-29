@@ -1,9 +1,7 @@
-using System;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
 public class CameraMove : MonoBehaviour
 {
@@ -13,7 +11,7 @@ public class CameraMove : MonoBehaviour
     [SerializeField] private BoxCollider moveArea;
     
     [SerializeField] private float scrollSpeed = 6f;
-    [SerializeField] private float minFOV = 75f;
+    [SerializeField] private float minFOV = 55f;
     [SerializeField] private float maxFOV = 120f;
 
     private InputAction pointAction;
@@ -109,7 +107,7 @@ public class CameraMove : MonoBehaviour
         Vector2 scrollDelta = scrollwheelAction.ReadValue<Vector2>();
         if (scrollDelta.y != 0)
         {
-            float zoomAmount = scrollDelta.y * 2f;
+            float zoomAmount = scrollDelta.y * scrollSpeed / 2f;
             targetFOV -= zoomAmount;
             targetFOV = Mathf.Clamp(targetFOV, minFOV, maxFOV);
         }
