@@ -58,6 +58,7 @@ public class QuestUIController : MonoBehaviour
         }
 
         Canvas.ForceUpdateCanvases();
+        OnQuestLoaded?.Invoke();
     }
     
     private void OnQuestCompleted(QuestData questData)
