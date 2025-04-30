@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: "\uCC3D\uBCD1"
   description: "\uCC3D\uBCD1"
-  sprite: {fileID: 21300000, guid: fd88eb23dc0ea5141ad0afe29dc7575f, type: 3}
-  cardType: 1
+  sprite: {fileID: 21300000, guid: 2a11e522e1b91864ba30cd4c96f47cbe, type: 3}
+  cardType: 7
   isConsumable: 1
