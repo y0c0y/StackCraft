@@ -33,6 +33,7 @@ public class GameTableManager : MonoBehaviour
     public List<Stack> GetAllStacksInField(FieldType fieldType) =>
         stacksOnTable.FindAll((s) => s?.currentField == fields[(int)fieldType]);
     
+    [SerializeField] public GameObject smokeEffectPrefab;
     [SerializeField] private GameObject cardPrefab;
     
     private void Awake()

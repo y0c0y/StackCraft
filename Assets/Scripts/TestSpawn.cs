@@ -19,7 +19,9 @@ public class TestSpawn : MonoBehaviour
                 Vector3.zero);
             
             var stack = GameTableManager.Instance.GetAllStacksInField(GameTableManager.FieldType.PlayerField)
-                .Where(stack => stack != newCard.owningStack && newCard.CanStackOn(stack.LastCard))
+                .Where(stack => stack != newCard.owningStack &&
+                                !BattleManager.Instance.Flag(stack.TopCard) &&
+                                newCard.CanStackOn(stack.LastCard))
                 .ToList()
                 .Random();
             if (stack != null)
