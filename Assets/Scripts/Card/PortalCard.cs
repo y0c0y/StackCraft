@@ -105,23 +105,23 @@ public class PortalCard : MonoBehaviour
                 switch (portalState)
                 {
                     case PortalState.CanSend:
-                        UIManager.Instance.OpenConfirmMessage(Global.descriptionMessageText);
+                        UIManager.Instance.OpenConfirmMessage(Global.DescriptionMessageText);
                         break;
                     case PortalState.CannotSend:
                         if (HasAllyInEnemyField)
                         {
-                            UIManager.Instance.OpenYesOrNoMessage(Global.moveFieldConfirmationText,
+                            UIManager.Instance.OpenYesOrNoMessage(Global.MoveFieldConfirmationText,
                                                                   () => MoveFieldConfirmCallback(GameTableManager.FieldType.PlayerField));
                         }
                         else
                         {
-                            UIManager.Instance.OpenConfirmMessage(Global.cannotSendWhileInvadedText);
+                            UIManager.Instance.OpenConfirmMessage(Global.CannotSendWhileInvadedText);
                         }
                         break;
                 }
                 break;
             case PortalType.EnemyField:
-                UIManager.Instance.OpenYesOrNoMessage(Global.moveFieldConfirmationText,
+                UIManager.Instance.OpenYesOrNoMessage(Global.MoveFieldConfirmationText,
                                                       () => MoveFieldConfirmCallback(GameTableManager.FieldType.PlayerField));
                 break;
         }
@@ -177,7 +177,7 @@ public class PortalCard : MonoBehaviour
         _card.cardTimerUI.gameObject.SetActive(false);
         _timer = null;
         var sendCardsText = string.Join(", ", _cardsToSend.Select(c => c.cardData.cardName));
-        UIManager.Instance.OpenYesOrNoMessage(Global.sendConfirmationText + "\n" + sendCardsText, SendConfirmCallback);
+        UIManager.Instance.OpenYesOrNoMessage(Global.SendConfirmationText + "\n" + sendCardsText, SendConfirmCallback);
     }
 
     private void SendConfirmCallback()
