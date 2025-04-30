@@ -151,6 +151,7 @@ public class BattleSystem : MonoBehaviour
             {
                 stackRepulsion.enabled = false;
             }
+            BattleManager.Instance.CardBattles[card].ResetArtWorkLocalPos();
         }
     } 
 
