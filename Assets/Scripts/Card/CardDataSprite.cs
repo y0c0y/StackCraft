@@ -67,6 +67,7 @@ public class CardDataSprite : MonoBehaviour
         _tween = 
             artworkSprite.transform.DOLocalMoveY(artHoverY, tweenDuration)
                  .SetEase(Ease.OutBack)
+                 .SetUpdate(true)
                  .SetLink(gameObject);
         
         if (_ownerCard.IndexInStack + 1 < _ownerCard.owningStack.cards.Count)
@@ -82,6 +83,7 @@ public class CardDataSprite : MonoBehaviour
         _tween = 
             artworkSprite.transform.DOLocalMoveY(artNormalY, tweenDuration)
                 .SetEase(Ease.OutBack)
+                .SetUpdate(true)
                 .SetLink(gameObject);
         
         if (_ownerCard.IndexInStack + 1 < _ownerCard.owningStack.cards.Count)
@@ -97,6 +99,7 @@ public class CardDataSprite : MonoBehaviour
         _tween = 
             artworkSprite.transform.DOLocalMoveY(artDragY, tweenDuration)
                 .SetEase(Ease.OutBack)
+                .SetUpdate(true)
                 .SetLink(gameObject);
         
         if (_ownerCard.IndexInStack + 1 < _ownerCard.owningStack.cards.Count)
@@ -112,6 +115,7 @@ public class CardDataSprite : MonoBehaviour
         _tween = 
             artworkSprite.transform.DOLocalMoveY(artHoverY, tweenDuration)
                 .SetEase(Ease.OutBack)
+                .SetUpdate(true)
                 .SetLink(gameObject);
         
         if (_ownerCard.IndexInStack + 1 < _ownerCard.owningStack.cards.Count)
