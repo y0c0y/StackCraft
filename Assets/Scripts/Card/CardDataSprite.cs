@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class CardDataSprite : MonoBehaviour
 {
-    [SerializeField] private SpriteRenderer artworkSprite;
+    [SerializeField] public SpriteRenderer artworkSprite;
     [SerializeField] private SpriteRenderer shadowSprite;
     [SerializeField] private GameObject canStackOnIndicator;
 

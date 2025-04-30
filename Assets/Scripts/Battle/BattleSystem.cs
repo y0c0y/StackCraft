@@ -28,6 +28,8 @@ public class BattleSystem : MonoBehaviour
 
     public bool preemptiveFlag;
     
+    
+    
     private readonly Random _random = new Random();
     public bool IsCardInBattle(Card card) => persons.Contains(card) || enemies.Contains(card);
 
@@ -101,29 +103,23 @@ public class BattleSystem : MonoBehaviour
         var attacker  = attackers[attackerIdx];
         var target = targets[targetIdx];
         
-        var attackerCb = attacker.GetComponentInChildren<CardBattle>();
-        var targetCb = target.GetComponentInChildren<CardBattle>();
+        int damage = BattleManager.Instance.CardBattles[attacker].GetDamage();
         
-        if(attackerCb == null || targetCb == null) return false;
-        
-        var damage = attackerCb.ability.TotalDamage;
         CreateAttackEffect?.Invoke(attacker, target);
-
-        targetCb.ability.CurrentHp -= damage;
         
-        if (  targetCb.ability.CurrentHp <= 0)
+        bool isDead = await BattleManager.Instance.CardBattles[target].ReceiveDamage(damage);
+
+        if (isDead)
         {
             Debug.Log($"🟥 {target.name} 파괴됨");
             await HandleRemove(targets, target);
         }
         else
         {
-            targetCb.battleUI.ChangeHpText(targetCb.ability.CurrentHp);
-            await UniTask.Delay(300);
-
+            await UniTask.Delay(200);
         }
-
-        await UniTask.Delay(500);
+        
+        await UniTask.Delay(300);
         
         return targets.Count == 0;
     }
@@ -132,7 +128,8 @@ public class BattleSystem : MonoBehaviour
     private async UniTask HandleRemove(List<Card> group, Card card)
     {
         if (!group.Remove(card)) return;
-
+        if(!BattleManager.Instance.CardBattles.Remove(card)) return;
+        
         Debug.Log($"{card.cardData.cardType}");
         
         Debug.Log("Destroy");
@@ -150,7 +147,7 @@ public class BattleSystem : MonoBehaviour
         foreach (var card in list)
         {
             if (card == null) continue;
-            card.GetComponent<CardDrag>().enabled = true;
+            if(!isEnemy) card.GetComponent<CardDrag>().enabled = true;
             card.owningStack.GetComponent<StackRepulsion>().enabled = true;
         }
     } 
