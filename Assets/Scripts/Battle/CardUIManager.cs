@@ -42,7 +42,7 @@ public class CardUIManager : MonoBehaviour
 		foreach (var card in stack.cards)
 		{
 			if (! _cardToUI.TryGetValue(card, out var modifier)) continue;
-			modifier.battleUI.canvas.enabled = card.IsLastCard;
+			modifier.ChangeBattleUI(card.IsLastCard);
 		}
 	}
 }

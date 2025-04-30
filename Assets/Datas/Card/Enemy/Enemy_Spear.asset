@@ -12,8 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8f8a2badb2439f4488891cc7743ddfa, type: 3}
   m_Name: Enemy_Spear
   m_EditorClassIdentifier: 
-  cardName: "\uC801 \uCC3D\uBCD1"
-  description: "\uC801 \uCC3D\uBCD1"
+  cardName: "\uCC3D\uBCD1"
+  description: "\uCC3D\uBCD1"
   sprite: {fileID: 21300000, guid: 2a11e522e1b91864ba30cd4c96f47cbe, type: 3}
   cardType: 7
   isConsumable: 0
+  isStatic: 0
+  customStackingRule:
+    customIncludeStackingOnMe: 0
+    customExcludeStackingOnMe: 0
+    customIncludeICanStackOn: 0
+    customExcludeICanStackOn: 0

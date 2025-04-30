@@ -11,7 +11,8 @@ public class BattleManager : MonoBehaviour
     
     public GameObject battleSystemPrefab;
     public List<BattleSystem> battleSystems = new();
-
+    public readonly Dictionary<Card, CardBattle> CardBattles = new();
+    
     public event Action CheckStageClear;
     
     [SerializeField] private GameObject cardBattlePrefab;
@@ -25,7 +26,6 @@ public class BattleManager : MonoBehaviour
         {
             Destroy(this);
         }
-        
     }
     
     private void Start()
@@ -50,11 +50,14 @@ public class BattleManager : MonoBehaviour
         var go = Instantiate(cardBattlePrefab, card.transform);
         cb = go.GetComponent<CardBattle>();
         cb.Setup(card);
+        
+        CardBattles.Add(card, cb);
     }
 
     private void OnCardRemovedFromTable(Card card)
     {
         if (!IsValidCardType(card)) return;
+        
        if(card.TryGetComponent<CardBattle>(out var cb)) Destroy(cb.gameObject);
         
     }
@@ -66,7 +69,7 @@ public class BattleManager : MonoBehaviour
         return card != null && 
                card.cardData.cardType is CardType.Person or CardType.Enemy;
     }
-    
+
     private async UniTask<List<Card>> SplitStack(Stack stack)
     {
         var separatedCards = new List<Card>();
@@ -80,7 +83,6 @@ public class BattleManager : MonoBehaviour
         {
             var slow = oldCard.GetComponent<SlowParentConstraint>();
             var drag = oldCard.GetComponent<CardDrag>();
-            var rig = oldCard.GetComponent<Rigidbody2D>();
             
             if (slow != null)
             {
@@ -92,16 +94,17 @@ public class BattleManager : MonoBehaviour
                             
             stack.RemoveCard(oldCard);
             
-            var newStack =  StackManager.Instance.AddNewStack();
+            var newStack = StackManager.Instance.AddNewStack();
             
             newStack.AddCard(oldCard);
+            
+            CardBattles[oldCard].ChangeBattleUI(true);
 
             await UniTask.WaitForEndOfFrame();
             
             var sr = newStack.GetComponent<StackRepulsion>();
             if (sr != null)
             {
-                Debug.Log("Stack Repulsion");
                 sr.enabled = false;
             }
             
@@ -110,7 +113,6 @@ public class BattleManager : MonoBehaviour
 
         GameTableManager.Instance.RemoveStackFromTable(stack);
 
-        Debug.Log($"SplitStack 완료 : {separatedCards.Count}개 카드 추출");
         return separatedCards;
     }
 
@@ -120,8 +122,6 @@ public class BattleManager : MonoBehaviour
         
         var personsForBattle = await SplitStack(personStack);
         var enemiesForBattle = await SplitStack(enemyStack);
-        
-        Debug.Log($"{personsForBattle.Count}");
         
         Debug.Log("새 전투 생성");
 
@@ -134,6 +134,8 @@ public class BattleManager : MonoBehaviour
         
         battleSystem.DeleteBattle += OnDeleteBattle;
         battleSystems.Add(battleSystem);
+        
+        await UniTask.WaitForEndOfFrame();
         
 
         await battleSystem.Init(personsForBattle, enemiesForBattle);
