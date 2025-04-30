@@ -8,9 +8,9 @@ public class UIManager : MonoBehaviour
     
     public static UIManager Instance;
     
-    [SerializeField] private List<GameObject> canvasUI;
+    [SerializeField] private List<Canvas> canvasUI;
     [SerializeField] private DescriptionUI descriptionUI;
-    private Dictionary<string, GameObject> canvasDict;
+    private Dictionary<string, Canvas> canvasDict;
     public static string defaultUI = "Level Canvas";
     
     public string currentUI {get; private set;}
@@ -21,7 +21,7 @@ public class UIManager : MonoBehaviour
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
         
-        canvasDict = new Dictionary<string, GameObject>();
+        canvasDict = new Dictionary<string, Canvas>();
         foreach (var canvas in canvasUI)
         {
             canvasDict.Add(canvas.name, canvas);
@@ -40,13 +40,13 @@ public class UIManager : MonoBehaviour
         {
             if (kv.Key == canvasName)
             {
-                kv.Value.SetActive(true);
+                kv.Value.enabled = true;
                 currentUI = canvasName;
                 isDefaultUI = (canvasName == defaultUI);
             }
             else
             {
-                kv.Value.SetActive(false);
+                kv.Value.enabled = false;
             }
         }
         
