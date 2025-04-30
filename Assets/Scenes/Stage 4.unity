@@ -68538,8 +68538,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  spawnEnemyDelayMin: 10
-  spawnEnemyDelayMax: 15
+  spawnEnemyDelayMin: 40
+  spawnEnemyDelayMax: 50
   enemyNeededToInvade: 5
   enemyInvasionPosition: {fileID: 467418571}
 --- !u!1 &633341635
@@ -138740,19 +138740,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8162429303310264220, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8162429303310264220, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8162429303310264220, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 186
       objectReference: {fileID: 0}
     - target: {fileID: 8162429303310264220, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -39.651
       objectReference: {fileID: 0}
     - target: {fileID: 8797926320936918869, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
       propertyPath: m_Value
@@ -138764,7 +138764,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9013709638632425590, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1877820
+      value: 1905120
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
