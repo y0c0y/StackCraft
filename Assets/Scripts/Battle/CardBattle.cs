@@ -29,6 +29,7 @@ public class CardBattle : MonoBehaviour
 		
 		Register();
 		ChangeBattleUI(true);
+		card.GetComponent<CardDrag>().CardDragEnded += OnDragEnded;
 	}
 	
 	public async UniTask<bool> ReceiveDamage(int damage)

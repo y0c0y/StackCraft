@@ -43,7 +43,6 @@ public class BattleManager : MonoBehaviour
     private void OnCardAddedToTable(Card card)
     {
         if (!IsValidCardType(card)) return;
-        card.GetComponent<CardDrag>().CardDragEnded += OnDragEnded;
         
         var cb = card.GetComponentInChildren<CardBattle>();
         if (cb != null) return;
@@ -59,8 +58,6 @@ public class BattleManager : MonoBehaviour
     {
         if (!IsValidCardType(card)) return;
         
-        card.GetComponent<CardDrag>().CardDragEnded -= OnDragEnded;
-        
        if(card.TryGetComponent<CardBattle>(out var cb)) Destroy(cb.gameObject);
         
     }
@@ -71,38 +68,6 @@ public class BattleManager : MonoBehaviour
     {
         return card != null && 
                card.cardData.cardType is CardType.Person or CardType.Enemy;
-    }
-
-    private void OnDragEnded(Card card)
-    {
-        if (!IsValidCardType(card)) return;
-        if (Flag(card)) return;
-
-        for (var i = 0; i < _results.Length; i++)
-        {
-            _results[i] = null;
-        }
-
-        var count = Physics2D.OverlapCollider(
-            card.GetComponent<Collider2D>(),
-            new ContactFilter2D().NoFilter(),
-            _results);
-
-        for (int i = 0; i < count; i++)
-        {
-            var other = _results[i].GetComponent<Card>();
-            if (other == null) continue;
-            if (!IsValidCardType(other)) continue;
-            if (Flag(other)) continue;
-            if (other.cardData.cardType == card.cardData.cardType) continue;
-
-            if (card.cardData.cardType == CardType.Person)
-                TryEngageBattle(card.owningStack, other.owningStack).Forget();
-            else
-                TryEngageBattle(other.owningStack, card.owningStack).Forget();
-            break;
-
-        }
     }
 
     private async UniTask<List<Card>> SplitStack(Stack stack)
