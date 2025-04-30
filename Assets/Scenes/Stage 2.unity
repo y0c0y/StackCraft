@@ -87412,8 +87412,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyCardsToSpawn:
     _serializedList:
-    - Key: {fileID: 11400000, guid: 59688c8b777f4a94b802fbed195863e2, type: 2}
-      Value: 2
+    - Key: {fileID: 11400000, guid: a9233a5c3127be74589371930d2e42dc, type: 2}
+      Value: 1
+    - Key: {fileID: 11400000, guid: d7dabb80b0b86764794ff4c0cf5adf29, type: 2}
+      Value: 1
   enemySpawnPoint: {fileID: 262625976}
   enemySpawnArea: {fileID: 0}
   zoomInCamera: {fileID: 255362607}

@@ -901,7 +901,7 @@ Transform:
   m_GameObject: {fileID: 558483105}
   serializedVersion: 2
   m_LocalRotation: {x: -0.008726465, y: -0, z: -0, w: 0.999962}
-  m_LocalPosition: {x: 13.47, y: -13.4, z: -10}
+  m_LocalPosition: {x: 14, y: -10, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -76961,9 +76961,7 @@ MonoBehaviour:
   enemyCardsToSpawn:
     _serializedList:
     - Key: {fileID: 11400000, guid: 59688c8b777f4a94b802fbed195863e2, type: 2}
-      Value: 1
-    - Key: {fileID: 11400000, guid: d7dabb80b0b86764794ff4c0cf5adf29, type: 2}
-      Value: 1
+      Value: 2
   enemySpawnPoint: {fileID: 2102248346}
   enemySpawnArea: {fileID: 0}
   zoomInCamera: {fileID: 558483107}
@@ -76982,7 +76980,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questEvents:
     _serializedList:
-    - Key: {fileID: 11400000, guid: d5870d75b74bb8c4d990af31ad0cc62f, type: 2}
+    - Key: {fileID: 11400000, guid: 1c58eb3e442731e408ece7c7d71aae18, type: 2}
       Value:
         m_PersistentCalls:
           m_Calls:
