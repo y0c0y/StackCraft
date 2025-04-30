@@ -148,6 +148,7 @@ public class BattleSystem : MonoBehaviour
         {
             if (card == null) continue;
             if(!isEnemy) card.GetComponent<CardDrag>().enabled = true;
+            if(card.owningStack == null) continue;
             card.owningStack.GetComponent<StackRepulsion>().enabled = true;
         }
     } 

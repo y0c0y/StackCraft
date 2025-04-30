@@ -29,9 +29,18 @@ public class CardBattle : MonoBehaviour
 		
 		Register();
 		ChangeBattleUI(true);
-		card.GetComponent<CardDrag>().CardDragEnded += OnDragEnded;
+
+		var drag = card.GetComponent<CardDrag>();
+		
+		if (card.cardData.cardType == CardType.Enemy)
+		{
+			drag.enabled = false;
+			return;
+		}
+		
+		drag.CardDragEnded += OnDragEnded;
 	}
-	
+	 
 	public async UniTask<bool> ReceiveDamage(int damage)
 	{
 		_ability.CurrentHp -= damage;
@@ -60,9 +69,6 @@ public class CardBattle : MonoBehaviour
 	{
 		CardUIManager.Instance?.Unregister(_card);
 	}
-	
-	
-
 
 	private void OnDestroy()
 	{
