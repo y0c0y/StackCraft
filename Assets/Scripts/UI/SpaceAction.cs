@@ -7,7 +7,6 @@ public class SpaceAction : MonoBehaviour
     private InputAction _spaceAction;
     
     private const string SPACE_STRING = "<Keyboard>/space";
-    private bool isPaused = false;
     
     private void OnEnable()
     {
@@ -26,28 +25,9 @@ public class SpaceAction : MonoBehaviour
     {
         if (!UIManager.Instance.isDefaultUI) return;
         
-        if (isPaused)
-        {
-            OnResume();
-        }
+        if (TimeManager.Instance.IsPausedByUser)
+            TimeManager.Instance.ResumeTimeByUser();
         else
-        {
-            OnPause();
-        }
-    }
-
-    private void OnResume()
-    {
-        isPaused = false;
-        stopPanel.SetActive(false);
-        TimeManager.Instance.ResumeTime();
-    }
-
-    private void OnPause()
-    {
-        if (isPaused) return;
-        isPaused = true;
-        stopPanel.SetActive(true);
-        TimeManager.Instance.PauseTime();
+            TimeManager.Instance.PauseTimeByUser();
     }
 }

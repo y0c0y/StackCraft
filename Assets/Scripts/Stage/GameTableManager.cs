@@ -168,11 +168,6 @@ public class GameTableManager : MonoBehaviour
         }
     }
 
-    public void SetTimeScale(float timeScale)
-    {
-        Time.timeScale = timeScale;
-    }
-
     public void ChangeField(FieldType fieldType)
     {
         if (fields[(int)fieldType] != null)

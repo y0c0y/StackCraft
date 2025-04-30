@@ -153,7 +153,7 @@ public class CameraMove : MonoBehaviour
         if (isZoomingIn) return;
         if (Mathf.Approximately(cam.Lens.FieldOfView, targetFOV)) return;
         
-        cam.Lens.FieldOfView = Mathf.Lerp(cam.Lens.FieldOfView, targetFOV, scrollSpeed * Time.deltaTime);
+        cam.Lens.FieldOfView = Mathf.Lerp(cam.Lens.FieldOfView, targetFOV, scrollSpeed * Time.unscaledDeltaTime);
     }
     
     private void OnFieldChanged(Field field)

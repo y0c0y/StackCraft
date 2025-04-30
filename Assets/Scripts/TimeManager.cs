@@ -1,18 +1,28 @@
+using System;
 using UnityEngine;
 
 public class TimeManager : MonoBehaviour
 {
+    public static event Action OnResume;
+    public static event Action OnPause;
+    
     public static TimeManager Instance;
 
-    private float timeScale = 1f;
-    private float stopTime = 0f;
+    public bool IsPausedByUser { get; private set; }
+    public bool IsPausedByUI { get; private set; }
+    public float CurrentSpeed { get; private set; } = 1f;
     
     private void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
-        
-        Time.timeScale = timeScale;
+    }
+
+    private void Start()
+    {
+        IsPausedByUser = false;
+        IsPausedByUI = false;
+        ApplyTimeScale();
     }
 
     private void OnEnable()
@@ -25,30 +35,57 @@ public class TimeManager : MonoBehaviour
         UIManager.OnUIChanged -= UIChanged;
     }
     
+    private void ApplyTimeScale()
+    {
+        if (IsPausedByUser || IsPausedByUI)
+            Time.timeScale = 0f;
+        else
+            Time.timeScale = CurrentSpeed;
+    }
+    
+    public void SetSpeed(float speed)
+    {
+        CurrentSpeed = speed;
+        IsPausedByUser = Mathf.Approximately(speed, 0f);
+        ApplyTimeScale();
+    }
+    
     public void ResumeTime()
     {
-        GameTableManager.Instance.SetTimeScale(timeScale);
+        IsPausedByUI = false;
+        ApplyTimeScale();
+        OnResume?.Invoke();
     }
 
     public void PauseTime()
     {
-        GameTableManager.Instance.SetTimeScale(stopTime);
+        IsPausedByUI = true;
+        ApplyTimeScale();
+        OnPause?.Invoke();
+    }
+    
+    public void PauseTimeByUser()
+    {
+        IsPausedByUser = true;
+        ApplyTimeScale();
+        OnPause?.Invoke();
     }
 
-    public void SetTimeScale(float timeScale)
+    public void ResumeTimeByUser()
     {
-        this.timeScale = timeScale;
+        IsPausedByUser = false;
+        ApplyTimeScale();
+        OnResume?.Invoke();
     }
 
     private void UIChanged(bool isDefaultUI)
     {
-        if (isDefaultUI)
-        {
-            ResumeTime();
-        }
-        else
-        {
+        IsPausedByUI = !isDefaultUI;
+        ApplyTimeScale();
+
+        if (IsPausedByUI)
             PauseTime();
-        }
+        else
+            ResumeTime();
     }
 }
