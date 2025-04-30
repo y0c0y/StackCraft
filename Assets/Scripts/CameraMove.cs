@@ -93,7 +93,7 @@ public class CameraMove : MonoBehaviour
 
             // 2D 레이캐스트 수행
             RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.zero, 11f, camLayerMask);
-            
+            Debug.Log(hit.collider?.name);
             isDraggingCard = (hit.collider != null);
         }
         else if (!isPressed && isDragging)
@@ -106,8 +106,13 @@ public class CameraMove : MonoBehaviour
         {
             if (EventSystem.current.IsPointerOverGameObject())
             {
-                lastMousePosition = pointAction.ReadValue<Vector2>();
-                return;
+                var uiInputModule = EventSystem.current.currentInputModule as InputSystemUIInputModule;
+                var result = uiInputModule?.GetLastRaycastResult(Pointer.current.deviceId);
+                if (!result?.gameObject.GetComponent<Card>())
+                {
+                    lastMousePosition = pointAction.ReadValue<Vector2>();
+                    return;
+                }
             }
 
             Vector2 currentMousePosition = pointAction.ReadValue<Vector2>();

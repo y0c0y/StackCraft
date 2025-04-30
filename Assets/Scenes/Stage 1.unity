@@ -77997,6 +77997,10 @@ PrefabInstance:
       propertyPath: scrollSpeed
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 6003804055431622851, guid: d7f1dead95e35f4419b52578180199d0, type: 3}
+      propertyPath: camLayerMask.m_Bits
+      value: 1024
+      objectReference: {fileID: 0}
     - target: {fileID: 6961227875569940428, guid: d7f1dead95e35f4419b52578180199d0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
