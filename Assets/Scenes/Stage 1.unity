@@ -76954,6 +76954,7 @@ MonoBehaviour:
     - Key: {fileID: 11400000, guid: d7dabb80b0b86764794ff4c0cf5adf29, type: 2}
       Value: 1
   enemySpawnPoint: {fileID: 2102248346}
+  enemySpawnArea: {fileID: 0}
   zoomInCamera: {fileID: 558483107}
   waitSeconds: 5
 --- !u!114 &1713332414

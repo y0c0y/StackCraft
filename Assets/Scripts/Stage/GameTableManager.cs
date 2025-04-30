@@ -27,7 +27,9 @@ public class GameTableManager : MonoBehaviour
     [SerializeField] public List<Field> fields;
     
     public List<Card> GetAllCardsInField(FieldType field) => 
-        cardsOnTable.FindAll((c) => c.owningStack.currentField == fields[(int)field]);
+        cardsOnTable.FindAll((c) => c.owningStack?.currentField == fields[(int)field]);
+    public List<Stack> GetAllStacksInField(Field field) =>
+        stacksOnTable.FindAll((s) => s?.currentField == field);
     
     [SerializeField] private GameObject cardPrefab;
     
@@ -151,10 +153,7 @@ public class GameTableManager : MonoBehaviour
             if (!c.IsTopCard) continue;
             if (c.owningStack == card.owningStack) continue;
             
-            var draggingCardData = card.cardData;
-            var releasedCardData = c.cardData;
-
-            if (StackingRules.CanStackByType(draggingCardData.cardType, releasedCardData.cardType))
+            if (card.CanStackOn(c))
             {
                 c.ShowCanStackOnIndicator();
             }
@@ -186,7 +185,7 @@ public class GameTableManager : MonoBehaviour
         }
     }
 
-    public static Stack MoveCardToField(FieldType field, Card card)
+    public static Stack MoveCardToField(FieldType field, Card card, Vector3? position)
     {
         if (card.owningStack)
         {
@@ -200,22 +199,28 @@ public class GameTableManager : MonoBehaviour
         newStack.AddCard(card);
         newStack.currentField = GameTableManager.Instance.fields[(int)field];
         Instance.AddStackToTable(newStack);
-        card.transform.position = GameTableManager.Instance.fields[(int)field].transform.position;
+        
+        card.transform.position = position ?? GameTableManager.Instance.fields[(int)field].transform.position;
+        
         CardColliderManager.Instance.ModifyColliders(newStack);
         
         return newStack;
     }
 
-    public static void MoveCardsToField(FieldType field, List<Card> cards)
+    public static void MoveCardsToField(FieldType field, List<Card> cards, Vector3? position)
     {
         if (cards.Count <= 0) return;
 
-        var newStack = MoveCardToField(field, cards[0]);
+        var newStack = MoveCardToField(field, cards[0], position);
 
         for (int i = 1; i < cards.Count; i++)
         {
             var card = cards[i];
             card.owningStack.RemoveCard(card);
+            var parentConstraint = card.GetComponent<SlowParentConstraint>();
+            parentConstraint.target = cards[i - 1].transform;
+            parentConstraint.enabled = true;
+            
             newStack.AddCard(card);
         }
     }
