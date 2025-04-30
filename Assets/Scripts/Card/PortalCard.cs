@@ -24,15 +24,17 @@ public class PortalCard : MonoBehaviour
     public PortalType portalType;
     public PortalState portalState;
     
-    [SerializeField] private string descriptionMessageText;
-    [SerializeField] private string sendConfirmationText;
-    [SerializeField] private string moveFieldConfirmationText;
+    
     [SerializeField] private float sendTimerDuration = 5f;
     
+    private bool isEnemyInvaded;
     private Card _card;
     private Timer _timer;
     private List<Card> _cardsToSend = new List<Card>();
     
+    private bool HasAllyInEnemyField =>
+        GameTableManager.Instance.GetAllCardsInField(GameTableManager.FieldType.EnemyField).Any(c => c.cardData.cardType == CardType.Person);
+
     private void Awake()
     {
         Debug.Assert(portalType != PortalType.None);
@@ -46,6 +48,14 @@ public class PortalCard : MonoBehaviour
         _ = ConnectStackEvent();
         
         BattleManager.Instance.BattleFinished += OnBattleFinished;
+        if (EnemyController.Instance)
+        {
+            EnemyController.Instance.EnemyInvaded += () =>
+            {
+                isEnemyInvaded = true;
+                portalState = PortalState.CannotSend;
+            };
+        }
     }
     
 
@@ -57,11 +67,31 @@ public class PortalCard : MonoBehaviour
     
     private void OnBattleFinished()
     {
-        if (portalType != PortalType.PlayerField || portalState != PortalState.CannotSend) return;
+        if (portalType != PortalType.PlayerField) return;
+        if (portalState != PortalState.CannotSend) return;
         
+        var canChangeToSend = true;
+        if (isEnemyInvaded)
+        {
+            // Check if all enemies in our field are dead
+            var cardsInPlayerField = GameTableManager.Instance.GetAllCardsInField(GameTableManager.FieldType.PlayerField);
+            if (cardsInPlayerField.Any(c => c.cardData.cardType == CardType.Enemy))
+            {
+                canChangeToSend = false;
+            }
+            else
+            {
+                isEnemyInvaded = false;
+            }
+        }
+            
         // Check if all allies in portal field are dead
-        var cardsInEnemyField = GameTableManager.Instance.GetAllCardsInField(GameTableManager.FieldType.EnemyField);
-        if (cardsInEnemyField.All(c => c.cardData.cardType != CardType.Person))
+        if (HasAllyInEnemyField)
+        {
+            canChangeToSend = false;
+        }
+            
+        if (canChangeToSend)
         {
             portalState = PortalState.CanSend;
         }
@@ -75,16 +105,23 @@ public class PortalCard : MonoBehaviour
                 switch (portalState)
                 {
                     case PortalState.CanSend:
-                        UIManager.Instance.OpenConfirmMessage(descriptionMessageText);
+                        UIManager.Instance.OpenConfirmMessage(Global.descriptionMessageText);
                         break;
                     case PortalState.CannotSend:
-                        UIManager.Instance.OpenYesOrNoMessage(moveFieldConfirmationText,
-                                                              () => MoveFieldConfirmCallback(GameTableManager.FieldType.EnemyField));
+                        if (HasAllyInEnemyField)
+                        {
+                            UIManager.Instance.OpenYesOrNoMessage(Global.moveFieldConfirmationText,
+                                                                  () => MoveFieldConfirmCallback(GameTableManager.FieldType.PlayerField));
+                        }
+                        else
+                        {
+                            UIManager.Instance.OpenConfirmMessage(Global.cannotSendWhileInvadedText);
+                        }
                         break;
                 }
                 break;
             case PortalType.EnemyField:
-                UIManager.Instance.OpenYesOrNoMessage(moveFieldConfirmationText,
+                UIManager.Instance.OpenYesOrNoMessage(Global.moveFieldConfirmationText,
                                                       () => MoveFieldConfirmCallback(GameTableManager.FieldType.PlayerField));
                 break;
         }
@@ -140,12 +177,12 @@ public class PortalCard : MonoBehaviour
         _card.cardTimerUI.gameObject.SetActive(false);
         _timer = null;
         var sendCardsText = string.Join(", ", _cardsToSend.Select(c => c.cardData.cardName));
-        UIManager.Instance.OpenYesOrNoMessage(sendConfirmationText + "\n" + sendCardsText, SendConfirmCallback);
+        UIManager.Instance.OpenYesOrNoMessage(Global.sendConfirmationText + "\n" + sendCardsText, SendConfirmCallback);
     }
 
     private void SendConfirmCallback()
     {
-        GameTableManager.MoveCardsToField(GameTableManager.FieldType.EnemyField, _cardsToSend);
+        GameTableManager.MoveCardsToField(GameTableManager.FieldType.EnemyField, _cardsToSend, null);
         portalState = PortalState.CannotSend;
         GameTableManager.Instance.ChangeField(GameTableManager.FieldType.EnemyField);
     }
