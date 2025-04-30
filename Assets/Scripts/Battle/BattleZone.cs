@@ -52,6 +52,7 @@ public class BattleZone : MonoBehaviour
             
             var offset = new Vector3(i * (cardWidth + horizontalSpacing), 0f, 0f);
             var targetPos = origin - centerOffset + offset;
+            targetPos.z = 0f;
 
             await MoveCardSmooth(card, targetPos, 0.3f);
         }

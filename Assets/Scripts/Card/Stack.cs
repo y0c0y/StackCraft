@@ -295,6 +295,16 @@ public class Stack: MonoBehaviour
                 pos.z = topz;
                 cards[i].transform.position = pos;
             }
+
+            if (cards[i].GetComponentInChildren<CardBattleUI>() is { } cardBattleUI
+                && cards[i].IsLastCard)
+            {
+                var lastSortingOrder = cards[i].GetComponentInChildren<CardDataSprite>().LastSortingOrder;
+                
+                Debug.Log($"cardBattleUI {cardBattleUI.name} sorting order {lastSortingOrder + 1}");
+                cardBattleUI.canvas.sortingOrder = lastSortingOrder + 1;
+                cardBattleUI.canvas.sortingLayerID = SortingLayer.layers[sortingLayerId].id;
+            }
         }
     }
 
