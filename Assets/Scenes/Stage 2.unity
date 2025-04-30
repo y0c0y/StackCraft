@@ -87411,6 +87411,7 @@ MonoBehaviour:
     - Key: {fileID: 11400000, guid: 59688c8b777f4a94b802fbed195863e2, type: 2}
       Value: 2
   enemySpawnPoint: {fileID: 262625976}
+  enemySpawnArea: {fileID: 0}
   zoomInCamera: {fileID: 255362607}
   waitSeconds: 5
 --- !u!114 &1351213715
@@ -87548,7 +87549,7 @@ MonoBehaviour:
   target: {fileID: 747068106}
   camLayerMask:
     serializedVersion: 2
-    m_Bits: 768
+    m_Bits: 1024
   moveArea: {fileID: 42918157}
   scrollSpeed: 6
   minFOV: 75

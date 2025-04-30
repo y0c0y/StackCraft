@@ -137439,7 +137439,7 @@ MonoBehaviour:
   target: {fileID: 747068106}
   camLayerMask:
     serializedVersion: 2
-    m_Bits: 768
+    m_Bits: 1024
   moveArea: {fileID: 42918157}
   scrollSpeed: 6
   minFOV: 55
@@ -138764,7 +138764,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9013709638632425590, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1868160
+      value: 1877820
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

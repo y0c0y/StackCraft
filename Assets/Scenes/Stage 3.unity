@@ -137010,6 +137010,7 @@ MonoBehaviour:
     - Key: {fileID: 11400000, guid: 59688c8b777f4a94b802fbed195863e2, type: 2}
       Value: 2
   enemySpawnPoint: {fileID: 262625976}
+  enemySpawnArea: {fileID: 0}
   zoomInCamera: {fileID: 255362607}
   waitSeconds: 5
 --- !u!114 &1351213715
@@ -137250,7 +137251,7 @@ MonoBehaviour:
   target: {fileID: 747068106}
   camLayerMask:
     serializedVersion: 2
-    m_Bits: 768
+    m_Bits: 1024
   moveArea: {fileID: 42918157}
   scrollSpeed: 6
   minFOV: 55
@@ -138200,11 +138201,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   portalType: 1
   portalState: 0
-  descriptionMessageText: "\uC774 \uACF3\uC5D0 \uC8FC\uBBFC \uCE74\uB4DC\uB97C \uC62C\uB9AC\uBA74
-    5\uCD08\uD6C4 \uC801\uC9C4\uC73C\uB85C \uC774\uB3D9\uC2DC\uD0B5\uB2C8\uB2E4 "
-  sendConfirmationText: "\uB2E4\uC74C\uC758 \uCE74\uB4DC\uB97C \uC801\uC9C4\uC73C\uB85C
-    \uC774\uB3D9\uC2DC\uD0B5\uB2C8\uAE4C?:"
-  moveFieldConfirmationText: "\uC801\uC9C4\uC73C\uB85C \uC774\uB3D9\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?"
   sendTimerDuration: 5
 --- !u!1 &2088946448
 GameObject:
@@ -138506,7 +138502,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9013709638632425590, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 525840
+      value: 531300
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -138558,9 +138554,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   portalType: 2
   portalState: 0
-  descriptionMessageText: 
-  sendConfirmationText: 
-  moveFieldConfirmationText: "\uBCF8\uC9C4\uC73C\uB85C \uC774\uB3D9\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?"
   sendTimerDuration: 5
 --- !u!1001 &4808429511326223823
 PrefabInstance:
