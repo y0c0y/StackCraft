@@ -1,9 +1,11 @@
 using System;
+using DG.Tweening;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
+using UnityEngine.InputSystem.UI;
 
 public class CameraMove : MonoBehaviour
 {
@@ -13,7 +15,7 @@ public class CameraMove : MonoBehaviour
     [SerializeField] private BoxCollider moveArea;
     
     [SerializeField] private float scrollSpeed = 6f;
-    [SerializeField] private float minFOV = 75f;
+    [SerializeField] private float minFOV = 55f;
     [SerializeField] private float maxFOV = 120f;
 
     private InputAction pointAction;
@@ -22,10 +24,30 @@ public class CameraMove : MonoBehaviour
 
     private bool isDragging = false;
     private bool isDraggingCard = false;
-    private float baseFOV = 75f;
-    private float targetFOV = 75f;
+    private float baseFOV = 80f;
+    private float targetFOV = 80f;
+
+    private float zoomInTargetFOV = 75f;
+    private float zoomInDuration = 0.5f;
+    private bool isZoomingIn = false;
+    
     private Vector2 lastMousePosition;
 
+    public void ZoomIn()
+    {
+        DOTween.To(() => cam.Lens.FieldOfView,
+                x => cam.Lens.FieldOfView = x,
+                zoomInTargetFOV,
+                zoomInDuration)
+               .SetEase(Ease.InQuad)
+               .OnStart(() =>
+               {
+                   targetFOV = zoomInTargetFOV;
+                   isZoomingIn = true;
+               })
+               .OnComplete(() => isZoomingIn = false)
+               .SetLink(gameObject);
+    }
 
     private void Awake()
     {
@@ -49,6 +71,7 @@ public class CameraMove : MonoBehaviour
         if (cam.IsParticipatingInBlend()) return;
         HandleDrag();
         HandleScroll();
+        MoveFov();
     }
 
     private void HandleDrag()
@@ -105,19 +128,28 @@ public class CameraMove : MonoBehaviour
 
     private void HandleScroll()
     {
-        if (EventSystem.current.IsPointerOverGameObject()) return;
+        if (EventSystem.current.IsPointerOverGameObject()) 
+        {
+            var uiInputModule = EventSystem.current.currentInputModule as InputSystemUIInputModule;
+            var result = uiInputModule?.GetLastRaycastResult(Pointer.current.deviceId);
+            if (!result?.gameObject.GetComponent<Card>()) return;
+        }
+        
         Vector2 scrollDelta = scrollwheelAction.ReadValue<Vector2>();
         if (scrollDelta.y != 0)
         {
-            float zoomAmount = scrollDelta.y * 2f;
+            float zoomAmount = scrollDelta.y * scrollSpeed / 2f;
             targetFOV -= zoomAmount;
             targetFOV = Mathf.Clamp(targetFOV, minFOV, maxFOV);
         }
-
-        if (!Mathf.Approximately(cam.Lens.FieldOfView, targetFOV))
-        {
-            cam.Lens.FieldOfView = Mathf.Lerp(cam.Lens.FieldOfView, targetFOV, scrollSpeed * Time.deltaTime);
-        }
+    }
+    
+    private void MoveFov()
+    {
+        if (isZoomingIn) return;
+        if (Mathf.Approximately(cam.Lens.FieldOfView, targetFOV)) return;
+        
+        cam.Lens.FieldOfView = Mathf.Lerp(cam.Lens.FieldOfView, targetFOV, scrollSpeed * Time.deltaTime);
     }
     
     private void OnFieldChanged(Field field)

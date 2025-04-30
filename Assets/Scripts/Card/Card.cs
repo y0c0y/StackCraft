@@ -14,6 +14,8 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoin
     public event Action<int, int> OnSortingLayerChanged;
     public event Action OnShowCanStackOnIndicator;
     public event Action OnHideCanStackOnIndicator;
+    public event Action CardPointerEntered;
+    public event Action CardPointerExited;
 
     public void RequestSplit() => RequestSplitFromStack?.Invoke(this);
     
@@ -65,6 +67,8 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoin
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        CardPointerEntered?.Invoke();
+        
         var cardUiInfo = CardInfoUI.Instance;
         if (cardUiInfo)
         {
@@ -74,6 +78,8 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoin
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        CardPointerExited?.Invoke();
+        
         var cardUiInfo = CardInfoUI.Instance;
         if (cardUiInfo)
         {

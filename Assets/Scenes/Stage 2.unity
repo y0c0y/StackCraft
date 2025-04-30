@@ -88032,6 +88032,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 1460611656}
+        m_TargetAssemblyTypeName: CameraMove, Assembly-CSharp
+        m_MethodName: ZoomIn
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 2093437801}
+        m_TargetAssemblyTypeName: FadeInCanvasGroup, Assembly-CSharp
+        m_MethodName: Run
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0.5
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   onFadeOutTransitionDone:
     m_PersistentCalls:
       m_Calls: []
@@ -88276,6 +88300,7 @@ GameObject:
   - component: {fileID: 2088946451}
   - component: {fileID: 2088946450}
   - component: {fileID: 2088946453}
+  - component: {fileID: 2088946454}
   m_Layer: 0
   m_Name: Scene Manager
   m_TagString: Untagged
@@ -88355,6 +88380,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stopPanel: {fileID: 2093437800}
+--- !u!114 &2088946454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2088946448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d47668b174b9a1b4a8a5c25bf0540074, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2093437797
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -88505,7 +88542,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9013709638632425590, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -0.00012207031
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -88527,6 +88564,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 558270893475155484, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
   m_PrefabInstance: {fileID: 2093437797}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2093437801 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8115378520119911991, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
+  m_PrefabInstance: {fileID: 2093437797}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2093437798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6fda580bdc7bbd4a9b977b1c6ea2a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4808429511326223823
 PrefabInstance:
   m_ObjectHideFlags: 0
