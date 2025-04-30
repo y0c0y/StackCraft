@@ -111,7 +111,7 @@ public class PortalCard : MonoBehaviour
                         if (HasAllyInEnemyField)
                         {
                             UIManager.Instance.OpenYesOrNoMessage(Global.MoveFieldConfirmationText,
-                                                                  () => MoveFieldConfirmCallback(GameTableManager.FieldType.PlayerField));
+                                                                  () => MoveFieldConfirmCallback(GameTableManager.FieldType.EnemyField));
                         }
                         else
                         {
