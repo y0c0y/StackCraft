@@ -10,6 +10,8 @@ public class CardDataSprite : MonoBehaviour
     [SerializeField] private SpriteRenderer shadowSprite;
     [SerializeField] private GameObject canStackOnIndicator;
 
+    public int LastSortingOrder => _spriteInitialSortingOrder.Keys.Select(spriteRenderer => spriteRenderer.sortingOrder).Max() + 1;
+    
     private float artNormalY = 0f;
     private float artHoverY = 0.07f;
     private float artDragY = 0.15f;

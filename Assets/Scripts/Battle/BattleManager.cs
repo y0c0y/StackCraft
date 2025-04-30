@@ -83,32 +83,26 @@ public class BattleManager : MonoBehaviour
         {
             var slow = oldCard.GetComponent<SlowParentConstraint>();
             var drag = oldCard.GetComponent<CardDrag>();
-            
             if (slow != null)
             {
                 slow.enabled = false;
                 slow.target = null;
             }
-            
             if (drag != null) drag.enabled = false;
-                            
+           
             stack.RemoveCard(oldCard);
-            
             var newStack = StackManager.Instance.AddNewStack();
             
             newStack.AddCard(oldCard);
+            separatedCards.Add(oldCard);
             
             CardBattles[oldCard].ChangeBattleUI(true);
-
+            
             await UniTask.WaitForEndOfFrame();
-            
+
             var sr = newStack.GetComponent<StackRepulsion>();
-            if (sr != null)
-            {
-                sr.enabled = false;
-            }
-            
-            separatedCards.Add(oldCard);
+            if(sr != null) sr.enabled = false;
+           
         }
 
         GameTableManager.Instance.RemoveStackFromTable(stack);

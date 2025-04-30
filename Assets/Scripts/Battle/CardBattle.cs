@@ -45,6 +45,8 @@ public class CardBattle : MonoBehaviour
 	{
 		_ability.CurrentHp -= damage;
 		
+		if (_ability.CurrentHp <= 0) _ability.CurrentHp = 0;
+		
 		_battleUI.ChangeHpText(_ability.CurrentHp);
 		
 		await UniTask.Delay(300);
@@ -57,7 +59,11 @@ public class CardBattle : MonoBehaviour
 	public void ChangeBattleUI(bool isTail)
 	{
 		_battleUI.ChangeUIEnabled(isTail);
-		_artworkSprite.gameObject.transform.localPosition = Vector3.zero;
+	}
+
+	public void ResetArtWorkLocalPos()
+	{
+		_artworkSprite.transform.localPosition = Vector3.zero;
 	}
 	
 	private void Register()

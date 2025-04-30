@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Random = System.Random;
 
 public class BattleSystem : MonoBehaviour
@@ -149,7 +147,11 @@ public class BattleSystem : MonoBehaviour
             if (card == null) continue;
             if(!isEnemy) card.GetComponent<CardDrag>().enabled = true;
             if(card.owningStack == null) continue;
-            card.owningStack.GetComponent<StackRepulsion>().enabled = true;
+            if (card.owningStack.GetComponent<StackRepulsion>() is { } stackRepulsion)
+            {
+                stackRepulsion.enabled = false;
+            }
+            BattleManager.Instance.CardBattles[card].ResetArtWorkLocalPos();
         }
     } 
 

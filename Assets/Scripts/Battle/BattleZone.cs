@@ -27,7 +27,6 @@ public class BattleZone : MonoBehaviour
         var zoneCollider = GetComponent<BoxCollider2D>();
         var bounds       = zoneCollider.bounds;
         
-        
         return (bounds.size, bounds.center);
     }
     
@@ -52,7 +51,11 @@ public class BattleZone : MonoBehaviour
             
             var offset = new Vector3(i * (cardWidth + horizontalSpacing), 0f, 0f);
             var targetPos = origin - centerOffset + offset;
-
+            targetPos.z = 0f;
+            
+            BattleManager.Instance.CardBattles[card].ResetArtWorkLocalPos();
+            await UniTask.WaitForEndOfFrame();
+            
             await MoveCardSmooth(card, targetPos, 0.3f);
         }
     }
@@ -74,7 +77,6 @@ public class BattleZone : MonoBehaviour
         }
 
         rb.MovePosition(targetPos);
-        
     }
 
 }
