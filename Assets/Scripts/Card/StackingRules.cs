@@ -64,24 +64,31 @@ public static class StackingRules
         }
     }
 
-    public static bool CanStackByType(CardType cardToPlaceType, CardType cardBelowType)
+    public static bool CanStackOn(this CardData cardToPlace, CardData cardBelow)
     {
-        var placingCardFlag = cardToPlaceType.ToFlag();
-        
+        var placingCardFlag = cardToPlace.cardType.ToFlag();
         if (placingCardFlag == StackingRuleFlags.None)
             return false;
-
-        StackingRuleFlags allowedOnBelow = GetDefaultCanStackOnMe(cardBelowType);
+        
+        StackingRuleFlags allowedOnBelow = GetDefaultCanStackOnMe(cardBelow.cardType);
+        allowedOnBelow |= cardBelow.customStackingRule.customIncludeStackingOnMe;
+        allowedOnBelow &= ~cardBelow.customStackingRule.customExcludeStackingOnMe;
+        
         bool belowAllowsPlacing = (placingCardFlag & allowedOnBelow) != 0;
         
-        var cardBelowFlag = cardBelowType.ToFlag();
         
+        var cardBelowFlag = cardBelow.cardType.ToFlag();
         if (cardBelowFlag == StackingRuleFlags.None)
             return false;
         
-        var placeCardCanStackOn = GetDefaultICanStackOn(cardToPlaceType);
+        var placeCardCanStackOn = GetDefaultICanStackOn(cardToPlace.cardType);
+        placeCardCanStackOn |= cardToPlace.customStackingRule.customIncludeICanStackOn;
+        placeCardCanStackOn &= ~cardToPlace.customStackingRule.customExcludeICanStackOn;
+        
         bool placingCardAllowsBelow = (cardBelowFlag & placeCardCanStackOn) != 0;
         
         return belowAllowsPlacing && placingCardAllowsBelow;
     }
+
+    public static bool CanStackOn(this Card cardToPlace, Card cardBelow) => cardToPlace.cardData.CanStackOn(cardBelow.cardData);
 }

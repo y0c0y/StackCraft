@@ -72,7 +72,7 @@ public class StackRepulsion : MonoBehaviour
 
     private void ApplyRepulsion()
     {
-        var stacksOnTable = GameTableManager.Instance.stacksOnTable;
+        var stacksOnTable = GameTableManager.Instance.GetAllStacksInField(_stack.currentField);
 
         const float checkDistanceRange = 100f;
         var closeStacks = 

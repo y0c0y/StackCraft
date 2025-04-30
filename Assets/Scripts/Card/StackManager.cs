@@ -106,9 +106,8 @@ public class StackManager : MonoBehaviour
             return;
         }
 
-        if (!StackingRules.CanStackByType(draggingCardData.cardType, releasedCardData.cardType))
+        if (!cardToAdd.CanStackOn(lastCard))
         {
-            //Debug.Log($"Can't stack type {draggingCardData.cardType} on {releasedCardData.cardType}");
             return;
         }
         
@@ -128,5 +127,6 @@ public class StackManager : MonoBehaviour
     {
         if (draggingCard == releasedCard) return;
         AddCardToStack(draggingCard, releasedCard.owningStack);
+        AudioManager.PlaySound(SoundType.PICKDOWN);
     }
 }

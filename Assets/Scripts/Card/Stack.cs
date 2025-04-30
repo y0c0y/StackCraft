@@ -93,8 +93,7 @@ public class Stack: MonoBehaviour
     {
         GameTableManager.Instance.AddStackToTable(this);
         
-        if (TopCard.cardData.cardType != CardType.Construction &&
-            TopCard.cardData.cardType != CardType.Portal)
+        if (!TopCard.cardData.isStatic)
         {
             gameObject.AddComponent<StackRepulsion>();
         }

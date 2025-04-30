@@ -46,3 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   battleSystemPrefab: {fileID: 5981893173078695814, guid: 84b4936e0bac2004398a077fd4aeee30, type: 3}
   battleSystems: []
+  cardBattlePrefab: {fileID: 5589276236981728959, guid: ce67e38ed4dd005499e741196f7f4635, type: 3}

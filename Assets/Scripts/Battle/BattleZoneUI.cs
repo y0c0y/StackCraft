@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI; // or TMPro
 using UnityEngine.EventSystems; // if needed
 
-public class BattleEffectManager : MonoBehaviour
+public class BattleZoneUI : MonoBehaviour
 {
     [Header("UI Canvas (World Space)")]
     [SerializeField] private Canvas battleZoneCanvas;
@@ -13,39 +13,39 @@ public class BattleEffectManager : MonoBehaviour
     [SerializeField] private GameObject projectileUIPrefab;  // RectTransform + Image
 
     [Header("Travel Settings")]
-    [SerializeField] private float travelTime = 0.3f;
+    [SerializeField] private float travelTime = 0.5f;
 
     private void Start()
     {
         battleZoneCanvas.worldCamera = Camera.main;
         
-        BattleSystem.Instance.AttackEffect += OnAttackEffect;
         BattleSystem.Instance.SetCanvas += OnSetCanvas;
+        BattleSystem.Instance. CreateAttackEffect += OnCreateAttackEffectHandler;
     }
     
     private void OnDestroy()
     {
         if (BattleSystem.Instance != null)
         {
-            BattleSystem.Instance.AttackEffect -= OnAttackEffect;
             BattleSystem.Instance.SetCanvas   -= OnSetCanvas;
+            BattleSystem.Instance.CreateAttackEffect -= OnCreateAttackEffectHandler;
         }
     }
-
-    public void OnAttackEffect(Card attacker, Card target)
+    
+    private void OnCreateAttackEffectHandler(Card attacker, Card target)
     {
-         _ = PlayProjectileUI(attacker, target);
+         _ = OnCreateAttackEffect(attacker, target);
     }
-
-    public void OnSetCanvas(Vector3 size, Vector3 center)
+    
+    private void OnSetCanvas(Vector3 size, Vector3 center)
     {
         var canvasRT = battleZoneCanvas.GetComponent<RectTransform>();
         
         canvasRT.sizeDelta = new Vector2(size.x, size.y);
         canvasRT.transform.position = center;
     }
-    
-    private async UniTask PlayProjectileUI(Card attacker, Card target)
+
+    private async UniTask OnCreateAttackEffect(Card attacker, Card target)
     {
         var canvasRT = battleZoneCanvas.GetComponent<RectTransform>();
 
