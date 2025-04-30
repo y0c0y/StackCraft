@@ -43,7 +43,7 @@ public class GameTableManager : MonoBehaviour
     private void Start()
     {
         StackManager.Instance.CardAddedToStackByDrag += HideCardCanStackIndicator;
-        Mouse.current.WarpCursorPosition(new Vector2(Screen.width / 2, Screen.height / 2));
+        Mouse.current.WarpCursorPosition(new Vector2(Screen.width / 2f, Screen.height / 2f));
     }
 
     public Card AddNewCardToTable(CardData newCardData, Vector3 position)

@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -7,7 +8,7 @@ public class CardDrag : MonoBehaviour
     public event Action<Card> CardDragStarted;
     public event Action<Card> CardDragEnded;
 
-    private const float SELECTED_Z_OFFSET = -0.5f;
+    private const float SELECTED_Z_OFFSET = -0.25f;
     private const float DRAG_TELEPORT_THRESHOLD = 0.05f;
     private const float SPEED = 30f;
     
@@ -18,6 +19,8 @@ public class CardDrag : MonoBehaviour
     private Vector2 _dragOrigin;
     private bool _isDragging = false;
     private bool _wasDragging = false;
+
+    private Tween _dragOffTween;
 
     private const float CARD_CLAMP_OFFSET = 0.35f;
     
@@ -87,11 +90,15 @@ public class CardDrag : MonoBehaviour
                 _wasDragging = false;
                 CardDragEnded?.Invoke(_card);
                 AudioManager.PlaySound(SoundType.PICKDOWN);
-                
-                // TODO: CHANGE INTO ANIMATION
-                var pos = transform.position;
-                pos.z = _targetPosition.z;
-                transform.position = pos;
+
+                _dragOffTween?.Kill();
+                _dragOffTween = transform.DOMoveZ(_targetPosition.z, 0.2f)
+                    .SetEase(Ease.OutCubic)
+                    .OnComplete(() =>
+                    {
+                        _dragOffTween = null;
+                    })
+                    .SetLink(gameObject);
             }
         }
     }

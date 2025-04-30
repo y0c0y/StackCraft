@@ -18,12 +18,13 @@ public class EnemySpawner: MonoBehaviour
     private async UniTaskVoid ZoomInUniTask()
     {
         SpawnEnemy();
-        GameTableManager.Instance.SetTimeScale(0f);
+        
+        TimeManager.Instance.PauseTime();
         zoomInCamera.gameObject.SetActive(true);
         await UniTask.Delay((int)(waitSeconds * 1000), true);
         zoomInCamera.gameObject.SetActive(false);
         await UniTask.Delay((int)(waitSeconds * 1000), true);
-        GameTableManager.Instance.SetTimeScale(1f);
+        TimeManager.Instance.ResumeTime();
     }
     
     public void SpawnEnemy()
