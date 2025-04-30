@@ -17,8 +17,8 @@ TagManager:
   - 
   - Battle
   - Card
+  - Battle UI
   - DraggingCard
-  - 
   - 
   - 
   - 
@@ -43,6 +43,9 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Battle UI
+    uniqueID: 104504033
     locked: 0
   - name: DraggedCard
     uniqueID: 4166844327

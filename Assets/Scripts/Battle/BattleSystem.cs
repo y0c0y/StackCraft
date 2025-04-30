@@ -12,7 +12,7 @@ public class BattleSystem : MonoBehaviour
     
     [Header("Prefabs")] 
     public BattleZone zone;
-    public BattleEffectManager zoneUI;
+    public BattleUIController zoneUI;
 
     [Header("InBattleCards")]
     public List<Card> persons = new();
@@ -21,12 +21,9 @@ public class BattleSystem : MonoBehaviour
     public readonly float RemoveCardDelay = 0.2f;
     
     public event Action<BattleSystem> DeleteBattle;
-    public event Action<Card, Card> AttackEffect;
     
     public event Action<Vector3, Vector3> SetCanvas;
-    
-    
-    private Dictionary<Card, int> _cardHp = new();
+    public event Action<Card, Card> AttackEffect;
     
     private readonly Random _random = new Random();
     
@@ -45,12 +42,10 @@ public class BattleSystem : MonoBehaviour
             Destroy(this);
         }
     }
-
-
+    
     public async UniTask Init(List<Card> oriPerson, List<Card> oriEnemy)
     {
         await UniTask.WaitForFixedUpdate();
-        
         
         persons.AddRange(oriPerson);
         enemies.AddRange(oriEnemy);
@@ -58,27 +53,10 @@ public class BattleSystem : MonoBehaviour
         var data = zone.ResizeBackground(enemies.Count, persons.Count);
         
         SetCanvas?.Invoke(data.Item1, data.Item2);
-        
-        
-        InitHp();
 
         await TryStartBattle();
     }
-
-    private void InitHp()
-    {
-        foreach (var card in persons)
-        {
-            _cardHp[card] = 5;
-            // BattleCommon.UpdateCardHpUI(card, 5);
-        }
-        foreach (var card in enemies)
-        {
-            _cardHp[card] = 5;
-            // BattleCommon.UpdateCardHpUI(card, 5);
-        }
-    }
-
+    
     private async UniTask TryStartBattle()
     {
         await zone.ArrangeCard(persons, enemies);
@@ -102,9 +80,14 @@ public class BattleSystem : MonoBehaviour
             preemptiveFlag = !preemptiveFlag;
         }
         
-        await UniTask.Delay(500);
+        await UniTask.Delay(300);
         
         EndBattle(preemptiveFlag);
+    }
+    
+    private async UniTask HandleDamage(Card card, int hp)
+    {
+       
     }
     
     private async UniTask<bool> Attack(List<Card> attackers, List<Card> targets)
@@ -119,24 +102,27 @@ public class BattleSystem : MonoBehaviour
         }
         
         var attacker  = attackers[attackerIdx];
-        var targetCard = targets[targetIdx];
+        var target = targets[targetIdx];
         
-        var damage = _random.Next(1, 6);
+        var damage = BattleManager.BattleAbilities[attacker].TotalDamage;
         
-        AttackEffect?.Invoke(attacker, targetCard);
+        AttackEffect?.Invoke(attacker, target);
         
-        // Debug.Log($"{attacker.name} → {targetCard.name}에게 {damage} 피해");
-
-        var hp = _cardHp[targetCard];
-        hp -= damage;
-        if (hp <= 0)
+        var targetBa = BattleManager.BattleAbilities[target];
+            
+        targetBa.CurrentHp-= damage;
+        
+        if (targetBa.CurrentHp <= 0)
         {
-            Debug.Log($"🟥 {targetCard.name} 파괴됨");
-            await HandleRemove(targets, targetCard);
+            Debug.Log($"🟥 {target.name} 파괴됨");
+            await HandleRemove(targets, target);
         }
         else
         {
-            _cardHp[targetCard] = hp;
+            if (BattleManager.UIMap.TryGetValue(target, out var ui))
+                ui.ChangeHpText(targetBa.CurrentHp);
+            await UniTask.Delay(300);
+
         }
 
         await UniTask.Delay(500);
@@ -151,29 +137,25 @@ public class BattleSystem : MonoBehaviour
 
         Debug.Log($"{card.cardData.cardType}");
 
-        _cardHp.Remove(card);
+        BattleManager.BattleAbilities.Remove(card);
 
         Debug.Log("Destroy");
         
         await UniTask.Delay(500);
-        
         
         Destroy(card.gameObject);
         Destroy(card.owningStack.gameObject);
         Destroy(card);
 
     }
-    
-    public void RestoreCardComponents(List<Card> list, bool isEnemy)
+
+    private void RestoreCardComponents(List<Card> list, bool isEnemy)
     {
         foreach (var card in list)
         {
             if (card == null) continue;
             card.GetComponent<CardDrag>().enabled = true;
             card.owningStack.GetComponent<StackRepulsion>().enabled = true;
-
-            // card.cardData.cardType = isEnemy ? CardType.Enemy : CardType.Person;
-
         }
     } 
 
