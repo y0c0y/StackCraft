@@ -74,6 +74,8 @@ public class StackManager : MonoBehaviour
 
     private void OnCardSplit(Card card)
     {
+        if (card.cardData.cardType == CardType.Enemy) return;
+        
         var slowParentCon = card.GetComponent<SlowParentConstraint>();
         slowParentCon.enabled = false;
         slowParentCon.target = null;

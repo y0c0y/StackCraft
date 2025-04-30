@@ -26,10 +26,12 @@ public class GameTableManager : MonoBehaviour
     [SerializeField] public List<Stack> stacksOnTable;
     [SerializeField] public List<Field> fields;
     
-    public List<Card> GetAllCardsInField(FieldType field) => 
-        cardsOnTable.FindAll((c) => c.owningStack?.currentField == fields[(int)field]);
+    public List<Card> GetAllCardsInField(FieldType fieldType) => 
+        cardsOnTable.FindAll((c) => c.owningStack?.currentField == fields[(int)fieldType]);
     public List<Stack> GetAllStacksInField(Field field) =>
         stacksOnTable.FindAll((s) => s?.currentField == field);
+    public List<Stack> GetAllStacksInField(FieldType fieldType) =>
+        stacksOnTable.FindAll((s) => s?.currentField == fields[(int)fieldType]);
     
     [SerializeField] private GameObject cardPrefab;
     

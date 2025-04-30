@@ -1,3 +1,4 @@
+using System.Linq;
 using AYellowpaper.SerializedCollections;
 using Cysharp.Threading.Tasks;
 using Unity.Cinemachine;
@@ -12,14 +13,14 @@ public class EnemySpawner: MonoBehaviour
     [SerializeField] private CinemachineCamera zoomInCamera;
     [SerializeField] private float waitSeconds = 5f;
 
-    public void ZoomInAndSpawnEnemy()
+    public void ZoomInAndSpawnEnemy(bool shouldStack)
     {
-        _ = ZoomInUniTask();
+        _ = ZoomInUniTask(shouldStack);
     }
 
-    private async UniTaskVoid ZoomInUniTask()
+    private async UniTaskVoid ZoomInUniTask(bool shouldStack)
     {
-        SpawnEnemy();
+        SpawnEnemyInPosition(shouldStack);
         
         TimeManager.Instance.PauseTime();
         zoomInCamera.gameObject.SetActive(true);
@@ -29,26 +30,33 @@ public class EnemySpawner: MonoBehaviour
         TimeManager.Instance.ResumeTime();
     }
     
-    public void SpawnEnemy()
+    public void SpawnEnemyInPosition(bool shouldStack)
     {
-        foreach (var kv in enemyCardsToSpawn)
-        {
-            for (int i = 0; i < kv.Value; i++)
-            {
-                var position = enemySpawnPoint.position + new Vector3(Random.Range(-4f, 4f), Random.Range(-4f, 4f), 0);
-                GameTableManager.Instance.AddNewCardToTable(kv.Key, position);
-            }
-        }
+        _ = SpawnTask(enemySpawnPoint.position, shouldStack);
+    }
+    
+    public void SpawnEnemyInArea(bool shouldStack)
+    {
+        _ = SpawnTask(GetRandomPointInsideCollider(enemySpawnArea), shouldStack);
     }
 
-    public void SpawnEnemyInArea()
+    private async UniTaskVoid SpawnTask(Vector3 position, bool shouldStack)
     {
         foreach (var kv in enemyCardsToSpawn)
         {
             for (int i = 0; i < kv.Value; i++)
             {
-                var position = GetRandomPointInsideCollider(enemySpawnArea);
-                GameTableManager.Instance.AddNewCardToTable(kv.Key, position);
+                var newCard = GameTableManager.Instance.AddNewCardToTable(kv.Key, position);
+
+                if (!shouldStack) continue;
+                
+                await UniTask.WaitUntil(() => newCard.owningStack != null);
+                var stack = newCard.owningStack.GetRandomStackFromSameField();
+                Debug.Log(stack);
+                if (stack != null)
+                {
+                    StackManager.Instance.AddCardToStack(newCard, stack);
+                }
             }
         }
     }

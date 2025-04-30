@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class TestSpawn : MonoBehaviour
@@ -14,7 +15,17 @@ public class TestSpawn : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.E))
         {
-            GameTableManager.Instance.AddNewCardToTable(enemyCardDatas[Random.Range(0, enemyCardDatas.Length)], Vector3.zero);
+            var newCard = GameTableManager.Instance.AddNewCardToTable(enemyCardDatas[Random.Range(0, enemyCardDatas.Length)],
+                Vector3.zero);
+            
+            var stack = GameTableManager.Instance.GetAllStacksInField(GameTableManager.FieldType.PlayerField)
+                .Where(stack => stack != newCard.owningStack && newCard.CanStackOn(stack.LastCard))
+                .ToList()
+                .Random();
+            if (stack != null)
+            {
+                StackManager.Instance.AddCardToStack(newCard, stack);
+            }
         }
     }
 }

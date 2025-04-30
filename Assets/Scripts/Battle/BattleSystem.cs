@@ -142,9 +142,11 @@ public class BattleSystem : MonoBehaviour
 
     private void RestoreCardComponents(List<Card> list, bool isEnemy)
     {
-        foreach (var card in list)
+        list.RemoveAll(c => c == null);
+        
+        for (int i = 0; i < list.Count; i++)
         {
-            if (card == null) continue;
+            var card = list[i];
             if(!isEnemy) card.GetComponent<CardDrag>().enabled = true;
             if(card.owningStack == null) continue;
             if (card.owningStack.GetComponent<StackRepulsion>() is { } stackRepulsion)
@@ -152,6 +154,16 @@ public class BattleSystem : MonoBehaviour
                 stackRepulsion.enabled = true;
             }
             BattleManager.Instance.CardBattles[card].ResetArtWorkLocalPos();
+
+            if (isEnemy && i >= 1)
+            {
+                var randomStack = list[i].owningStack.GetRandomStackFromSameField();
+                Debug.Log(randomStack);
+                if (randomStack != null)
+                {
+                    StackManager.Instance.AddCardToStack(card, randomStack);
+                }
+            }
         }
     } 
 
