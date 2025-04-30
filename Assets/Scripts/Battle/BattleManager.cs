@@ -72,7 +72,10 @@ public class BattleManager : MonoBehaviour
     {
         var separatedCards = new List<Card>();
 
-        stack.GetComponent<StackRepulsion>().enabled = false;
+        if (stack.GetComponent<StackRepulsion>() is { } stackRepulsion)
+        {
+            stackRepulsion.enabled = false;
+        }
 
         foreach (var oldCard in stack.cards.ToList())
         {
