@@ -152,6 +152,7 @@ public class GameTableManager : MonoBehaviour
             if (c == card) continue;
             if (!c.IsTopCard) continue;
             if (c.owningStack == card.owningStack) continue;
+            if (BattleManager.Instance?.Flag(c) ?? false) continue;
             
             if (card.CanStackOn(c))
             {

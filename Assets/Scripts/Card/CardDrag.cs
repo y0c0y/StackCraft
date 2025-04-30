@@ -107,7 +107,7 @@ public class CardDrag : MonoBehaviour
     {
         var inverseTransformPoint = transform.InverseTransformPoint(eventData.pointerPressRaycast.worldPosition);
         _dragOrigin = new Vector2(inverseTransformPoint.x, inverseTransformPoint.y);
-        _card.owningStack?.ReorderZOrder(1);
+        _card.owningStack?.ReorderZOrder(2);
         
         _isDragging = true;
     }
