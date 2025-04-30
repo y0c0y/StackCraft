@@ -27,4 +27,9 @@ public class CardBattleUI : MonoBehaviour
 		hpText.text = hp.ToString();
 	}
 	
+	public void ChangeUIEnabled(bool isTail)
+	{
+		canvas.enabled = isTail;
+	}
+	
 }

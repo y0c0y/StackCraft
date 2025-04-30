@@ -1,35 +1,55 @@
 using System.Collections;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
 public class CardBattle : MonoBehaviour
 {
-	public CardAbility ability;
-	public CardBattleUI battleUI;
-
-	private Card _card;
-
-	private Collider2D[] _results = new Collider2D[5];
-	private bool _stackSubscribed;
-
+	[SerializeField] private GameObject    cardBattleUIPrefab;
 	
-	private IEnumerator Start()
-	{
-		yield return null;
-		Register();
-	}
+	private CardBattleUI _battleUI;
+	private CardAbility _ability;
+	private SpriteRenderer _artworkSprite;
+	private Card         _card;
 	
 	public void Setup(Card card)
 	{
 		_card = card;
 
-		ability.InitAbility(card.cardData);
-		battleUI.Init(ability);
+		_ability = gameObject.AddComponent<CardAbility>();
+		_ability.InitAbility(card.cardData);
 
-		card.GetComponent<CardDrag>().CardDragEnded += OnDragEnded;
+		var cardDataSprite = card.gameObject.GetComponentInChildren<CardDataSprite>();
+		_artworkSprite = cardDataSprite.gameObject.GetComponentInChildren<SpriteRenderer>();
+		var uiGO = Instantiate(cardBattleUIPrefab, _artworkSprite.transform);
+		_battleUI = uiGO.GetComponent<CardBattleUI>();
+
+		_battleUI.Init(_ability);
+		
+		Register();
+		ChangeBattleUI(true);
 	}
+	
+	public async UniTask<bool> ReceiveDamage(int damage)
+	{
+		_ability.CurrentHp -= damage;
+		
+		_battleUI.ChangeHpText(_ability.CurrentHp);
+		
+		await UniTask.Delay(300);
+		
+		return _ability.CurrentHp <= 0;
+	}
+	
+	public int GetDamage() => _ability.TotalDamage;
 
+	public void ChangeBattleUI(bool isTail)
+	{
+		_battleUI.ChangeUIEnabled(isTail);
+		_artworkSprite.gameObject.transform.localPosition = Vector3.zero;
+	}
+	
 	private void Register()
 	{
 		CardUIManager.Instance?.Register(_card, this);
@@ -39,50 +59,7 @@ public class CardBattle : MonoBehaviour
 	{
 		CardUIManager.Instance?.Unregister(_card);
 	}
-
-
-	private void OnDestroy()
-	{
-		if (_card != null)
-		{
-			_card.GetComponent<CardDrag>().CardDragEnded -= OnDragEnded;
-		}
-	}
-
-	private void OnDragEnded(Card card)
-	{
-		var battleMgr = BattleManager.Instance;
-
-		if (card != _card) return;
-
-		if (battleMgr.Flag(card)) return;
-
-		for (var i = 0; i < _results.Length; i++)
-		{
-			_results[i] = null;
-		}
-
-		var count = Physics2D.OverlapCollider(
-			card.GetComponent<Collider2D>(),
-			new ContactFilter2D().NoFilter(),
-			_results);
-
-		for (int i = 0; i < count; i++)
-		{
-			var other = _results[i].GetComponent<Card>();
-			if (other == null) continue;
-			if (!battleMgr.IsValidCardType(other)) continue;
-			if (battleMgr.Flag(other)) continue;
-
-			if (other.cardData.cardType == card.cardData.cardType) return;
-
-			if (card.cardData.cardType == CardType.Person)
-				battleMgr.TryEngageBattle(card.owningStack, other.owningStack).Forget();
-			else
-				battleMgr.TryEngageBattle(other.owningStack, card.owningStack).Forget();
-			break;
-
-		}
-	}
+	
+	
 
 }
