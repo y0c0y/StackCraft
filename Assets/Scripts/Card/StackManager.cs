@@ -126,6 +126,11 @@ public class StackManager : MonoBehaviour
     private void OnCardReleasedOn(Card draggingCard, Card releasedCard)
     {
         if (draggingCard == releasedCard) return;
+        if (BattleManager.Instance.Flag(draggingCard) || BattleManager.Instance.Flag(releasedCard))
+        {
+            Debug.Log("Card is in battle. Cannot stack.");
+            return;
+        }
         AddCardToStack(draggingCard, releasedCard.owningStack);
         AudioManager.PlaySound(SoundType.PICKDOWN);
     }
