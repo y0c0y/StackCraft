@@ -6,7 +6,8 @@ using UnityEngine.Events;
 
 public class StageScenarioManager: MonoBehaviour
 {
-    [SerializedDictionary] public SerializedDictionary<QuestData, UnityEvent> questEvents;
+    [SerializedDictionary("Completed Quest Data", "Events")]
+    public SerializedDictionary<QuestData, UnityEvent> questEvents;
 
     private void Start()
     {

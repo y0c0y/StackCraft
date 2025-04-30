@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class BattleManager : MonoBehaviour
 {
-    public event Action BattleFinished;
+    public event Action<BattleSystem> BattleFinished;
     public static BattleManager Instance;
     
     public GameObject battleSystemPrefab;
@@ -110,7 +109,10 @@ public class BattleManager : MonoBehaviour
     {
         var separatedCards = new List<Card>();
 
-        stack.GetComponent<StackRepulsion>().enabled = false;
+        if (stack.GetComponent<StackRepulsion>() is { } stackRepulsion)
+        {
+            stackRepulsion.enabled = false;
+        }
 
         foreach (var oldCard in stack.cards.ToList())
         {
@@ -178,12 +180,11 @@ public class BattleManager : MonoBehaviour
     {
         if (battleSystem != null)
         {
+            BattleFinished?.Invoke(battleSystem);
             battleSystem.DeleteBattle -= OnDeleteBattle;
             battleSystems.Remove(battleSystem);
         
             Destroy(battleSystem.gameObject);
-            
-            BattleFinished?.Invoke();
         }
 
         CheckStageClear?.Invoke();
