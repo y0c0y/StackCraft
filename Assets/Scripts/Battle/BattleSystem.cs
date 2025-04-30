@@ -12,7 +12,7 @@ public class BattleSystem : MonoBehaviour
     
     [Header("Prefabs")] 
     public BattleZone zone;
-    public BattleUIController zoneUI;
+    public BattleZoneUI zoneUI;
 
     [Header("InBattleCards")]
     public List<Card> persons = new();
@@ -23,10 +23,12 @@ public class BattleSystem : MonoBehaviour
     public event Action<BattleSystem> DeleteBattle;
     
     public event Action<Vector3, Vector3> SetCanvas;
-    public event Action<Card, Card> AttackEffect;
+    public event Action<Card, Card> CreateAttackEffect;
+
+
+    public bool preemptiveFlag;
     
     private readonly Random _random = new Random();
-    
     public bool IsCardInBattle(Card card) => persons.Contains(card) || enemies.Contains(card);
 
     public bool IsEnemyNearby(Vector3 pos, float range)
@@ -41,6 +43,8 @@ public class BattleSystem : MonoBehaviour
         {
             Destroy(this);
         }
+        
+        preemptiveFlag = false;// 이거 수정해야함. (적 필드일 때, 나의 필드 일때)
     }
     
     public async UniTask Init(List<Card> oriPerson, List<Card> oriEnemy)
@@ -61,8 +65,6 @@ public class BattleSystem : MonoBehaviour
     {
         await zone.ArrangeCard(persons, enemies);
         
-        var preemptiveFlag = false;
-
         while (true)
         {
             Debug.Log($"🕛 { (preemptiveFlag ? "적" : "아군")} 턴 시작");
@@ -85,11 +87,6 @@ public class BattleSystem : MonoBehaviour
         EndBattle(preemptiveFlag);
     }
     
-    private async UniTask HandleDamage(Card card, int hp)
-    {
-       
-    }
-    
     private async UniTask<bool> Attack(List<Card> attackers, List<Card> targets)
     {
         var attackerIdx = _random.Next(0, attackers.Count);
@@ -104,29 +101,30 @@ public class BattleSystem : MonoBehaviour
         var attacker  = attackers[attackerIdx];
         var target = targets[targetIdx];
         
-        var damage = BattleManager.BattleAbilities[attacker].TotalDamage;
+        var attackerCb = attacker.GetComponentInChildren<CardBattle>();
+        var targetCb = target.GetComponentInChildren<CardBattle>();
         
-        AttackEffect?.Invoke(attacker, target);
+        if(attackerCb == null || targetCb == null) return false;
         
-        var targetBa = BattleManager.BattleAbilities[target];
-            
-        targetBa.CurrentHp-= damage;
+        var damage = attackerCb.ability.TotalDamage;
+        CreateAttackEffect?.Invoke(attacker, target);
+
+        targetCb.ability.CurrentHp -= damage;
         
-        if (targetBa.CurrentHp <= 0)
+        if (  targetCb.ability.CurrentHp <= 0)
         {
             Debug.Log($"🟥 {target.name} 파괴됨");
             await HandleRemove(targets, target);
         }
         else
         {
-            if (BattleManager.UIMap.TryGetValue(target, out var ui))
-                ui.ChangeHpText(targetBa.CurrentHp);
+            targetCb.battleUI.ChangeHpText(targetCb.ability.CurrentHp);
             await UniTask.Delay(300);
 
         }
 
         await UniTask.Delay(500);
-
+        
         return targets.Count == 0;
     }
 
@@ -136,9 +134,7 @@ public class BattleSystem : MonoBehaviour
         if (!group.Remove(card)) return;
 
         Debug.Log($"{card.cardData.cardType}");
-
-        BattleManager.BattleAbilities.Remove(card);
-
+        
         Debug.Log("Destroy");
         
         await UniTask.Delay(500);
