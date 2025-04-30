@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: "\uD3EC\uD0C8"
   description: "\uD3EC\uD0C8"
-  sprite: {fileID: 5002509553983478421, guid: 5064e532fe08e7149a3ed19df2197310, type: 3}
+  sprite: {fileID: 21300000, guid: 1efdbd9cc8d789f4b874e589fef768c4, type: 3}
   cardType: 8
   isConsumable: 0
   isStatic: 1
