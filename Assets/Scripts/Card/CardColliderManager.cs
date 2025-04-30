@@ -22,8 +22,22 @@ public class CardColliderManager : MonoBehaviour
     {
         GameTableManager.Instance.StackAddedOnTable += AddStack;
         GameTableManager.Instance.StackRemovedFromTable += RemoveStack;
+        BattleManager.Instance.BattleFinished += OnBattleFinished;
     }
-    
+
+    private void OnBattleFinished(BattleSystem obj)
+    {
+        foreach (var c in obj.persons)
+        {
+            ModifyColliders(c.owningStack);
+        }
+        
+        foreach (var c in obj.enemies)
+        {
+            ModifyColliders(c.owningStack);
+        }
+    }
+
     public void Register(Card card, ModifyCollider modifier)
     {
         if (!cardToCollider.ContainsKey(card))

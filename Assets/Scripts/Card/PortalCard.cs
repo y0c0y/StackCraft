@@ -46,8 +46,8 @@ public class PortalCard : MonoBehaviour
     {
         portalState = PortalState.CanSend;
         _ = ConnectStackEvent();
-        
-        BattleManager.Instance.BattleFinished += OnBattleFinished;
+
+        BattleManager.Instance.BattleFinished += (b) => OnBattleFinished();
         if (EnemyController.Instance)
         {
             EnemyController.Instance.EnemyInvaded += () =>
