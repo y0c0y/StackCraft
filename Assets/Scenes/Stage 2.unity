@@ -87762,7 +87762,6 @@ MonoBehaviour:
   stacksOnTable: []
   fields:
   - {fileID: 756775228}
-  - {fileID: 0}
   cardPrefab: {fileID: 8875983536118978043, guid: 516e59c89f26ff24482b1b6ace821be4, type: 3}
 --- !u!4 &1613349325
 Transform:
