@@ -409,7 +409,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8875983536118978043, guid: 516e59c89f26ff24482b1b6ace821be4, type: 3}
       propertyPath: m_Name
-      value: Person
+      value: Card
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -552,6 +552,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 338804461}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &265165834
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 265165835}
+  - component: {fileID: 265165836}
+  m_Layer: 0
+  m_Name: Card UI Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &265165835
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265165834}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 338804461}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &265165836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265165834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f099169d978142239651655148bf5edf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &316408796
 GameObject:
   m_ObjectHideFlags: 0
@@ -642,6 +686,7 @@ Transform:
   m_Children:
   - {fileID: 263159521}
   - {fileID: 2107592235}
+  - {fileID: 265165835}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &423764927
@@ -76905,7 +76950,9 @@ MonoBehaviour:
   enemyCardsToSpawn:
     _serializedList:
     - Key: {fileID: 11400000, guid: 59688c8b777f4a94b802fbed195863e2, type: 2}
-      Value: 2
+      Value: 1
+    - Key: {fileID: 11400000, guid: d7dabb80b0b86764794ff4c0cf5adf29, type: 2}
+      Value: 1
   enemySpawnPoint: {fileID: 2102248346}
   zoomInCamera: {fileID: 558483107}
   waitSeconds: 5
@@ -76923,7 +76970,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questEvents:
     _serializedList:
-    - Key: {fileID: 11400000, guid: 1c58eb3e442731e408ece7c7d71aae18, type: 2}
+    - Key: {fileID: 11400000, guid: d5870d75b74bb8c4d990af31ad0cc62f, type: 2}
       Value:
         m_PersistentCalls:
           m_Calls:
@@ -77482,6 +77529,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Battle Manager
       objectReference: {fileID: 0}
+    - target: {fileID: 3509050789598948246, guid: edbdca7397f31c84ea8d2f27ee019573, type: 3}
+      propertyPath: cardBattlePrefab
+      value: 
+      objectReference: {fileID: 5589276236981728959, guid: ce67e38ed4dd005499e741196f7f4635, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

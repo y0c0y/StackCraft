@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,8 +16,7 @@ public class CardBattleUI : MonoBehaviour
 	public Image hpImage;
 	public TMP_Text hpText;
 	
-
-	public void Init(Card card,BattleAbility ba)
+	public void Init(CardAbility ba)
 	{        
 		damageText.text = ba.TotalDamage.ToString();
 		hpText.text = ba.CurrentHp.ToString();
@@ -25,4 +26,5 @@ public class CardBattleUI : MonoBehaviour
 	{
 		hpText.text = hp.ToString();
 	}
+	
 }

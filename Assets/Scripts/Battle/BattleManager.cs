@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BattleManager : MonoBehaviour
@@ -11,11 +12,12 @@ public class BattleManager : MonoBehaviour
     
     public GameObject battleSystemPrefab;
     public List<BattleSystem> battleSystems = new();
-    
-    public static Dictionary<Card, BattleAbility> BattleAbilities;
-    public static Dictionary<Card, CardBattleUIController> UIMap;
 
     public event Action CheckStageClear;
+    
+    [SerializeField] private GameObject cardBattlePrefab;
+    
+    private Collider2D[] _results = new Collider2D[5];
     
     private void Awake()
     {
@@ -25,8 +27,6 @@ public class BattleManager : MonoBehaviour
             Destroy(this);
         }
         
-        BattleAbilities = new Dictionary<Card, BattleAbility>();
-        UIMap = new Dictionary<Card, CardBattleUIController>();
     }
     
     private void Start()
@@ -45,81 +45,28 @@ public class BattleManager : MonoBehaviour
     {
         if (!IsValidCardType(card)) return;
         
-        if (!BattleAbilities.ContainsKey(card))
-        {
-            var ability = BattleAbility.FindAbility(card.cardData);
-            BattleAbilities.Add(card, ability);
-            
-            var ui = card.GetComponentInChildren<CardBattleUIController>();
-            ui.Init(card, ability);
-            UIMap[card] = ui;
-        }
-
-        var drag = card.GetComponent<CardDrag>();
-        if (drag != null)
-        {
-            drag.CardDragEnded -= OnCardDragEnded;
-            drag.CardDragEnded += OnCardDragEnded;
-        }
+        var cb = card.GetComponentInChildren<CardBattle>();
+        if (cb != null) return;
+        
+        var go = Instantiate(cardBattlePrefab, card.transform);
+        cb = go.GetComponent<CardBattle>();
+        cb.Setup(card);
     }
 
     private void OnCardRemovedFromTable(Card card)
     {
         if (!IsValidCardType(card)) return;
+       if(card.TryGetComponent<CardBattle>(out var cb)) Destroy(cb.gameObject);
         
-        BattleAbilities.Remove(card);
-        UIMap.Remove(card);
-        
-        var drag = card.GetComponent<CardDrag>();
-        if (drag != null)
-        {
-            drag.CardDragEnded -= OnCardDragEnded;
-        }
     }
 
-    private bool Flag(Card c) => battleSystems.Any(bs => bs.IsCardInBattle(c));
+    public bool Flag(Card c) => battleSystems.Any(bs => bs.IsCardInBattle(c));
 
-    private static bool IsValidCardType(Card card)
+    public bool IsValidCardType(Card card)
     {
         return card != null && 
                card.cardData.cardType is CardType.Person or CardType.Enemy;
     }
-
-    private void OnCardDragEnded(Card card)
-    {
-        if (Flag(card)) return;
-
-        var results = new Collider2D[5];
-        var filter = new ContactFilter2D().NoFilter();
-        var count = Physics2D.OverlapCollider(card.GetComponent<Collider2D>(), filter, results);
-
-        for (var i = 0; i < count; i++)
-        {
-            var other = results[i].GetComponent<Card>();
-            if (other == null) continue;
-            if (!IsValidCardType(other)) continue;
-            if (Flag(other)) continue;
-            
-            Debug.Log($"Card {other.name}");
-
-            var me = card.cardData.cardType;
-            var you = other.cardData.cardType;
-            if (me == you) continue;
-
-            switch (me)
-            {
-                case CardType.Person:
-                    TryEngageBattle(card.owningStack, other.owningStack).Forget();
-                    break;
-                case CardType.Enemy:
-                    TryEngageBattle(other.owningStack, card.owningStack).Forget();
-                    break;
-            }
-
-            return;
-        }
-    }
-
     
     private async UniTask<List<Card>> SplitStack(Stack stack)
     {
@@ -140,9 +87,6 @@ public class BattleManager : MonoBehaviour
             }
             
             if (drag != null) drag.enabled = false;
-            
-            // if(rig != null) rig
-            
                             
             stack.RemoveCard(oldCard);
             
@@ -168,7 +112,7 @@ public class BattleManager : MonoBehaviour
         return separatedCards;
     }
 
-    private async UniTaskVoid TryEngageBattle(Stack personStack, Stack enemyStack)
+    public async UniTaskVoid TryEngageBattle(Stack personStack, Stack enemyStack)
     {
         await UniTask.WaitForFixedUpdate();
         
