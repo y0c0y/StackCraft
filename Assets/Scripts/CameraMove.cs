@@ -1,7 +1,9 @@
+using System;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.UI;
 
 public class CameraMove : MonoBehaviour
 {
@@ -47,6 +49,7 @@ public class CameraMove : MonoBehaviour
         if (cam.IsParticipatingInBlend()) return;
         HandleDrag();
         HandleScroll();
+        MoveFov();
     }
 
     private void HandleDrag()
@@ -103,7 +106,13 @@ public class CameraMove : MonoBehaviour
 
     private void HandleScroll()
     {
-        if (EventSystem.current.IsPointerOverGameObject()) return;
+        if (EventSystem.current.IsPointerOverGameObject()) 
+        {
+            var uiInputModule = EventSystem.current.currentInputModule as InputSystemUIInputModule;
+            var result = uiInputModule?.GetLastRaycastResult(Pointer.current.deviceId);
+            if (!result?.gameObject.GetComponent<Card>()) return;
+        }
+        
         Vector2 scrollDelta = scrollwheelAction.ReadValue<Vector2>();
         if (scrollDelta.y != 0)
         {
@@ -111,7 +120,10 @@ public class CameraMove : MonoBehaviour
             targetFOV -= zoomAmount;
             targetFOV = Mathf.Clamp(targetFOV, minFOV, maxFOV);
         }
-
+    }
+    
+    private void MoveFov()
+    {
         if (!Mathf.Approximately(cam.Lens.FieldOfView, targetFOV))
         {
             cam.Lens.FieldOfView = Mathf.Lerp(cam.Lens.FieldOfView, targetFOV, scrollSpeed * Time.deltaTime);
