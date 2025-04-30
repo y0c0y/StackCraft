@@ -106,10 +106,13 @@ public class QuestManager : MonoBehaviour
          else
          {
             Debug.Log("클리어 실패");
+            UIManager.Instance.OpenConfirmMessage(Global.StageFailedMessageText,
+               () => SceneManager.LoadScene("StageSelect"));
+            return;
          }
       }
       
-      UIManager.Instance.OpenConfirmMessage("승리했습니다!",
+      UIManager.Instance.OpenConfirmMessage(Global.StageClearMessageText,
          () => SceneManager.LoadScene("StageSelect"));
    }
    
