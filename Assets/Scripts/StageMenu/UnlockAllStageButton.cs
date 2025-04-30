@@ -3,10 +3,10 @@ using UnityEngine.SceneManagement;
 
 public class UnlockAllStageButton : MonoBehaviour
 {
+    [SerializeField] private SceneTransition sceneTransition;
     public void OnButtonClick()
     {
-        // TODO totalStages 수정 필요
-        const int totalStages = 2;
+        const int totalStages = 4;
 
         for (var i = 0; i < totalStages; i++)
         {
@@ -14,6 +14,12 @@ public class UnlockAllStageButton : MonoBehaviour
         }
 
         PlayerPrefs.Save();
+        sceneTransition.onFadeOutTransitionDone.AddListener(LoadScene);
+        sceneTransition.StartFadeOutTransition();
+    }
+    
+    public void LoadScene()
+    {
         SceneManager.LoadScene("StageSelect");
     }
 }
