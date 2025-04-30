@@ -9,10 +9,7 @@ public class CardBattle : MonoBehaviour
 	public CardBattleUI battleUI;
 
 	private Card _card;
-
-	private Collider2D[] _results = new Collider2D[5];
 	private bool _stackSubscribed;
-
 	
 	private IEnumerator Start()
 	{
@@ -54,34 +51,24 @@ public class CardBattle : MonoBehaviour
 		var battleMgr = BattleManager.Instance;
 
 		if (card != _card) return;
-
 		if (battleMgr.Flag(card)) return;
-
-		for (var i = 0; i < _results.Length; i++)
+		
+		var allStacksInField = GameTableManager.Instance.GetAllStacksInField(card.owningStack.currentField);
+		
+		foreach (var stack in allStacksInField)
 		{
-			_results[i] = null;
-		}
-
-		var count = Physics2D.OverlapCollider(
-			card.GetComponent<Collider2D>(),
-			new ContactFilter2D().NoFilter(),
-			_results);
-
-		for (int i = 0; i < count; i++)
-		{
-			var other = _results[i].GetComponent<Card>();
-			if (other == null) continue;
-			if (!battleMgr.IsValidCardType(other)) continue;
-			if (battleMgr.Flag(other)) continue;
-
-			if (other.cardData.cardType == card.cardData.cardType) return;
+			if (stack == card.owningStack) continue;
+			if (stack.TopCard == null) continue;
+			if (stack.TopCard.cardData.cardType == card.cardData.cardType) continue;
+			if (!battleMgr.IsValidCardType(stack.TopCard)) continue;
+			if (battleMgr.Flag(stack.TopCard)) continue;
+			if (!stack.bounds.Intersects(card.owningStack.bounds)) continue;
 
 			if (card.cardData.cardType == CardType.Person)
-				battleMgr.TryEngageBattle(card.owningStack, other.owningStack).Forget();
+				battleMgr.TryEngageBattle(card.owningStack, stack).Forget();
 			else
-				battleMgr.TryEngageBattle(other.owningStack, card.owningStack).Forget();
+				battleMgr.TryEngageBattle(stack, card.owningStack).Forget();
 			break;
-
 		}
 	}
 
