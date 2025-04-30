@@ -429,6 +429,7 @@ GameObject:
   - component: {fileID: 208793398}
   - component: {fileID: 208793401}
   - component: {fileID: 208793402}
+  - component: {fileID: 208793403}
   m_Layer: 0
   m_Name: Scene Manager
   m_TagString: Untagged
@@ -508,6 +509,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stopPanel: {fileID: 1472251171}
+--- !u!114 &208793403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 208793397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d47668b174b9a1b4a8a5c25bf0540074, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &263159520
 GameObject:
   m_ObjectHideFlags: 0
@@ -76820,6 +76833,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 1836229976313178615}
+        m_TargetAssemblyTypeName: FadeInCanvasGroup, Assembly-CSharp
+        m_MethodName: Run
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0.5
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 5400125469473087724}
+        m_TargetAssemblyTypeName: CameraMove, Assembly-CSharp
+        m_MethodName: ZoomIn
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0.5
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   onFadeOutTransitionDone:
     m_PersistentCalls:
       m_Calls: []
@@ -77817,6 +77854,17 @@ Canvas:
   m_CorrespondingSourceObject: {fileID: 7111702213389333732, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
   m_PrefabInstance: {fileID: 1836229976313178613}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1836229976313178615 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8115378520119911991, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
+  m_PrefabInstance: {fileID: 1836229976313178613}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1097378571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6fda580bdc7bbd4a9b977b1c6ea2a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &5400125469473087721
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -77856,6 +77904,14 @@ PrefabInstance:
     - target: {fileID: 3741816268949953743, guid: d7f1dead95e35f4419b52578180199d0, type: 3}
       propertyPath: m_Size.y
       value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 4219066529048476706, guid: d7f1dead95e35f4419b52578180199d0, type: 3}
+      propertyPath: field of view
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 4645918376687297039, guid: d7f1dead95e35f4419b52578180199d0, type: 3}
+      propertyPath: Lens.FieldOfView
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 5549267345881136685, guid: d7f1dead95e35f4419b52578180199d0, type: 3}
       propertyPath: IgnoreTimeScale
@@ -77935,6 +77991,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6961227875569940428, guid: d7f1dead95e35f4419b52578180199d0, type: 3}
   m_PrefabInstance: {fileID: 5400125469473087721}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5400125469473087724 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6003804055431622851, guid: d7f1dead95e35f4419b52578180199d0, type: 3}
+  m_PrefabInstance: {fileID: 5400125469473087721}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74025926834b3e94a9a1e8ff30a183b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

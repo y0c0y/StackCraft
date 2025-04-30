@@ -1,6 +1,8 @@
 using System;
+using DG.Tweening;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
@@ -22,10 +24,30 @@ public class CameraMove : MonoBehaviour
 
     private bool isDragging = false;
     private bool isDraggingCard = false;
-    private float baseFOV = 75f;
-    private float targetFOV = 75f;
+    private float baseFOV = 80f;
+    private float targetFOV = 80f;
+
+    private float zoomInTargetFOV = 75f;
+    private float zoomInDuration = 0.5f;
+    private bool isZoomingIn = false;
+    
     private Vector2 lastMousePosition;
 
+    public void ZoomIn()
+    {
+        DOTween.To(() => cam.Lens.FieldOfView,
+                x => cam.Lens.FieldOfView = x,
+                zoomInTargetFOV,
+                zoomInDuration)
+               .SetEase(Ease.InQuad)
+               .OnStart(() =>
+               {
+                   targetFOV = zoomInTargetFOV;
+                   isZoomingIn = true;
+               })
+               .OnComplete(() => isZoomingIn = false)
+               .SetLink(gameObject);
+    }
 
     private void Awake()
     {
@@ -124,10 +146,10 @@ public class CameraMove : MonoBehaviour
     
     private void MoveFov()
     {
-        if (!Mathf.Approximately(cam.Lens.FieldOfView, targetFOV))
-        {
-            cam.Lens.FieldOfView = Mathf.Lerp(cam.Lens.FieldOfView, targetFOV, scrollSpeed * Time.deltaTime);
-        }
+        if (isZoomingIn) return;
+        if (Mathf.Approximately(cam.Lens.FieldOfView, targetFOV)) return;
+        
+        cam.Lens.FieldOfView = Mathf.Lerp(cam.Lens.FieldOfView, targetFOV, scrollSpeed * Time.deltaTime);
     }
     
     private void OnFieldChanged(Field field)

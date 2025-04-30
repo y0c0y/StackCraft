@@ -2879,6 +2879,8 @@ GameObject:
   - component: {fileID: 7111702213389333732}
   - component: {fileID: 946579323588340973}
   - component: {fileID: 4814467158593087989}
+  - component: {fileID: 8356921236333846905}
+  - component: {fileID: 8115378520119911991}
   m_Layer: 5
   m_Name: Level Canvas
   m_TagString: Untagged
@@ -2973,6 +2975,30 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!225 &8356921236333846905
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6320114994016342858}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &8115378520119911991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6320114994016342858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6fda580bdc7bbd4a9b977b1c6ea2a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6431898092083767590
 GameObject:
   m_ObjectHideFlags: 0
