@@ -69,23 +69,11 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoin
     public void OnPointerEnter(PointerEventData eventData)
     {
         CardPointerEntered?.Invoke();
-        
-        var cardUiInfo = CardInfoUI.Instance;
-        if (cardUiInfo)
-        {
-            cardUiInfo.ShowStackInfo(this);
-        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         CardPointerExited?.Invoke();
-        
-        var cardUiInfo = CardInfoUI.Instance;
-        if (cardUiInfo)
-        {
-            cardUiInfo.HideStackInfo();
-        }
     }
 
     public void OnPointerDown(PointerEventData eventData)
