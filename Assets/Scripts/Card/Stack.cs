@@ -219,8 +219,7 @@ public class Stack: MonoBehaviour
         if (!card.cardData.isConsumable) return;
         
         var cardPos = card.transform.position;
-        var smokeEffect = Instantiate(GameTableManager.Instance.smokeEffectPrefab, cardPos, Quaternion.identity);
-        Debug.Log(smokeEffect);
+        Instantiate(GameTableManager.Instance.smokeEffectPrefab, cardPos, Quaternion.identity);
         
         cards.Remove(card);
         

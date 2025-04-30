@@ -128,16 +128,20 @@ public class BattleSystem : MonoBehaviour
         if (!group.Remove(card)) return;
         if(!BattleManager.Instance.CardBattles.Remove(card)) return;
         
+        
         Debug.Log($"{card.cardData.cardType}");
         
         Debug.Log("Destroy");
         
         await UniTask.Delay(500);
         
+        var cardPos = card.transform.position;
+        
         Destroy(card.gameObject);
         Destroy(card.owningStack.gameObject);
         Destroy(card);
 
+        Instantiate(GameTableManager.Instance.smokeEffectPrefab, cardPos, Quaternion.identity);
     }
 
     private void RestoreCardComponents(List<Card> list, bool isEnemy)
