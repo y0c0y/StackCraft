@@ -149,7 +149,7 @@ public class BattleSystem : MonoBehaviour
             if(card.owningStack == null) continue;
             if (card.owningStack.GetComponent<StackRepulsion>() is { } stackRepulsion)
             {
-                stackRepulsion.enabled = false;
+                stackRepulsion.enabled = true;
             }
             BattleManager.Instance.CardBattles[card].ResetArtWorkLocalPos();
         }
