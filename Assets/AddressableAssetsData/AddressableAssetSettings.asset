@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: 3d90d323a3f53e046871d142c104e36a
   m_currentHash:
     serializedVersion: 2
-    Hash: ae875984dedd7b1f236de2d8138a76e0
+    Hash: 78837aba25c750b00d6e57756924181b
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_CatalogRequestsTimeout: 0
@@ -103,6 +103,7 @@ MonoBehaviour:
     - Stage 2 Quests
     - Stage 3 Quests
     - Stage 4 Quests
+    - Level
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: d12661268c376d648b1348f98f6a7625, type: 2}

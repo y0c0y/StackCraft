@@ -49,7 +49,24 @@ public class QuestManager : MonoBehaviour
       }
       else
       {
-         await LoadQuests("Stage 1 Quests");
+         var activeScene = SceneManager.GetActiveScene();
+         var tmp = activeScene.name.Split(" ");
+         
+         var handle = Addressables.LoadAssetsAsync<LevelData>("Level", null);
+      
+         if (handle.Status == AsyncOperationStatus.Failed)
+         {
+            Debug.LogError($"로드 실패: {handle.OperationException} Level: {activeScene.name}");
+         }
+         
+         var data = await handle.ToUniTask();
+         
+         StageInfo.SelectedLevel = data[int.Parse(tmp[1])-1];
+         
+         await LoadQuests($"{activeScene.name} Quests");
+         
+         Debug.Log($"{StageInfo.SelectedLevel.levelIndex} Quests");
+         Debug.Log($"{activeScene.name} Quests");
       }
    }
 
