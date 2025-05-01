@@ -179,7 +179,7 @@ public class CameraMove : MonoBehaviour
         var scrollDelta = scrollwheelAction.ReadValue<float>();
         if (scrollDelta != 0)
         {
-            float zoomAmount = scrollDelta * scrollSpeed / 2f;
+            float zoomAmount = scrollDelta * (scrollwheelAction.activeControl is Touchscreen ? -1f: 1f) * scrollSpeed / 2f;
             targetFOV -= zoomAmount;
             targetFOV = Mathf.Clamp(targetFOV, minFOV, maxFOV);
 
