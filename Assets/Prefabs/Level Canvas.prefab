@@ -619,7 +619,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: a431bc036ddfd5f45b7e24d950176f48, type: 3}
   - {fileID: 21300000, guid: 2480dcded8cbe704f81286e0b5b93340, type: 3}
   - {fileID: 21300000, guid: 5cfdd8bc197215d418d809123e1fd987, type: 3}
-  - {fileID: 21300000, guid: b6af66ad72809b54daf67dc97fed65fa, type: 3}
+  - {fileID: 21300000, guid: 3e2dbaa4931d5a34a96167752414009d, type: 3}
   StopPanel: {fileID: 558270893475155484}
 --- !u!1 &1706826801375916918
 GameObject:
