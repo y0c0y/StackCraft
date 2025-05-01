@@ -32,7 +32,7 @@ public class EnemySpawner: MonoBehaviour
     
     public void SpawnEnemyInPosition(bool shouldStack)
     {
-        _ = SpawnTask(enemySpawnPoint.position, shouldStack);
+        _ = SpawnTask(enemySpawnPoint.position + new Vector3(Random.Range(-4f, 4f), Random.Range(-4f, 4f), 0f), shouldStack);
     }
     
     public void SpawnEnemyInArea(bool shouldStack)
