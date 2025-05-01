@@ -58,7 +58,7 @@ public class CardDataSprite : MonoBehaviour
                                 .SetLoops(2, LoopType.Yoyo)
                                 .SetUpdate(true)
                                 .SetLink(gameObject);
-        transform.DOMoveZ(-2.2f, 0.22f)
+        transform.DOMoveZ(-1.5f, 0.22f)
                                 .SetEase(Ease.OutCubic) 
                                 .SetLoops(2, LoopType.Yoyo)
                                 .OnComplete(() => transform.localPosition = Vector3.zero)
