@@ -32,7 +32,8 @@ public class CameraMove : MonoBehaviour
     private Texture2D cursor_point_tex;
     private Texture2D cursor_hover_tex;
     private Texture2D cursor_drag_tex;
-    
+
+    private Vector2 mouseOffset = new Vector2(7f, 5f);
     private Vector2 lastMousePosition;
 
     private bool scrolledWithTouch = false;
@@ -53,6 +54,7 @@ public class CameraMove : MonoBehaviour
         scrollwheelAction?.Enable();
 
         GameTableManager.Instance.FieldChanged += OnFieldChanged;
+        
         
         cursor_point_tex = Resources.Load<Texture2D>("Cursor/hand_small_point");
         cursor_hover_tex = Resources.Load<Texture2D>("Cursor/hand_small_open");
@@ -153,15 +155,15 @@ public class CameraMove : MonoBehaviour
         
         if (isDragging)
         {
-            Cursor.SetCursor(cursor_drag_tex, Vector2.zero, CursorMode.Auto);
+            Cursor.SetCursor(cursor_drag_tex, mouseOffset, CursorMode.Auto);
         }
         else if (isOverCard)
         {
-            Cursor.SetCursor(cursor_hover_tex, Vector2.zero, CursorMode.Auto);
+            Cursor.SetCursor(cursor_hover_tex, mouseOffset, CursorMode.Auto);
         }
         else
         {
-            Cursor.SetCursor(cursor_point_tex, Vector2.zero, CursorMode.Auto);
+            Cursor.SetCursor(cursor_point_tex, mouseOffset, CursorMode.Auto);
         }
     }
 
