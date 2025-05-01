@@ -110,7 +110,7 @@ public class PortalCard : MonoBehaviour
                     case PortalState.CannotSend:
                         if (HasAllyInEnemyField)
                         {
-                            UIManager.Instance.OpenYesOrNoMessage(Global.MoveFieldConfirmationText,
+                            UIManager.Instance.OpenYesOrNoMessage(Global.MoveToEnemyFieldConfirmationText,
                                                                   () => MoveFieldConfirmCallback(GameTableManager.FieldType.EnemyField));
                         }
                         else
@@ -121,7 +121,7 @@ public class PortalCard : MonoBehaviour
                 }
                 break;
             case PortalType.EnemyField:
-                UIManager.Instance.OpenYesOrNoMessage(Global.MoveFieldConfirmationText,
+                UIManager.Instance.OpenYesOrNoMessage(Global.MoveToPlayerFieldConfirmationText,
                                                       () => MoveFieldConfirmCallback(GameTableManager.FieldType.PlayerField));
                 break;
         }
