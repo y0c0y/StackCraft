@@ -95,8 +95,11 @@ public class BattleManager : MonoBehaviour
             
             newStack.AddCard(oldCard);
             separatedCards.Add(oldCard);
-            
-            CardBattles[oldCard].ChangeBattleUI(true);
+
+            if (CardBattles.TryGetValue(oldCard, out var battle))
+            {
+                battle.ChangeBattleUI(true);
+            }
             
             await UniTask.WaitForEndOfFrame();
 
