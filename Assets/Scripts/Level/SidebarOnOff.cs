@@ -1,6 +1,5 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class SidebarOnOff : MonoBehaviour
 {
@@ -21,7 +20,7 @@ public class SidebarOnOff : MonoBehaviour
     private void Update()
     {
         sidebarGroup.anchoredPosition = Vector2.Lerp(sidebarGroup.anchoredPosition, 
-           _targetPos, slideSpeed * Time.deltaTime);
+           _targetPos, slideSpeed * Time.unscaledDeltaTime);
     }
 
     public void OnButtonClick()

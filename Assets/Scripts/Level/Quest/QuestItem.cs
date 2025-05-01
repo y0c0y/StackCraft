@@ -1,7 +1,5 @@
-using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class QuestItem : MonoBehaviour
@@ -12,7 +10,7 @@ public class QuestItem : MonoBehaviour
     public void Init(QuestData data)
     {
         label.text = data.description;
-        toggle.isOn = QuestManager.Instance.IsCompleted(data.questID);
+        toggle.isOn = false;
         toggle.interactable = false;
     }
 

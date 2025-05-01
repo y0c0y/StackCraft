@@ -1,25 +1,18 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class EscAction : MonoBehaviour
 {
-    private InputAction _cancleAction;
+    private InputAction _cancelAction;
     
     [SerializeField] private string defaultUI;
     [SerializeField] private string escTargetUI;
 
-    private readonly string _cancle = "Cancle";
-    private string _currentUI;
-
-    private void Start()
-    {
-        _currentUI = defaultUI;
-    }
+    private const string CANCEL_STRING = "Cancel";
 
     private void OnEnable()
     {
-        var cancel = InputSystem.actions.FindAction("Cancel");
+        var cancel = InputSystem.actions.FindAction(CANCEL_STRING);
 
         if (cancel == null)
         {
@@ -32,25 +25,23 @@ public class EscAction : MonoBehaviour
 
     private void OnDisable()
     {
-        var cancel = InputSystem.actions.FindAction("Cancel");
+        var cancel = InputSystem.actions.FindAction(CANCEL_STRING);
         if (cancel != null)
         {
             cancel.performed -= OnCancel;
         }
     }
 
-    public void SetCurrentUI(string currentUI)
-    {
-        _currentUI = currentUI;
-    }
-
     private void OnCancel(InputAction.CallbackContext ctx)
     {
-        Debug.Log($"{_currentUI} {defaultUI}");
-        if (_currentUI == defaultUI)
+        if (UIManager.Instance.currentUI == defaultUI)
         {
             UIManager.Instance.ChangeUI(escTargetUI);
-            _currentUI = escTargetUI;
         }
+    }
+
+    public void OnClick()
+    {
+        UIManager.Instance.ChangeUI(escTargetUI);
     }
 }

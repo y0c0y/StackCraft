@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,8 +20,22 @@ public class CardColliderManager : MonoBehaviour
     {
         GameTableManager.Instance.StackAddedOnTable += AddStack;
         GameTableManager.Instance.StackRemovedFromTable += RemoveStack;
+        BattleManager.Instance.BattleFinished += OnBattleFinished;
     }
-    
+
+    private void OnBattleFinished(BattleSystem obj)
+    {
+        foreach (var c in obj.persons)
+        {
+            ModifyColliders(c.owningStack);
+        }
+        
+        foreach (var c in obj.enemies)
+        {
+            ModifyColliders(c.owningStack);
+        }
+    }
+
     public void Register(Card card, ModifyCollider modifier)
     {
         if (!cardToCollider.ContainsKey(card))
@@ -47,12 +59,11 @@ public class CardColliderManager : MonoBehaviour
         stack.OnStackModified -= ModifyColliders;
     }
 
-    private void ModifyColliders(Stack stack)
+    public void ModifyColliders(Stack stack)
     {
         if (stack.cards.Count <= 0) return;
         foreach (var card in stack.cards)
         {
-            
             if (!cardToCollider.TryGetValue(card, out var modifier)) continue;
             modifier.SetColliderMode(card.IsLastCard);
         }

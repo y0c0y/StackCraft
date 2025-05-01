@@ -93,7 +93,6 @@ public class RecipeManager : MonoBehaviour
         {
             Debug.Log($"Recipe matched: {matchedRecipe.name} with {stack.name}, consumed cards: {string.Join(", ", consumedCards.Select(c => c.name))}");
             
-            // OnRecipeStarted?.Invoke(matchedRecipe);
             if (matchedRecipe.produceTime > 0)
             {
                 stack.AddTimer(matchedRecipe, consumedCards);
@@ -141,6 +140,15 @@ public class RecipeManager : MonoBehaviour
         if (recipe == woodRecipe)
         {
             _woodRecipeDone++;
+            if (_woodRecipeDone >= woodRecipeNeedForBerry - 1)
+            {
+                if (Random.value <= 0.5f)
+                {
+                    _woodRecipeDone = 0;
+                    ApplyRecipe(stack, berryRecipe, new List<Card>());
+                }
+            }
+            
             if (_woodRecipeDone >= woodRecipeNeedForBerry)
             {
                 _woodRecipeDone = 0;
@@ -205,7 +213,6 @@ public class RecipeManager : MonoBehaviour
             }
             
             var inputCards = recipe.GetInputCards();
-            //Debug.Log($"Checking recipe {recipe.recipeName} with input cards: {string.Join(", ", inputCards)}");
             bool canMatch = true;
             
             foreach (var requirement in inputCards)

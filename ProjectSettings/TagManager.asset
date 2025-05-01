@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 3
   tags:
   - Card
+  - Field
+  - SceneTransition
   layers:
   - Default
   - TransparentFX
@@ -13,10 +15,10 @@ TagManager:
   - Water
   - UI
   - 
-  - 
+  - Battle
   - Card
+  - Battle UI
   - DraggingCard
-  - 
   - 
   - 
   - 
@@ -41,6 +43,9 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: BattleUI
+    uniqueID: 129693873
     locked: 0
   - name: DraggedCard
     uniqueID: 4166844327

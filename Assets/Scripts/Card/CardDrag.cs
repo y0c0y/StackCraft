@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -7,18 +8,22 @@ public class CardDrag : MonoBehaviour
     public event Action<Card> CardDragStarted;
     public event Action<Card> CardDragEnded;
 
-    private const float SELECTED_Z_OFFSET = -0.5f;
+    private const float SELECTED_Z_OFFSET = -0.25f;
     private const float DRAG_TELEPORT_THRESHOLD = 0.05f;
-    
-    [SerializeField] private float speed = 30f;
+    private const float SPEED = 30f;
     
     private Vector3 _targetPosition;
     
     private Card _card;
+    private Field _currentField => _card.owningStack.currentField;
     private Vector2 _dragOrigin;
     private bool _isDragging = false;
     private bool _wasDragging = false;
 
+    private Tween _dragOffTween;
+
+    private const float CARD_CLAMP_OFFSET = 0.35f;
+    
     private void Awake()
     {
         _card = GetComponent<Card>();
@@ -44,6 +49,7 @@ public class CardDrag : MonoBehaviour
             if (!_wasDragging)
             {
                 CardDragStarted?.Invoke(_card);
+                AudioManager.PlaySound(SoundType.PICKUP);
             }
             _wasDragging = true;
             
@@ -54,6 +60,28 @@ public class CardDrag : MonoBehaviour
             
             _targetPosition = screenPos - new Vector3(_dragOrigin.x * transform.localScale.x,
                 _dragOrigin.y * transform.localScale.y, 0);
+            _targetPosition.x = Mathf.Clamp(
+                                    _targetPosition.x, 
+                                _currentField.MinX + Card.CARD_SIZE.x / 2 + CARD_CLAMP_OFFSET,
+                                _currentField.MaxX - Card.CARD_SIZE.x / 2 - CARD_CLAMP_OFFSET
+                                    );
+            _targetPosition.y = Mathf.Clamp(
+                                    _targetPosition.y, 
+                                _currentField.MinY + _card.owningStack.bounds.size.y - Card.CARD_SIZE.y / 2 + CARD_CLAMP_OFFSET,
+                                _currentField.MaxY - Card.CARD_SIZE.y / 2 - CARD_CLAMP_OFFSET
+                                    );
+            
+            if (Vector3.SqrMagnitude(transform.position - _targetPosition) > DRAG_TELEPORT_THRESHOLD)
+            {
+                transform.position = Vector3.Lerp(transform.position, _targetPosition, SPEED * Time.unscaledDeltaTime);
+                Physics2D.SyncTransforms();
+            }
+            else
+            {
+                var pos = transform.position;
+                pos.z = _targetPosition.z;
+                transform.position = pos;
+            }
         }
         else
         {
@@ -61,18 +89,17 @@ public class CardDrag : MonoBehaviour
             {
                 _wasDragging = false;
                 CardDragEnded?.Invoke(_card);
-            }
-        }
+                AudioManager.PlaySound(SoundType.PICKDOWN);
 
-        if (Vector3.SqrMagnitude(transform.position - _targetPosition) > DRAG_TELEPORT_THRESHOLD)
-        {
-            transform.position = Vector3.Lerp(transform.position, _targetPosition, speed * Time.deltaTime);
-        }
-        else
-        {
-            var pos = transform.position;
-            pos.z = _targetPosition.z;
-            transform.position = pos;
+                _dragOffTween?.Kill();
+                _dragOffTween = transform.DOMoveZ(_targetPosition.z, 0.2f)
+                    .SetEase(Ease.OutCubic)
+                    .OnComplete(() =>
+                    {
+                        _dragOffTween = null;
+                    })
+                    .SetLink(gameObject);
+            }
         }
     }
 
@@ -80,7 +107,7 @@ public class CardDrag : MonoBehaviour
     {
         var inverseTransformPoint = transform.InverseTransformPoint(eventData.pointerPressRaycast.worldPosition);
         _dragOrigin = new Vector2(inverseTransformPoint.x, inverseTransformPoint.y);
-        _card.owningStack?.ReorderZOrder(1);
+        _card.owningStack?.ReorderZOrder(2);
         
         _isDragging = true;
     }

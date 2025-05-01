@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class SlowParentConstraint : MonoBehaviour
@@ -22,7 +21,5 @@ public class SlowParentConstraint : MonoBehaviour
         {
             transform.position = desiredPosition;
         }
-        
-        //transform.position = new Vector3(transform.position.x, transform.position.y, pos.z);
     }
 }

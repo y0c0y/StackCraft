@@ -26,7 +26,7 @@ public class StageInfoPanel : MonoBehaviour
             return;
         }
         
-        titleText.text = data.displayName;
+        titleText.text = data.stageName;
         descriptionText.text = data.description;
     }
 }

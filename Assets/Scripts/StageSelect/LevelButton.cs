@@ -12,7 +12,7 @@ public class LevelButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     [SerializeField] private TMP_Text label;
     [SerializeField] private GameObject lockIcon;
 
-    public event Action<LevelData> OnHoverd;
+    public event Action<LevelData> OnHovered;
     
     private bool _isUnlocked;
     
@@ -27,19 +27,35 @@ public class LevelButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        OnHoverd?.Invoke(levelData);
+        OnHovered?.Invoke(levelData);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        OnHoverd?.Invoke(null);
+        OnHovered?.Invoke(null);
     }
 
     public void OnButtonClick()
     {
         if(!_isUnlocked) return;
         StageInfo.SelectedLevel = levelData;
+
+        var allCanvas = FindObjectsByType<Canvas>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        foreach (var canvas in allCanvas)
+        {
+            if (canvas.renderMode != RenderMode.ScreenSpaceCamera)
+            {
+                canvas.enabled = false;
+            }
+        }
+        
+        var sceneTransition = FindFirstObjectByType<SceneTransition>();
+        sceneTransition.onFadeOutTransitionDone.AddListener(LoadScene);
+        sceneTransition.StartFadeOutTransition();
+    }
+
+    private void LoadScene()
+    {
         UnityEngine.SceneManagement.SceneManager.LoadScene(levelData.sceneName);
     }
-    
 }

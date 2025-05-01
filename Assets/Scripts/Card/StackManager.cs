@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
 public class StackManager : MonoBehaviour
@@ -22,7 +23,7 @@ public class StackManager : MonoBehaviour
 
     private void Start()
     {
-        var startingStacks = stacksHolderGameObject.GetComponents<Stack>();
+        var startingStacks = stacksHolderGameObject.GetComponentsInChildren<Stack>();
         foreach (var stack in startingStacks)
         {
             for (int i = 0; i < stack.cards.Count; i++)
@@ -50,7 +51,13 @@ public class StackManager : MonoBehaviour
 
     public Stack AddNewStack()
     {
-        return stacksHolderGameObject.AddComponent<Stack>();
+        var stackHolder = new GameObject();
+        stackHolder.transform.SetParent(stacksHolderGameObject.transform);
+        var newStack = stackHolder.AddComponent<Stack>();
+#if UNITY_EDITOR
+        newStack.OnStackModified += (stack) => stack.gameObject.name = stack.CardCounts.Aggregate("", (s, kv) => s + kv.Key.cardName + ":" + kv.Value + " ");  
+#endif
+        return newStack;
     }
 
     private void OnCardAddedToTable(Card card)
@@ -67,6 +74,8 @@ public class StackManager : MonoBehaviour
 
     private void OnCardSplit(Card card)
     {
+        if (card.cardData.cardType == CardType.Enemy) return;
+        
         var slowParentCon = card.GetComponent<SlowParentConstraint>();
         slowParentCon.enabled = false;
         slowParentCon.target = null;
@@ -99,9 +108,8 @@ public class StackManager : MonoBehaviour
             return;
         }
 
-        if (!StackingRules.CanStackByType(draggingCardData.cardType, releasedCardData.cardType))
+        if (!cardToAdd.CanStackOn(lastCard))
         {
-            //Debug.Log($"Can't stack type {draggingCardData.cardType} on {releasedCardData.cardType}");
             return;
         }
         
@@ -120,6 +128,12 @@ public class StackManager : MonoBehaviour
     private void OnCardReleasedOn(Card draggingCard, Card releasedCard)
     {
         if (draggingCard == releasedCard) return;
+        if (BattleManager.Instance.Flag(draggingCard) || BattleManager.Instance.Flag(releasedCard))
+        {
+            Debug.Log("Card is in battle. Cannot stack.");
+            return;
+        }
         AddCardToStack(draggingCard, releasedCard.owningStack);
+        AudioManager.PlaySound(SoundType.PICKDOWN);
     }
 }

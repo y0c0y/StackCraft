@@ -5,6 +5,6 @@ public class LevelEndButton : MonoBehaviour
 {
     public void OnButtonClick()
     {
-        QuestManager.GameClear();
+        QuestManager.GameClear(true);
     }
 }

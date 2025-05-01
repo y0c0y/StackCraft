@@ -17,3 +17,9 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 633120577003a334d8ec8b208c816b2c, type: 3}
   cardType: 4
   isConsumable: 0
+  isStatic: 0
+  customStackingRule:
+    customIncludeStackingOnMe: 0
+    customExcludeStackingOnMe: 0
+    customIncludeICanStackOn: 0
+    customExcludeICanStackOn: 0

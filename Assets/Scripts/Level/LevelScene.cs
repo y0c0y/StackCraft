@@ -1,7 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class LevelScene : MonoBehaviour
 {
@@ -14,13 +13,10 @@ public class LevelScene : MonoBehaviour
             await UniTask.Yield();
         
             await QuestUIController.Instance.LoadQuestsUI();
-            
-            LayoutRebuilder.ForceRebuildLayoutImmediate(scrollContent);
-            
         }
         catch (Exception e)
         {
-            throw ; // TODO 예외 처리
+            Debug.LogError($"[QuestUI Start] 예외 발생: {e.Message}\n{e.StackTrace}");
         }
     }
 }

@@ -1,10 +1,12 @@
 using System;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
 public class QuestUIController : MonoBehaviour
 {
+    public static event Action OnQuestLoaded;
     
     public static QuestUIController Instance;
     
@@ -24,13 +26,42 @@ public class QuestUIController : MonoBehaviour
         }
     }
 
-    public void Start()
+    private void Start()
     {
-        QuestManager.Instance.OnChangeQuestProgress += ChangeQuestProgress;
-        QuestManager.Instance.OnChangeQuestItemUI += ChangeQuestItemUI;
+        QuestManager.Instance.QuestProgressChanged += OnQuestProgressChanged;
+        QuestManager.Instance.QuestCompleted += OnQuestCompleted;
     }
 
-    public void ChangeQuestItemUI(QuestData questData)
+    public async UniTask LoadQuestsUI()
+    {
+        await QuestManager.Instance.Init();
+
+        var goalOpened = false;
+        var quests = QuestManager.Instance.Quests.Values
+            .Where(q => q.questID != QuestInfo.GameOverQuestID);
+
+        foreach (var data in quests)
+        {
+            var ui = Instantiate(togglePrefab, questListParent)
+                .GetComponent<QuestItem>();
+
+            goalOpened = goalOpened || data.questID == QuestInfo.GoalOpenQuestID;
+
+            ui.Init(data);
+
+            if (goalOpened && data.questID == QuestInfo.GameClearQuestID)
+            {
+                _hideQuestIdx         = data.idxInQuestList;
+                _hideQuestDescription = data.description;
+                ui.HideGoal();
+            }
+        }
+
+        Canvas.ForceUpdateCanvases();
+        OnQuestLoaded?.Invoke();
+    }
+    
+    private void OnQuestCompleted(QuestData questData)
     {
         var item = FindQuestItem(questData.idxInQuestList);
         
@@ -43,37 +74,11 @@ public class QuestUIController : MonoBehaviour
         item.OnChange();
     }
 
-    public void ChangeQuestProgress(int total, int completed)
+    private void OnQuestProgressChanged(int total, int completed)
     {
         progressText.text = $"({completed}/{total})";
     }
     
-    public async UniTask LoadQuestsUI()
-    {
-        await QuestManager.Instance.Init();
-        
-        var quests = QuestManager.Instance.Quests;
-        var flag = false;
-
-        foreach (var quest in quests)
-        {
-            var go = Instantiate(togglePrefab, questListParent);
-            var questUI = go.GetComponent<QuestItem>();
-            
-            if(quest.Key == QuestInfo.GoalOpenQuestID) flag = true;
-            questUI.Init(quest.Value);
-            if (flag)
-            {
-                if (quest.Key == QuestInfo.GameClearQuestID)
-                {
-                    _hideQuestIdx = quest.Value.idxInQuestList;
-                    _hideQuestDescription = quest.Value.description;
-                    questUI.HideGoal();
-                }
-            }
-        }
-        Canvas.ForceUpdateCanvases(); 
-    }
     private QuestItem FindQuestItem(int index)
     {
         var item = questListParent.GetChild(index);

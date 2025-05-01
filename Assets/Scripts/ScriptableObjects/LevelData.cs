@@ -6,6 +6,7 @@ public class LevelData : ScriptableObject
     public int levelIndex;
     public string displayName;
     public string sceneName;
+    public string stageName;
     public bool unlockedByDefault;
     
     [TextArea]

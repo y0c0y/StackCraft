@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8f8a2badb2439f4488891cc7743ddfa, type: 3}
+  m_Name: Enemy_Throw
+  m_EditorClassIdentifier: 
+  cardName: "\uC6B4\uC6A9\uD22C\uC11D\uAE30"
+  description: "\uC6B4\uC6A9\uD22C\uC11D\uAE30"
+  sprite: {fileID: 21300000, guid: 2f8b9b1dbf16eae4bb7303c31995f03a, type: 3}
+  cardType: 7
+  isConsumable: 0
+  isStatic: 0
+  customStackingRule:
+    customIncludeStackingOnMe: 0
+    customExcludeStackingOnMe: 0
+    customIncludeICanStackOn: 0
+    customExcludeICanStackOn: 0
