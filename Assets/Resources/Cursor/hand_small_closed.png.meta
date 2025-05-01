@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: dbcba8f7853582046a7e4ea4cc04c483
+guid: fa9e2ff40ec76c14fadc458bc79dfb79
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -118057155318131194
-    second: hand_open_0
+      213: 1762633218717345347
+    second: hand_small_closed_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -13,7 +13,7 @@ TextureImporter:
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
-    borderMipMap: 0
+    borderMipMap: 1
     mipMapsPreserveCoverage: 0
     alphaTestReferenceValue: 0.5
     mipMapFadeDistanceStart: 1
@@ -139,13 +139,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: hand_open_0
+      name: hand_small_closed_0
       rect:
         serializedVersion: 2
-        x: 2
-        y: 1
-        width: 28
-        height: 31
+        x: 5
+        y: 6
+        width: 22
+        height: 19
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 606d11a84a39c5ef0800000000000000
-      internalID: -118057155318131194
+      spriteID: 34663f6d291267810800000000000000
+      internalID: 1762633218717345347
       vertices: []
       indices: 
       edges: []

@@ -2,7 +2,6 @@ using System;
 using DG.Tweening;
 using Unity.Cinemachine;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
@@ -30,8 +29,49 @@ public class CameraMove : MonoBehaviour
     private float zoomInTargetFOV = 75f;
     private float zoomInDuration = 0.5f;
     private bool isZoomingIn = false;
+
+    private Texture2D cursor_point_tex;
+    private Texture2D cursor_hover_tex;
+    private Texture2D cursor_drag_tex;
     
     private Vector2 lastMousePosition;
+
+    
+    
+    private void Awake()
+    {
+        pointAction = InputSystem.actions.FindAction("Point");
+        clickAction = InputSystem.actions.FindAction("Click");
+        scrollwheelAction = InputSystem.actions.FindAction("ScrollWheel");
+
+        isDragging = false;
+        isDraggingCard = false;
+        
+        pointAction?.Enable();
+        clickAction?.Enable();
+        scrollwheelAction?.Enable();
+
+        GameTableManager.Instance.FieldChanged += OnFieldChanged;
+        
+        cursor_point_tex = Resources.Load<Texture2D>("Cursor/hand_small_point");
+        cursor_hover_tex = Resources.Load<Texture2D>("Cursor/hand_small_open");
+        cursor_drag_tex = Resources.Load<Texture2D>("Cursor/hand_small_closed");
+    }
+
+    private void Update()
+    {
+        if (!UIManager.Instance.isDefaultUI) return;
+        if (cam.IsParticipatingInBlend()) return;
+        HandleDrag();
+        HandleScroll();
+        MoveFov();
+    }
+
+    private void OnDestroy()
+    {
+        Cursor.SetCursor(cursor_point_tex, Vector2.zero, CursorMode.Auto);
+    }
+
 
     public void ZoomIn()
     {
@@ -49,30 +89,6 @@ public class CameraMove : MonoBehaviour
                .SetLink(gameObject);
     }
 
-    private void Awake()
-    {
-        pointAction = InputSystem.actions.FindAction("Point");
-        clickAction = InputSystem.actions.FindAction("Click");
-        scrollwheelAction = InputSystem.actions.FindAction("ScrollWheel");
-
-        isDragging = false;
-        isDraggingCard = false;
-        
-        pointAction?.Enable();
-        clickAction?.Enable();
-        scrollwheelAction?.Enable();
-
-        GameTableManager.Instance.FieldChanged += OnFieldChanged;
-    }
-
-    private void Update()
-    {
-        if (!UIManager.Instance.isDefaultUI) return;
-        if (cam.IsParticipatingInBlend()) return;
-        HandleDrag();
-        HandleScroll();
-        MoveFov();
-    }
 
     private void HandleDrag()
     {
@@ -80,20 +96,25 @@ public class CameraMove : MonoBehaviour
             return;
         
         bool isPressed = clickAction.ReadValue<float>() > 0;
+        
+        // 마우스 위치를 월드 좌표로 변환
+        var mousePosition = pointAction.ReadValue<Vector2>();
+        Vector3 mouseScreenPos = new Vector3(mousePosition.x, mousePosition.y, Mathf.Abs(Camera.main.transform.position.z));
+        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(mouseScreenPos);
+        Vector2 origin = new Vector2(mouseWorldPos.x, mouseWorldPos.y);
+        
+        // 2D 레이캐스트 수행
+        
+        RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.zero, 15f, camLayerMask | LayerMask.GetMask("Card"));
 
+        bool isOverCard = hit.collider != null;
+        bool isOverDraggingCard = hit.collider != null && hit.transform.gameObject.layer == LayerMask.NameToLayer("DraggingCard");
+        
         if (isPressed && !isDragging)
         {
             isDragging = true;
-            lastMousePosition = pointAction.ReadValue<Vector2>();
-
-            // 마우스 위치를 월드 좌표로 변환
-            Vector3 mouseScreenPos = new Vector3(lastMousePosition.x, lastMousePosition.y, Mathf.Abs(Camera.main.transform.position.z));
-            Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(mouseScreenPos);
-            Vector2 origin = new Vector2(mouseWorldPos.x, mouseWorldPos.y);
-
-            // 2D 레이캐스트 수행
-            RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.zero, 11f, camLayerMask);
-            isDraggingCard = (hit.collider != null);
+            lastMousePosition = mousePosition;
+            isDraggingCard = isOverDraggingCard;
         }
         else if (!isPressed && isDragging)
         {
@@ -127,6 +148,19 @@ public class CameraMove : MonoBehaviour
 
             target.position = newPosition;
             lastMousePosition = currentMousePosition;
+        }
+        
+        if (isDragging)
+        {
+            Cursor.SetCursor(cursor_drag_tex, Vector2.zero, CursorMode.Auto);
+        }
+        else if (isOverCard)
+        {
+            Cursor.SetCursor(cursor_hover_tex, Vector2.zero, CursorMode.Auto);
+        }
+        else
+        {
+            Cursor.SetCursor(cursor_point_tex, Vector2.zero, CursorMode.Auto);
         }
     }
 
