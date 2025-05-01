@@ -58,6 +58,11 @@ public class CardDataSprite : MonoBehaviour
                                 .SetLoops(2, LoopType.Yoyo)
                                 .SetUpdate(true)
                                 .SetLink(gameObject);
+        transform.DOMoveZ(-2.2f, 0.22f)
+                                .SetEase(Ease.OutCubic) 
+                                .SetLoops(2, LoopType.Yoyo)
+                                .SetUpdate(true)
+                                .SetLink(gameObject);
     }
 
     private void Update()
