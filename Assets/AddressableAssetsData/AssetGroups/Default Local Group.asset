@@ -15,6 +15,12 @@ MonoBehaviour:
   m_GroupName: Default Local Group
   m_GUID: 3d90d323a3f53e046871d142c104e36a
   m_SerializeEntries:
+  - m_GUID: 07eb535befcc6b645889daa1e0b88afa
+    m_Address: Assets/Datas/Level
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Level
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4d8306444304fd34da95d23907990c81
     m_Address: Assets/Datas/Stage/Quest/Quest2
     m_ReadOnly: 0

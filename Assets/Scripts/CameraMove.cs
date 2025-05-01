@@ -35,6 +35,8 @@ public class CameraMove : MonoBehaviour
     
     private Vector2 lastMousePosition;
 
+    private bool scrolledWithTouch = false;
+
     
     
     private void Awake()
@@ -61,8 +63,8 @@ public class CameraMove : MonoBehaviour
     {
         if (!UIManager.Instance.isDefaultUI) return;
         if (cam.IsParticipatingInBlend()) return;
-        HandleDrag();
         HandleScroll();
+        HandleDrag();
         MoveFov();
     }
 
@@ -91,7 +93,7 @@ public class CameraMove : MonoBehaviour
 
     private void HandleDrag()
     {
-        if (clickAction == null || pointAction == null)
+        if (clickAction == null || pointAction == null || scrolledWithTouch)
             return;
         
         bool isPressed = clickAction.ReadValue<float>() > 0;
@@ -172,12 +174,25 @@ public class CameraMove : MonoBehaviour
             if (!result?.gameObject.GetComponent<Card>()) return;
         }
         
-        Vector2 scrollDelta = scrollwheelAction.ReadValue<Vector2>();
-        if (scrollDelta.y != 0)
+        var scrollDelta = scrollwheelAction.ReadValue<float>();
+        if (scrollDelta != 0)
         {
-            float zoomAmount = scrollDelta.y * scrollSpeed / 2f;
+            float zoomAmount = scrollDelta * scrollSpeed / 2f;
             targetFOV -= zoomAmount;
             targetFOV = Mathf.Clamp(targetFOV, minFOV, maxFOV);
+
+            if (scrollwheelAction.activeControl is Touchscreen)
+            {
+                scrolledWithTouch = true;
+            }
+            else
+            {
+                scrolledWithTouch = false;
+            }
+        }
+        else
+        {
+            scrolledWithTouch = false;
         }
     }
     

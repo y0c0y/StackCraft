@@ -138,7 +138,6 @@ public class BattleSystem : MonoBehaviour
         var cardPos = card.transform.position;
         
         Destroy(card.gameObject);
-        Destroy(card.owningStack.gameObject);
         Destroy(card);
 
         Instantiate(GameTableManager.Instance.smokeEffectPrefab, cardPos, Quaternion.identity);
