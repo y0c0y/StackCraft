@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 
 public class BattleZone : MonoBehaviour
@@ -38,8 +39,8 @@ public class BattleZone : MonoBehaviour
         var totalWidth = (maxCnt - 1) * (cardWidth + horizontalSpacing);
         var centerOffset = new Vector3(totalWidth * 0.5f, 0f, 0f);
 
-        await ArrangeGroup(persons, transform.position + personArea.localPosition, centerOffset); 
         await ArrangeGroup(enemies, transform.position + enemyArea.localPosition, centerOffset);
+        await ArrangeGroup(persons, transform.position + personArea.localPosition, centerOffset);
     }
 
     private async UniTask ArrangeGroup(List<Card> cards, Vector3 origin, Vector3 centerOffset)
@@ -52,31 +53,21 @@ public class BattleZone : MonoBehaviour
             var offset = new Vector3(i * (cardWidth + horizontalSpacing), 0f, 0f);
             var targetPos = origin - centerOffset + offset;
             targetPos.z = 0f;
-            
-            BattleManager.Instance.CardBattles[card].ResetArtWorkLocalPos();
-            await UniTask.WaitForEndOfFrame();
-            
             await MoveCardSmooth(card, targetPos, 0.3f);
         }
     }
 
     private async UniTask MoveCardSmooth(Card card, Vector3 targetPos, float duration)
     {
-        var rb = card.GetComponent<Rigidbody2D>();
-        if (rb == null) return;
-
-        Vector3 startPos = rb.position;
-        var elapsed = 0f;
+        // Rigidbody2D 물리 적용이 필요 없거나, z도 같이 움직여야 한다면
+        await card.transform
+            .DOMove(targetPos, duration)
+            .SetEase(Ease.Linear)
+            .AsyncWaitForCompletion();
         
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            var t = Mathf.Clamp01(elapsed / duration);
-            rb.MovePosition(Vector3.Lerp(startPos, targetPos, t));
-            await UniTask.Yield();
-        }
-
-        rb.MovePosition(targetPos);
+        
+        BattleManager.Instance.CardBattles[card].ResetSpriteLocalPos();
+        // await UniTask.NextFrame();
     }
 
 }

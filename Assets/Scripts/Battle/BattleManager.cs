@@ -109,7 +109,7 @@ public class BattleManager : MonoBehaviour
 
         return separatedCards;
     }
-
+    
     public async UniTaskVoid TryEngageBattle(Stack personStack, Stack enemyStack)
     {
         await UniTask.WaitForFixedUpdate();
