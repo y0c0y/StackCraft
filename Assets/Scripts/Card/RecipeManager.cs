@@ -141,6 +141,15 @@ public class RecipeManager : MonoBehaviour
         if (recipe == woodRecipe)
         {
             _woodRecipeDone++;
+            if (_woodRecipeDone >= woodRecipeNeedForBerry - 1)
+            {
+                if (Random.value <= 0.5f)
+                {
+                    _woodRecipeDone = 0;
+                    ApplyRecipe(stack, berryRecipe, new List<Card>());
+                }
+            }
+            
             if (_woodRecipeDone >= woodRecipeNeedForBerry)
             {
                 _woodRecipeDone = 0;

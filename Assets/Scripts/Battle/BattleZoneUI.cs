@@ -87,7 +87,11 @@ public class BattleZoneUI : MonoBehaviour
             rt.anchoredPosition = Vector2.Lerp(startPos, endPos, t);
             await UniTask.Yield();
         }
-
+        
+        if (target.GetComponentInChildren<CardDataSprite>() is { } targetSprite)
+        {
+            targetSprite.OnHit();
+        }
         Destroy(projGo);
     }
 

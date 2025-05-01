@@ -7,7 +7,7 @@ using UnityEngine;
 public class CardDataSprite : MonoBehaviour
 {
     [SerializeField] public SpriteRenderer artworkSprite;
-    [SerializeField] private SpriteRenderer shadowSprite;
+    [SerializeField] public SpriteRenderer shadowSprite;
     [SerializeField] private GameObject canStackOnIndicator;
 
     public int LastSortingOrder => _spriteInitialSortingOrder.Keys.Select(spriteRenderer => spriteRenderer.sortingOrder).Max() + 1;
@@ -56,6 +56,12 @@ public class CardDataSprite : MonoBehaviour
         artworkSprite.DOColor(Color.black, 0.075f)
                                 .SetEase(Ease.InOutElastic)
                                 .SetLoops(2, LoopType.Yoyo)
+                                .SetUpdate(true)
+                                .SetLink(gameObject);
+        transform.DOMoveZ(-2.2f, 0.22f)
+                                .SetEase(Ease.OutCubic) 
+                                .SetLoops(2, LoopType.Yoyo)
+                                .OnComplete(() => transform.localPosition = Vector3.zero)
                                 .SetUpdate(true)
                                 .SetLink(gameObject);
     }
@@ -145,5 +151,22 @@ public class CardDataSprite : MonoBehaviour
             sprite.sortingLayerID = SortingLayer.layers[sortingLayerId].id;
             sprite.sortingOrder = _spriteInitialSortingOrder[sprite] + sortingOrder;
         }
+    }
+
+    public void OnHit()
+    {
+        transform.DOPunchRotation(new Vector3(0f, 0f, 10f), 0.5f)
+                    .SetUpdate(true)
+                    .SetLink(gameObject);
+        
+        transform.DOPunchScale(new Vector3(0.2f, 0f, 0f), 0.5f)
+                    .SetUpdate(true)
+                    .SetLink(gameObject);
+        
+        artworkSprite.DOColor(Color.black, 0.075f)
+                    .SetEase(Ease.InOutElastic)
+                    .SetLoops(2, LoopType.Yoyo)
+                    .SetUpdate(true)
+                    .SetLink(gameObject);
     }
 }
