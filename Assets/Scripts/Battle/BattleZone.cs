@@ -57,12 +57,10 @@ public class BattleZone : MonoBehaviour
 
     private async UniTask MoveCardSmooth(Card card, Vector3 targetPos, float duration)
     {
-        // Rigidbody2D 물리 적용이 필요 없거나, z도 같이 움직여야 한다면
         await card.transform
             .DOMove(targetPos, duration)
             .SetEase(Ease.Linear)
             .AsyncWaitForCompletion();
-        
         
         BattleManager.Instance.CardBattles[card].ResetSpriteLocalPos();
     }
