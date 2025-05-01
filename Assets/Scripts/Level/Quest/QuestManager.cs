@@ -15,7 +15,10 @@ public class QuestManager : MonoBehaviour
    public static QuestManager Instance {get; private set;}
 
    public GameObject questList;
-
+   
+   private AsyncOperationHandle<IList<QuestData>> _questHandle;
+   private AsyncOperationHandle<IList<LevelData>> _levelHandle;
+   
    private int TotalQuestCnt {get; set;}
    private int CompletedQuestCnt {get; set;}
    
@@ -30,12 +33,22 @@ public class QuestManager : MonoBehaviour
          Destroy(this);
       }
    }
-   
 
    private void Start()
    {
       RecipeManager.Instance.OnRecipeFinished += CheckRecipe;
       BattleManager.Instance.CheckStageClear += OnCheckStageClear;
+   }
+
+   private void OnDestroy()
+   {
+      if (RecipeManager.Instance != null)
+         RecipeManager.Instance.OnRecipeFinished -= CheckRecipe;
+      if (BattleManager.Instance != null)
+         BattleManager.Instance.CheckStageClear -= OnCheckStageClear;
+      
+      if (_questHandle.IsValid()) Addressables.Release(_questHandle);
+      if(_levelHandle.IsValid()) Addressables.Release(_levelHandle);
    }
 
    public async UniTask Init()
@@ -52,14 +65,17 @@ public class QuestManager : MonoBehaviour
          var activeScene = SceneManager.GetActiveScene();
          var tmp = activeScene.name.Split(" ");
          
-         var handle = Addressables.LoadAssetsAsync<LevelData>("Level", null);
-      
-         if (handle.Status == AsyncOperationStatus.Failed)
+         if(_levelHandle.IsValid()) Addressables.Release(_levelHandle);
+
+         _levelHandle = Addressables.LoadAssetsAsync<LevelData>("Level", null);
+
+         _levelHandle.Completed += h =>
          {
-            Debug.LogError($"로드 실패: {handle.OperationException} Level: {activeScene.name}");
-         }
-         
-         var data = await handle.ToUniTask();
+            if (h.Status == AsyncOperationStatus.Failed)
+               Debug.LogError($"Failed to load level: {h.OperationException}");
+         };
+
+         var data = await _levelHandle.ToUniTask(cancellationToken: this.GetCancellationTokenOnDestroy());
          
          StageInfo.SelectedLevel = data[int.Parse(tmp[1])-1];
          
@@ -72,14 +88,17 @@ public class QuestManager : MonoBehaviour
 
    private async UniTask LoadQuests(string stageLabel)
    {
-      var handle = Addressables.LoadAssetsAsync<QuestData>(stageLabel, null);
+      if (_questHandle.IsValid()) Addressables.Release(_questHandle);
       
-      if (handle.Status == AsyncOperationStatus.Failed)
+      _questHandle  = Addressables.LoadAssetsAsync<QuestData>(stageLabel, null);
+
+      _questHandle.Completed += h =>
       {
-         Debug.LogError($"로드 실패: {handle.OperationException} {stageLabel}");
-      }
+         if (h.Status == AsyncOperationStatus.Failed)
+            Debug.LogError($"로드 실패: {h.OperationException}");
+      };
       
-      var data = await handle.ToUniTask();
+      var data = await _questHandle.ToUniTask(cancellationToken: this.GetCancellationTokenOnDestroy());
 
       for (var i = 0; i < data.Count; i++)
       {
