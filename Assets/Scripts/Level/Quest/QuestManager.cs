@@ -14,7 +14,7 @@ public class QuestManager : MonoBehaviour
    
    public static QuestManager Instance {get; private set;}
 
-   public GameObject questList;
+   public QuestData[] fallbackQuestList;
 
    private int TotalQuestCnt {get; set;}
    private int CompletedQuestCnt {get; set;}
@@ -55,14 +55,7 @@ public class QuestManager : MonoBehaviour
 
    private async UniTask LoadQuests(string stageLabel)
    {
-      var handle = Addressables.LoadAssetsAsync<QuestData>(stageLabel, null);
-      
-      if (handle.Status == AsyncOperationStatus.Failed)
-      {
-         Debug.LogError($"로드 실패: {handle.OperationException} {stageLabel}");
-      }
-      
-      var data = await handle.ToUniTask();
+      var data = await LoadQuestsWithFallback(stageLabel);
 
       for (var i = 0; i < data.Count; i++)
       {
@@ -76,6 +69,21 @@ public class QuestManager : MonoBehaviour
       CompletedQuestCnt = 0;
       
       QuestProgressChanged?.Invoke(TotalQuestCnt, CompletedQuestCnt);
+   }
+   
+   private async UniTask<IList<QuestData>> LoadQuestsWithFallback(string stageLabel)
+   {
+      var handle = Addressables.LoadAssetsAsync<QuestData>(stageLabel, null);
+      try
+      {
+         var result = await handle.ToUniTask();
+         return result;
+      }
+      catch (Exception e)
+      {
+         Debug.Log($"로드 실패: {e.Message} {stageLabel}");
+         return fallbackQuestList;
+      }
    }
    
    public static void GameClear(bool isClear)

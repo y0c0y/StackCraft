@@ -561,7 +561,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5af61f2212f42f44b8388cfc1aa58b0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  questList: {fileID: 0}
+  fallbackQuestList:
+  - {fileID: 11400000, guid: 4418fce2a4d27714289668bc91ae2ea4, type: 2}
+  - {fileID: 11400000, guid: d18fd8dcf857fd04bb4d7ab4a05ce511, type: 2}
+  - {fileID: 11400000, guid: 7cce63d3bed64ab4f8871ea0ed3b20b9, type: 2}
+  - {fileID: 11400000, guid: c4e55c9bb778a87459e4d00bdcfb5e24, type: 2}
+  - {fileID: 11400000, guid: 59591ef258aed3d40a24916fe2ab730b, type: 2}
+  - {fileID: 11400000, guid: 331b03851a806544997e266983d79f9b, type: 2}
+  - {fileID: 11400000, guid: 2fb4707a861f77d4e944fe78d6fda738, type: 2}
 --- !u!4 &304428548
 Transform:
   m_ObjectHideFlags: 0
@@ -88459,6 +88466,22 @@ PrefabInstance:
     - target: {fileID: 354813890971327759, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
       propertyPath: m_AnchorMin.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1329002862320265231, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1329002862320265231, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2088946450}
+    - target: {fileID: 1329002862320265231, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnClick
+      objectReference: {fileID: 0}
+    - target: {fileID: 1329002862320265231, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: EscAction, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 4648702701294011934, guid: 00ac0f4c83cef014ab74f9ecf643b864, type: 3}
       propertyPath: m_Pivot.x

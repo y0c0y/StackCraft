@@ -39,4 +39,9 @@ public class EscAction : MonoBehaviour
             UIManager.Instance.ChangeUI(escTargetUI);
         }
     }
+
+    public void OnClick()
+    {
+        UIManager.Instance.ChangeUI(escTargetUI);
+    }
 }
