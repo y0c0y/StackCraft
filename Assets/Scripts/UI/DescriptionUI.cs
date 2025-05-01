@@ -69,6 +69,9 @@ public class DescriptionUI: MonoBehaviour
     
     private void SetText(string message)
     {
-        descriptionText.text = message;
+        var text = TMPUtils.GetEllipsizedTextWithAutoSize(descriptionText, message);
+        
+        
+        descriptionText.text = text;
     }
 }
