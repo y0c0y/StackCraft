@@ -155,6 +155,11 @@ public class CardDataSprite : MonoBehaviour
 
     public void OnHit()
     {
+        transform.DOComplete();
+        transform.DOKill();
+        artworkSprite.DOComplete();
+        artworkSprite.DOKill();
+        
         transform.DOPunchRotation(new Vector3(0f, 0f, 10f), 0.5f)
                     .SetUpdate(true)
                     .SetLink(gameObject);

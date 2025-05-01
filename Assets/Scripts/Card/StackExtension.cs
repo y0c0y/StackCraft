@@ -16,7 +16,10 @@ public static class StackExtension
     {
         return GameTableManager.Instance
             .GetAllStacksInField(stack.currentField)
-            .Where(s => s != stack && s.LastCard?.cardData && stack.LastCard.CanStackOn(s.LastCard))
+            .Where(s => s != stack 
+                        && s.LastCard?.cardData 
+                        && BattleManager.Instance ? !BattleManager.Instance.Flag(s.TopCard) : true
+                           && stack.LastCard.CanStackOn(s.LastCard))
             .ToList()
             .Random();
     }
