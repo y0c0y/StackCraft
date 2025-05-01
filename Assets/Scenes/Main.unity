@@ -1172,7 +1172,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 20, y: 20}
-  m_SizeDelta: {x: 400, y: 480}
+  m_SizeDelta: {x: 450, y: 480}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1329437075
 MonoBehaviour:
@@ -1226,10 +1226,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1092773697581974799, guid: 4a9dbf17ca1c8be4480da845fd3375dd, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2823482880393333826, guid: 4a9dbf17ca1c8be4480da845fd3375dd, type: 3}
-      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3872318768694272602, guid: 4a9dbf17ca1c8be4480da845fd3375dd, type: 3}
@@ -1347,10 +1343,6 @@ PrefabInstance:
     - target: {fileID: 8138522563355779207, guid: 4a9dbf17ca1c8be4480da845fd3375dd, type: 3}
       propertyPath: m_Name
       value: Option Canvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 8138522563355779207, guid: 4a9dbf17ca1c8be4480da845fd3375dd, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8869840241688625753, guid: 4a9dbf17ca1c8be4480da845fd3375dd, type: 3}
       propertyPath: m_AnchorMax.x
@@ -69212,11 +69204,11 @@ RectTransform:
   - {fileID: 2089123111}
   m_Father: {fileID: 1329437074}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_SizeDelta: {x: 400, y: 480}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &1942321944
 GameObject:
   m_ObjectHideFlags: 0
