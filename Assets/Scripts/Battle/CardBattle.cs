@@ -11,6 +11,7 @@ public class CardBattle : MonoBehaviour
 	private CardBattleUI _battleUI;
 	private CardAbility _ability;
 	private SpriteRenderer _artworkSprite;
+	private SpriteRenderer _shadowSprite;
 	private Card         _card;
 	
 	public void Setup(Card card)
@@ -21,8 +22,9 @@ public class CardBattle : MonoBehaviour
 		_ability.InitAbility(card.cardData);
 
 		var cardDataSprite = card.gameObject.GetComponentInChildren<CardDataSprite>();
-		_artworkSprite = cardDataSprite.gameObject.GetComponentInChildren<SpriteRenderer>();
-		var uiGO = Instantiate(cardBattleUIPrefab, _artworkSprite.transform);
+		_artworkSprite = cardDataSprite.artworkSprite;
+		_shadowSprite = cardDataSprite.shadowSprite;
+		var uiGO = Instantiate(cardBattleUIPrefab, _artworkSprite.gameObject.transform);
 		_battleUI = uiGO.GetComponent<CardBattleUI>();
 
 		_battleUI.Init(_ability);
@@ -61,9 +63,10 @@ public class CardBattle : MonoBehaviour
 		_battleUI.ChangeUIEnabled(isTail);
 	}
 
-	public void ResetArtWorkLocalPos()
+	public void ResetSpriteLocalPos()
 	{
 		_artworkSprite.transform.localPosition = Vector3.zero;
+		_shadowSprite.transform.localPosition = Vector3.zero;
 	}
 	
 	private void Register()

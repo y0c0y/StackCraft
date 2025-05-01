@@ -7,7 +7,7 @@ using UnityEngine;
 public class CardDataSprite : MonoBehaviour
 {
     [SerializeField] public SpriteRenderer artworkSprite;
-    [SerializeField] private SpriteRenderer shadowSprite;
+    [SerializeField] public SpriteRenderer shadowSprite;
     [SerializeField] private GameObject canStackOnIndicator;
 
     public int LastSortingOrder => _spriteInitialSortingOrder.Keys.Select(spriteRenderer => spriteRenderer.sortingOrder).Max() + 1;
