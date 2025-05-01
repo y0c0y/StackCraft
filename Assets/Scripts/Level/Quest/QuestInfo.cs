@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public static class QuestInfo
 {
     public const string GameClearQuestID = "Quest_End";

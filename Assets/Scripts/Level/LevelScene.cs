@@ -20,7 +20,7 @@ public class LevelScene : MonoBehaviour
         }
         catch (Exception e)
         {
-            throw ; // TODO 예외 처리
+            Debug.LogError($"[QuestUI Start] 예외 발생: {e.Message}\n{e.StackTrace}");
         }
     }
 }

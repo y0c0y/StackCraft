@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
@@ -13,7 +12,6 @@ public class BattleZone : MonoBehaviour
     [Header("Card Layout")] 
     [SerializeField] private float cardWidth = 3f;
     [SerializeField] private float cardHeight = 4f;
-    [SerializeField] private float verticalSpacing = 1f;
     [SerializeField] private float horizontalSpacing = 0.2f;
     
     public (Vector3,Vector3) ResizeBackground(int personsCount, int enemiesCount)
@@ -67,7 +65,5 @@ public class BattleZone : MonoBehaviour
         
         
         BattleManager.Instance.CardBattles[card].ResetSpriteLocalPos();
-        // await UniTask.NextFrame();
     }
-
 }

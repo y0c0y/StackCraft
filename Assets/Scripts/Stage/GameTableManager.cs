@@ -76,10 +76,6 @@ public class GameTableManager : MonoBehaviour
                 cardDrag.CardDragStarted += OnCardDragStarted;
                 cardDrag.CardDragEnded += OnCardDragEnded;
             }
-            else
-            {
-                //Debug.LogError($"CardDrag component not found on {card.name}");
-            }
                 
             CardAddedOnTable?.Invoke(card);
         }
@@ -121,7 +117,6 @@ public class GameTableManager : MonoBehaviour
     
     private void OnCardDragStarted(Card card)
     {
-        //Debug.Log($"Card {card.name} started dragging");
         ShowCardCanStackIndicator(card);
         var owningStack = card.owningStack;
         if (owningStack)
@@ -135,7 +130,6 @@ public class GameTableManager : MonoBehaviour
 
     private void OnCardDragEnded(Card card)
     {
-        //Debug.Log($"Card {obj.name} ended dragging");
         HideCardCanStackIndicator();
         
         var owningStack = card.owningStack;
@@ -196,10 +190,10 @@ public class GameTableManager : MonoBehaviour
         
         var newStack = StackManager.Instance.AddNewStack();
         newStack.AddCard(card);
-        newStack.currentField = GameTableManager.Instance.fields[(int)field];
+        newStack.currentField = Instance.fields[(int)field];
         Instance.AddStackToTable(newStack);
         
-        card.transform.position = position ?? GameTableManager.Instance.fields[(int)field].transform.position;
+        card.transform.position = position ?? Instance.fields[(int)field].transform.position;
         
         CardColliderManager.Instance.ModifyColliders(newStack);
         

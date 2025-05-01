@@ -93,7 +93,6 @@ public class RecipeManager : MonoBehaviour
         {
             Debug.Log($"Recipe matched: {matchedRecipe.name} with {stack.name}, consumed cards: {string.Join(", ", consumedCards.Select(c => c.name))}");
             
-            // OnRecipeStarted?.Invoke(matchedRecipe);
             if (matchedRecipe.produceTime > 0)
             {
                 stack.AddTimer(matchedRecipe, consumedCards);
@@ -214,7 +213,6 @@ public class RecipeManager : MonoBehaviour
             }
             
             var inputCards = recipe.GetInputCards();
-            //Debug.Log($"Checking recipe {recipe.recipeName} with input cards: {string.Join(", ", inputCards)}");
             bool canMatch = true;
             
             foreach (var requirement in inputCards)

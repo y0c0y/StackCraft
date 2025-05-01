@@ -1,8 +1,5 @@
-using System.Collections;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 
 public class CardBattle : MonoBehaviour
 {
